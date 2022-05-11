@@ -1,0 +1,22 @@
+Package: BT
+Title: (Adaptive) Boosting Trees Algorithm
+Version: 0.1
+Date: February 18, 2022
+Authors@R: 
+    c(person("Gireg", "Willame", email = "g.willame@detralytics.eu", role = c("aut", "cre", "cph")),
+    person("Julien", "Trufin", email = "j.trufin@detralytics.eu", role = "cph"),
+    person("Michel", "Denuit", email = "m.denuit@detralytics.eu", role = "cph"))
+Author: Gireg Willame [aut, cre, cph],
+  Julien Trufin [cph],
+  Michel Denuit [cph]
+Maintainer: Gireg Willame <g.willame@detralytics.eu>
+Depends: R (>= 4.0)
+Imports: rpart,
+  stats,
+  statmod
+Suggests: testthat
+Description: This packages aims to perform the (Adaptive) Boosting Trees Algorithm. The code approach is similar to the one used in gbm. However, each tree in the expansion is built thanks to the rpart package.
+URL: www.detralytics.eu
+License: GPL (>= 3)
+Encoding: UTF-8
+RoxygenNote: 7.1.2
