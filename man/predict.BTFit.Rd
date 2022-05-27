@@ -31,7 +31,8 @@ Predicted values based on a boosting tree model object.
 If \code{n.iter} is a vector then the result is a matrix with each column corresponding to the \code{BT} predictions with \code{n.iter[1]} boosting iterations, \code{n.iter[2]} boosting
 iterations, and so on.
 
-As for the fit, the predictions do not include any offset term. The user may add the value of the offset to the predicted value, if desired.
+As for the fit, the predictions do not include any offset term.
+In the Poisson case, please remind that a weighted approach is initally favored.
 }
 \references{
 D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.

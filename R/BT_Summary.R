@@ -26,6 +26,8 @@
 #'
 #' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
 #'
+#' @rdname summary.BTFit
+#' @export summary.BTFit
 #' @export
 #'
 summary.BTFit <- function(BTFit_object,

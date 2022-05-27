@@ -98,7 +98,7 @@ BT_call <- function(training.set, validation.set, tweedie.power, respVar, w, exp
 BT_callInit <- function(training.set, validation.set, tweedie.power, respVar, w){
   message('bag.fraction is not used for the initialization fit.')
   initFit <- glm(formula = as.formula(paste(respVar, "~1")), data=training.set, family=tweedie(var.power=tweedie.power, link.power=0),
-                 weights = w)
+                 weights = training.set[,w])
   currTrainScore <- log(initFit$fitted.values) # Return value on score scale.
   trainingError <- sum(BT_devTweedie(training.set[, respVar], exp(currTrainScore),
                                      tweedieVal = tweedie.power, w=training.set[,w]))/nrow(training.set)#sum(mf$originalWeights)
@@ -146,7 +146,7 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
 
     # Fit the current tree, update score and store the fit.
     if (tweedie.power==1){
-      currFit <- rpart(currFormula, training.set[sampRow,], weights = iWeights, method = "poisson", control=tree.control, y=FALSE)
+      currFit <- rpart(currFormula, training.set[sampRow,], weights = training.set[, "iWeights"], method = "poisson", control=tree.control, y=FALSE) #iWeights is also working but not best.
     }else{
       stop("Currently implemented for Poisson distribution only.")
      # currFit <- rpart(currFormula, training.set[sampRow,], weights = iWeights, method = list(eval=evalTweedie, split=splitTweedie, init=initTweedie),
@@ -166,7 +166,7 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
 
     # Delete the where object resulting from rpart. Not needed for the predict afterwards.
     currFit$where <- NULL
-    training.set[, "currTrainScore"] <- training.set[, "currTrainScore"] + shrinkage*log( predict(currFit, newdata=training.set) )
+    training.set[, "currTrainScore"] <- training.set[, "currTrainScore"] + shrinkage*log( predict(currFit, newdata=training.set, type = 'vector') )
     listFits[[iTree]] <- currFit
 
     # Compute errors.
@@ -177,7 +177,7 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
                                                                  tweedieVal = tweedie.power, w=training.set[oobRow, w]))/length(oobRow))) # OOB Improvement.
     }
     if (!is.null(validation.set)){
-      validation.set[, "currValScore"] <- validation.set[, "currValScore"] + shrinkage*log( predict(currFit, newdata=validation.set) )
+      validation.set[, "currValScore"] <- validation.set[, "currValScore"] + shrinkage*log( predict(currFit, newdata=validation.set, type = 'vector') )
       validation.error[iTree] <- sum(BT_devTweedie(validation.set[, respVar], exp(validation.set[, "currValScore"]),
                                                    tweedieVal = tweedie.power, w=validation.set[,w]))/nrow(validation.set) # Validation error.
     }
@@ -193,7 +193,7 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
 
   BT_CallBoosting$distribution <- tweedie.power
   BT_CallBoosting$var.names <- explVar ; BT_CallBoosting$response <- respVar ; BT_CallBoosting$w <- w
-  if (keep.data) BT_CallBoosting$BTData <- structure(list(training.set = subset(training.set, select=-c(residuals, iWeights)),
+  if (keep.data) BT_CallBoosting$BTData <- structure(list(training.set = training.set[, ! (colnames(training.set) %in% c("iWeights", "residuals"))],
                                                           validation.set = validation.set), class = "BTData")
 
   BT_CallBoosting$BTParams <- structure(list(ABT = ABT,

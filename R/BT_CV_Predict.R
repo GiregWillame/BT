@@ -24,6 +24,7 @@
 #'
 #' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
 #'
+#' @export predict.BTCVFit
 #' @export
 #'
 predict.BTCVFit <- function(BTCVFit_object, data, cv.folds, folds, best.iter.cv, ...){
