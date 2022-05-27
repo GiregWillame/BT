@@ -22,15 +22,14 @@
 #'
 #' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
 #'
-#' @rdname BT_cv_errors.BTCVFit
+#' @rdname BT_cv_errors
 #' @export
 #'
 BT_cv_errors <- function(BT_cv_fit, cv.folds, folds) {
   UseMethod("BT_cv_errors", BT_cv_fit)
 }
 
-#' @rdname BT_cv_errors.BTCVFit
-#' @exportS3Method
+#' @keywords internal
 #'
 BT_cv_errors.BTCVFit <- function(BT_cv_fit, cv.folds, folds){
 

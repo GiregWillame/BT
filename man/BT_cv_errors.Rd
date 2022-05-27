@@ -2,12 +2,9 @@
 % Please edit documentation in R/BT_CV_Errors.R
 \name{BT_cv_errors}
 \alias{BT_cv_errors}
-\alias{BT_cv_errors.BTCVFit}
 \title{Cross-validation errors.}
 \usage{
 BT_cv_errors(BT_cv_fit, cv.folds, folds)
-
-\method{BT_cv_errors}{BTCVFit}(BT_cv_fit, cv.folds, folds)
 }
 \arguments{
 \item{BT_cv_fit}{a \code{\link{BTCVFit}} object.}

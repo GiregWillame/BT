@@ -14,9 +14,11 @@ Depends: R (>= 4.0)
 Imports: rpart,
   stats,
   statmod
-Suggests: testthat
+Suggests: 
+    testthat (>= 3.0.0)
 Description: This packages aims to perform the (Adaptive) Boosting Trees Algorithm. The code approach is similar to the one used in gbm. However, each tree in the expansion is built thanks to the rpart package.
 URL: www.detralytics.eu
 License: GPL (>= 3)
 Encoding: UTF-8
 RoxygenNote: 7.1.2
+Config/testthat/edition: 3

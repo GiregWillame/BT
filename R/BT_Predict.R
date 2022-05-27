@@ -30,7 +30,7 @@
 #'
 #' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
 #'
-#' @export predict.BTFit
+#' @rdname predict.BTFit
 #' @export
 #'
 predict.BTFit <- function(BTFit_object, newdata, n.iter, type = "link", single.iter=FALSE, ...){
