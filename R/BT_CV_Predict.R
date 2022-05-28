@@ -2,7 +2,7 @@
 #'
 #' Compute predictions from cross-validated Boosting Trees model.
 #'
-#' @param BTCVFit_object a \code{\link{BTCVFit}} object containing CV BT models.
+#' @param object a \code{\link{BTCVFit}} object containing CV BT models.
 #' @param data the database on which one wants to predict the different CV BT models.
 #' @param cv.folds a positive integer specifying the number of folds to be used in cross-validation of the BT fit.
 #' @param folds vector of integers specifying which row of data belongs to which cv.folds.
@@ -27,7 +27,7 @@
 #' @rdname predict.BTCVFit
 #' @export
 #'
-predict.BTCVFit <- function(BTCVFit_object, data, cv.folds, folds, best.iter.cv, ...){
+predict.BTCVFit <- function(object, data, cv.folds, folds, best.iter.cv, ...){
 
   # We directly apply the predict on the dataset -> no database extraction.
 
@@ -40,7 +40,7 @@ predict.BTCVFit <- function(BTCVFit_object, data, cv.folds, folds, best.iter.cv,
   result <- rep(NA, length = nrow(data))
 
   for (index in seq_len(cv.folds)){
-    currModel <- BTCVFit_object[[index]]
+    currModel <- object[[index]]
     flag <- which(folds==index)
     result[flag] <- predict(currModel,
                             newdata = data[flag, currModel$var.names, drop=FALSE],

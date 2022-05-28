@@ -2,7 +2,7 @@
 #'
 #' Predicted values based on a boosting tree model object.
 #'
-#' @param BTFit_object a \code{\link{BTFit}} object.
+#' @param object a \code{\link{BTFit}} object.
 #' @param newdata data frame of observations for which to make predictions. If missing or not a data frame, if \code{keep.data=TRUE} in the initial fit then the original training set will be used.
 #' @param n.iter number of boosting iteration used in the prediction. This parameter can be a vector in which case predictions are returned for each iteration specified.
 #' @param type the scale on which the BT makes the predictions. Can either be "link" or "response". Note that, by construction, a log-link function is used during the fit.
@@ -33,7 +33,7 @@
 #' @rdname predict.BTFit
 #' @export
 #'
-predict.BTFit <- function(BTFit_object, newdata, n.iter, type = "link", single.iter=FALSE, ...){
+predict.BTFit <- function(object, newdata, n.iter, type = "link", single.iter=FALSE, ...){
 
   # Check inputs
   if(!is.element(type, c("link","response" ))) {
@@ -41,15 +41,15 @@ predict.BTFit <- function(BTFit_object, newdata, n.iter, type = "link", single.i
   }
 
   if(missing(newdata) || !is.data.frame(newdata)) {
-    if (BTFit_object$keep.data){
+    if (object$keep.data){
       message("As newdata is missing or is not a data frame, the training set has been used thanks to the keep.data = TRUE parameter.")
-      newdata <- BTFit_object$BTData$training.set
+      newdata <- object$BTData$training.set
     } else{
       stop("newdata must be provided as a data frame.")
     }
   }
 
-  if (!all(BTFit_object$var.names %in% colnames(newdata))){
+  if (!all(object$var.names %in% colnames(newdata))){
     stop("newdata must contain the same explanatory variable as the original fitted BT object.")
   }
 
@@ -66,8 +66,8 @@ predict.BTFit <- function(BTFit_object, newdata, n.iter, type = "link", single.i
     stop("n.iter must be a vector of non-negative integers.")
   }
 
-  if(any(n.iter > BTFit_object$BTParams$n.iter)) {
-    n.iter[n.iter > BTFit_object$BTParams$n.iter] <- BTFit_object$BTParams$n.iter
+  if(any(n.iter > object$BTParams$n.iter)) {
+    n.iter[n.iter > object$BTParams$n.iter] <- object$BTParams$n.iter
     warning("Number of trees exceeded number fit so far. Using ", paste(n.iter,collapse=" "),".")
   }
 
@@ -77,18 +77,18 @@ predict.BTFit <- function(BTFit_object, newdata, n.iter, type = "link", single.i
     for (i in seq(1, length(n.iter))){
       iIter <- n.iter[i]
       # Link-scale output.
-      outMatrix[,i] <- log(predict(BTFit_object$BTIndivFits[[iIter]], newdata))
+      outMatrix[,i] <- log(predict(object$BTIndivFits[[iIter]], newdata))
     }
   } else{
     # Compute cumulative results for each iteration in the vector n.iter
     lastIter <- max(n.iter)
-    shrinkage <- BTFit_object$BTParams$shrinkage
+    shrinkage <- object$BTParams$shrinkage
 
-    currPred <- predict(BTFit_object$BTInit$initFit, newdata=newdata, type = "link") # GLM used as first prediction.
+    currPred <- predict(object$BTInit$initFit, newdata=newdata, type = "link") # GLM used as first prediction.
 
 
     for (iIter in seq(1, lastIter)){
-      currPred <- currPred + shrinkage*log(predict(BTFit_object$BTIndivFits[[iIter]], newdata))
+      currPred <- currPred + shrinkage*log(predict(object$BTIndivFits[[iIter]], newdata))
       if (iIter %in% n.iter){
         outMatrix[, which(n.iter == iIter)] <- currPred
       }

@@ -4,10 +4,10 @@
 \alias{predict.BTCVFit}
 \title{Predictions for CV fitted BT models.}
 \usage{
-\method{predict}{BTCVFit}(BTCVFit_object, data, cv.folds, folds, best.iter.cv, ...)
+\method{predict}{BTCVFit}(object, data, cv.folds, folds, best.iter.cv, ...)
 }
 \arguments{
-\item{BTCVFit_object}{a \code{\link{BTCVFit}} object containing CV BT models.}
+\item{object}{a \code{\link{BTCVFit}} object containing CV BT models.}
 
 \item{data}{the database on which one wants to predict the different CV BT models.}
 

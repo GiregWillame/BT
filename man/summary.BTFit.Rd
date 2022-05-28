@@ -5,9 +5,9 @@
 \title{Summary of a BTFit object.}
 \usage{
 \method{summary}{BTFit}(
-  BTFit_object,
-  cBars = length(BTFit_object$var.names),
-  n.iter = length(BTFit_object$BTIndivFits),
+  object,
+  cBars = length(object$var.names),
+  n.iter = length(object$BTIndivFits),
   plot_it = TRUE,
   order_it = TRUE,
   method = BT_relative_influence,
@@ -16,7 +16,7 @@
 )
 }
 \arguments{
-\item{BTFit_object}{a \code{\link{BTFit}} object.}
+\item{object}{a \code{\link{BTFit}} object.}
 
 \item{cBars}{the number of bars to plot. If \code{order=TRUE} only the variables with the \code{cBars} largest relative influence will appear in the barplot.
 If \code{order=FALSE} then the first \code{cBars} variables will appear in the barplot.}

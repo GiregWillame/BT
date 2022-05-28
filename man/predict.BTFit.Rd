@@ -4,10 +4,10 @@
 \alias{predict.BTFit}
 \title{Predict method for BT Model fits.}
 \usage{
-\method{predict}{BTFit}(BTFit_object, newdata, n.iter, type = "link", single.iter = FALSE, ...)
+\method{predict}{BTFit}(object, newdata, n.iter, type = "link", single.iter = FALSE, ...)
 }
 \arguments{
-\item{BTFit_object}{a \code{\link{BTFit}} object.}
+\item{object}{a \code{\link{BTFit}} object.}
 
 \item{newdata}{data frame of observations for which to make predictions. If missing or not a data frame, if \code{keep.data=TRUE} in the initial fit then the original training set will be used.}
 

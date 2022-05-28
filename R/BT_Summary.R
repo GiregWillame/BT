@@ -2,7 +2,7 @@
 #'
 #' Computes the relative influence of each variable in the BTFit object.
 #'
-#' @param BTFit_object a \code{\link{BTFit}} object.
+#' @param object a \code{\link{BTFit}} object.
 #' @param cBars the number of bars to plot. If \code{order=TRUE} only the variables with the \code{cBars} largest relative influence will appear in the barplot.
 #' If \code{order=FALSE} then the first \code{cBars} variables will appear in the barplot.
 #' @param n.iter the number of trees used to generate the plot. Only the first \code{n.trees} trees will be used.
@@ -29,9 +29,9 @@
 #' @rdname summary.BTFit
 #' @export
 #'
-summary.BTFit <- function(BTFit_object,
-                           cBars=length(BTFit_object$var.names),
-                           n.iter=length(BTFit_object$BTIndivFits),
+summary.BTFit <- function(object,
+                           cBars=length(object$var.names),
+                           n.iter=length(object$BTIndivFits),
                            plot_it=TRUE,
                            order_it=TRUE,
                            method=BT_relative_influence,
@@ -41,7 +41,7 @@ summary.BTFit <- function(BTFit_object,
   # Initial checks
   check_if_natural_number(n.iter)
   check_if_natural_number(cBars)
-  check_if_BT_fit(BTFit_object)
+  check_if_BT_fit(object)
   if(!is.logical(plot_it) || (length(plot_it) > 1) || is.na(plot_it)) {
     stop("argument plot_it must be a logical - excluding NA")
   }
@@ -53,14 +53,14 @@ summary.BTFit <- function(BTFit_object,
   }
 
   # Set inputs (if required)
-  if(cBars==0) cBars <- min(10, length(BTFit_object$var.names))
-  if(cBars>length(BTFit_object$var.names)) cBars <- length(BTFit_object$var.names)
-  if(n.iter > BTFit_object$BTParams$n.iter)
-    warning("Exceeded total number of BT terms. Results use n.iter=", BTFit_object$BTParams$n.iter," terms.\n")
-  n.iter <- min(n.iter, BTFit_object$BTParams$n.iter)
+  if(cBars==0) cBars <- min(10, length(object$var.names))
+  if(cBars>length(object$var.names)) cBars <- length(object$var.names)
+  if(n.iter > object$BTParams$n.iter)
+    warning("Exceeded total number of BT terms. Results use n.iter=", object$BTParams$n.iter," terms.\n")
+  n.iter <- min(n.iter, object$BTParams$n.iter)
 
   # Calculate relative influence and order/normalize
-  rel_inf <- method(BTFit_object, n.iter=n.iter)
+  rel_inf <- method(object, n.iter=n.iter)
   rel_inf[rel_inf<0] <- 0
   if(normalize) rel_inf <- 100*rel_inf/sum(rel_inf)
 
@@ -74,10 +74,10 @@ summary.BTFit <- function(BTFit_object,
     barplot(rel_inf[ordering[cBars:1]],
             horiz=TRUE,
             col=rainbow(cBars,start=3/6,end=4/6),
-            names=BTFit_object$var.names[ordering[cBars:1]],
+            names=object$var.names[ordering[cBars:1]],
             xlab="Relative influence",
             las=1,...)
   }
-  return(data.frame(var=BTFit_object$var.names[ordering],
+  return(data.frame(var=object$var.names[ordering],
                     rel_inf=rel_inf[ordering]))
 }
