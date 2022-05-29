@@ -166,7 +166,7 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
 
     # Delete the where object resulting from rpart. Not needed for the predict afterwards.
     currFit$where <- NULL
-    training.set[, "currTrainScore"] <- training.set[, "currTrainScore"] + shrinkage*log( predict(currFit, newdata=training.set, type = 'vector') )
+    training.set[, "currTrainScore"] <- training.set[, "currTrainScore"] + shrinkage*log( predict(currFit, newdata=training.set, type = "vector") )
     listFits[[iTree]] <- currFit
 
     # Compute errors.
@@ -177,7 +177,7 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
                                                                  tweedieVal = tweedie.power, w=training.set[oobRow, w]))/length(oobRow))) # OOB Improvement.
     }
     if (!is.null(validation.set)){
-      validation.set[, "currValScore"] <- validation.set[, "currValScore"] + shrinkage*log( predict(currFit, newdata=validation.set, type = 'vector') )
+      validation.set[, "currValScore"] <- validation.set[, "currValScore"] + shrinkage*log( predict(currFit, newdata=validation.set, type = "vector") )
       validation.error[iTree] <- sum(BT_devTweedie(validation.set[, respVar], exp(validation.set[, "currValScore"]),
                                                    tweedieVal = tweedie.power, w=validation.set[,w]))/nrow(validation.set) # Validation error.
     }

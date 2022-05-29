@@ -163,7 +163,7 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
     valIndex <- which(folds==xx) ; trainIndex <- setdiff(1:length(folds), valIndex)
     BT_call(training.set[trainIndex,], training.set[valIndex,], tweedie.power, respVar, w, explVar, ABT,
             tree.control, train.fraction, interaction.depth, bag.fraction, shrinkage, n.iter, colsample.bytree,
-            keep.data = FALSE, is.verbose) # We dont keep a copy of each dataset in case of cross-validation.
+            FALSE, is.verbose) # We dont keep a copy of each dataset in case of cross-validation, keep.data=FALSE
   })
   stopCluster(cl)
   # Different folds -> result object is from a different class.

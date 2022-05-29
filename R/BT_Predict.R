@@ -77,7 +77,7 @@ predict.BTFit <- function(object, newdata, n.iter, type = "link", single.iter=FA
     for (i in seq(1, length(n.iter))){
       iIter <- n.iter[i]
       # Link-scale output.
-      outMatrix[,i] <- log(predict(object$BTIndivFits[[iIter]], newdata))
+      outMatrix[,i] <- log(predict(object$BTIndivFits[[iIter]], newdata = newdata, type = "vector"))
     }
   } else{
     # Compute cumulative results for each iteration in the vector n.iter
@@ -88,7 +88,7 @@ predict.BTFit <- function(object, newdata, n.iter, type = "link", single.iter=FA
 
 
     for (iIter in seq(1, lastIter)){
-      currPred <- currPred + shrinkage*log(predict(object$BTIndivFits[[iIter]], newdata))
+      currPred <- currPred + shrinkage*log(predict(object$BTIndivFits[[iIter]], newdata = newdata, type = "vector"))
       if (iIter %in% n.iter){
         outMatrix[, which(n.iter == iIter)] <- currPred
       }

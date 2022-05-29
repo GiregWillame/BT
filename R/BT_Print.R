@@ -54,13 +54,6 @@ print_iters_and_dist <- function(x) {
   }
 }
 
-# Old - Before ABT - Keep for now.
-# print_iters_and_dist <- function(x) {
-#   check_if_BT_fit(x)
-#   cat("A boosting tree model with Tweedie parameter :", x$distribution, " has been fitted.\n",
-#       length(iteration_error(x, 'train')), "iterations were performed.\n")
-# }
-
 #' @rdname print.BTFit
 #' @export
 #'

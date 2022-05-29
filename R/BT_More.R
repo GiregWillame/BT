@@ -77,7 +77,7 @@ BT_more <- function(BTFit_object, new.n.iter=100, is.verbose=FALSE){
 
   BT_more_fit$BTIndivFits <- structure(c(BTFit_object$BTIndivFits, BT_more_fit$BTIndivFits), class = "BTIndivFits")
 
-  BT_more_fit$BTParams$n.iter <- length(BT_more_fit$BTIndivFits)
+  BT_more_fit$BTParams$n.iter <- length(BT_more_fit$BTIndivFits) # is equal to BTFit_object$n.iter + new.n.iter.
 
   return(BT_more_fit)
 }
