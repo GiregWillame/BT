@@ -98,11 +98,12 @@ BT_call <- function(training.set, validation.set, tweedie.power, respVar, w, exp
 BT_callInit <- function(training.set, validation.set, tweedie.power, respVar, w){
   message('bag.fraction is not used for the initialization fit.')
   initFit <- glm(formula = as.formula(paste(respVar, "~1")), data=training.set, family=tweedie(var.power=tweedie.power, link.power=0),
-                 weights = training.set[,w])
+                 weights = w)
   currTrainScore <- log(initFit$fitted.values) # Return value on score scale.
   trainingError <- sum(BT_devTweedie(training.set[, respVar], exp(currTrainScore),
                                      tweedieVal = tweedie.power, w=training.set[,w]))/nrow(training.set)#sum(mf$originalWeights)
-  validationError <- NULL
+
+  currValScore <- NULL ; validationError <- NULL
   if (!is.null(validation.set)){
     currValScore <- predict(initFit, newdata=validation.set, type="link") # Return value on score scale.
     validationError <- sum(BT_devTweedie(validation.set[, respVar], exp(currValScore),

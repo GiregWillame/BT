@@ -68,12 +68,12 @@ check_train_fraction <- function(train.fraction){
 
 #' @keywords internal
 check_keep_data <- function(keep.data) {
-  if (!is.logical(keep.data) || (length(keep.data) > 1)) stop("keep.data should be a boolean.")
+  if (!is.logical(keep.data) || (length(keep.data) > 1) || is.na(keep.data)) stop("keep.data should be a boolean.")
 }
 
 #' @keywords internal
 check_is_verbose <- function(is.verbose) {
-  if (!is.logical(is.verbose) || (length(is.verbose) > 1)) stop("is.verbose should be a boolean.")
+  if (!is.logical(is.verbose) || (length(is.verbose) > 1) || is.na(is.verbose)) stop("is.verbose should be a boolean.")
 }
 
 #' @keywords internal
@@ -99,7 +99,7 @@ check_weights <- function(weights){
 
 #' @keywords internal
 check_ABT <- function(ABT) {
-  if (!is.logical(ABT) || (length(ABT) > 1)) stop("ABT should be a boolean.")
+  if (!is.logical(ABT) || (length(ABT) > 1) || is.na(ABT)) stop("ABT should be a boolean.")
 }
 
 ############################
