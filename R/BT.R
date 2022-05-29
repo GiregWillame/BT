@@ -84,7 +84,7 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
                train.fraction = 1, interaction.depth = 4, shrinkage = 1, bag.fraction = 1,
                colsample.bytree = NULL, keep.data = TRUE, is.verbose = FALSE,
                cv.folds = 1, folds.id = NULL, n.cores = 1,
-               tree.control = rpart.control(xval = 0, maxdepth = (if(!is.null(interaction.depth)){interaction.depth} else{10}), cp = 0),
+               tree.control = rpart.control(xval = 0, maxdepth = (if(!is.null(interaction.depth)){interaction.depth} else{10}), cp = 0, minsplit = 2),
                weights = NULL, ...){
 
   the_call <- match.call()
