@@ -33,4 +33,4 @@ bin-release/
 .Renviron
 
 # R proj
-.Rproj
+*.Rproj
