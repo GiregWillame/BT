@@ -84,7 +84,7 @@ check_cv_folds <- function(cv.folds){
 
 #' @keywords internal
 check_folds_id <- function(folds.id){
-  if (!is.null(folds.id) && !is.vector(folds.id)) stop("When defined folds.id should be a vector of CV index.")
+  if (!is.null(folds.id) && (!is.vector(folds.id) || any(is.na(folds.id)))) stop("When defined folds.id should be a vector of CV index.")
 }
 
 #' @keywords internal
@@ -94,7 +94,7 @@ check_n_cores <- function(n.cores){
 
 #' @keywords internal
 check_weights <- function(weights){
-  if(any(weights < 0)) stop("Negative weights not allowed.")
+  if(!is.double(weights) || any(weights <= 0)) stop("Non-double and negative weights not allowed.")
 }
 
 #' @keywords internal

@@ -102,7 +102,7 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
   #originalFormula <- formula # Keep a track of the original formula if there's any change with variable subsampling.
 
   if(!is.null(attr(Terms, "offset"))){
-    stop("Offset are not supported. For Poisson model, weights (=offset) and response variable (=Frequency rate, i.e. ClaimNb/Offset) can be used.")
+    stop("Offset are not supported. For Poisson model with log-link function, weights (=offset) and response variable (=Frequency rate, i.e. ClaimNb/Offset) can instead be used.")
   }
 
   if (is.null(model.weights(mf))){mf$w <- rep(1, nrow(mf))}
