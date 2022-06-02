@@ -116,7 +116,7 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
   check_interaction_depth(interaction.depth)
   check_shrinkage(shrinkage)
   check_bag_fraction(bag.fraction)
-  check_colsample_bytree(colsample.bytree)
+  check_colsample_bytree(colsample.bytree, length(explVar))
   check_keep_data(keep.data)
   check_is_verbose(is.verbose)
   check_cv_folds(cv.folds)

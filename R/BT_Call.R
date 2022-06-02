@@ -148,7 +148,7 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
 
     # Fit the current tree, update score and store the fit.
     if (tweedie.power==1){
-      currFit <- rpart(currFormula, training.set[sampRow,], weights = training.set[, "iWeights"], method = "poisson", control=tree.control, y=FALSE) #iWeights is also working but not best.
+      currFit <- rpart(currFormula, training.set[sampRow,], weights = training.set[sampRow, "iWeights"], method = "poisson", control=tree.control, y=FALSE) #iWeights is also working but not best.
     }else{
       stop("Currently implemented for Poisson distribution only.")
      # currFit <- rpart(currFormula, training.set[sampRow,], weights = iWeights, method = list(eval=evalTweedie, split=splitTweedie, init=initTweedie),

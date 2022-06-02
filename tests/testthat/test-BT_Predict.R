@@ -54,11 +54,52 @@ testthat::test_that("BT_Predict function checks",{
   respVar <- "Y_normalized"
   w <- "ExpoR"
 
-  BT_algo <- BT::BT(formula = as.formula("Y_normalized ~ Gender+Age+Split+Sport"),
-                    data = training.set,
-                    shrinkage = 0.01,
-                    train.fraction = 0.5)
+  paramsList <- list(formula = as.formula("Y_normalized ~ Gender+Age+Split+Sport"),
+                     data = training.set,
+                     n.iter = 200,
+                     train.fraction = 0.5,
+                     interaction.depth = 2,
+                     shrinkage = 0.01,
+                     bag.fraction = 0.5,
+                     colsample.bytree = 2,
+                     keep.data = F,
+                     is.verbose = F,
+                     cv.folds = 1,
+                     folds.id = NULL)
 
-  expect_equal(T,T)
+  BT_algo <- do.call(BT, paramsList)
+
+  trainSet <- training.set[seq(1, paramsList$train.fraction*nrow(training.set)),]
+  valSet <- training.set[setdiff(seq(1, nrow(training.set)), seq(1, paramsList$train.fraction*nrow(training.set))),]
+
+  # prediction with 20 iters.
+  pred_trainBT20 <- predict(BT_algo, trainSet, n.iter = 20)
+  pred_valBT20 <- predict(BT_algo, valSet, n.iter = 20)
+  # prediction with 100 iters.
+  pred_trainBT100 <- predict(BT_algo, trainSet, n.iter = 100)
+  pred_valBT100 <- predict(BT_algo, valSet, n.iter = 100)
+
+  glmTrain <- log(BT_algo$BTInit$initFit$fitted.values)
+  glmVal <- predict(BT_algo$BTInit$initFit, newdata = valSet, type = 'link')
+  predTrain <- list() ; predVal <- list()
+  for (iTree in seq(1, 100)){
+    predTrain_current <- log(predict(BT_algo$BTIndivFits[[iTree]], newdata = trainSet, type = 'vector'))
+    predVal_current <- log(predict(BT_algo$BTIndivFits[[iTree]], newdata = valSet, type = 'vector'))
+    if (iTree == 1){
+      predTrain[[iTree]] <- glmTrain + (BT_algo$BTParams$shrinkage * predTrain_current)
+      predVal[[iTree]] <- glmVal + (BT_algo$BTParams$shrinkage * predVal_current)
+    }else{
+      predTrain[[iTree]] <- predTrain[[iTree-1]] + (BT_algo$BTParams$shrinkage * predTrain_current)
+      predVal[[iTree]] <- predVal[[iTree-1]] + (BT_algo$BTParams$shrinkage * predVal_current)
+    }
+  }
+
+  # Comparison with 20 iterations.
+  expect_equal(pred_trainBT20, unname(unlist(predTrain[[20]])))
+  expect_equal(pred_valBT20, unname(unlist(predVal[[20]])))
+
+  # Comparison with 100 iterations.
+  expect_equal(pred_trainBT100, unname(unlist(predTrain[[100]])))
+  expect_equal(pred_valBT100, unname(unlist(predVal[[100]])))
 
 })
