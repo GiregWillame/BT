@@ -34,3 +34,5 @@ bin-release/
 
 # R proj
 *.Rproj
+
+tests/testthat/test-BT_ResultsComparison.R
