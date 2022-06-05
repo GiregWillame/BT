@@ -66,6 +66,10 @@ predict.BTFit <- function(object, newdata, n.iter, type = "link", single.iter=FA
     stop("n.iter must be a vector of non-negative integers.")
   }
 
+  if(!(single.iter %in% c(TRUE, FALSE))){
+    stop("single.iter should be either TRUE or FALSE.")
+  }
+
   if(any(n.iter > object$BTParams$n.iter)) {
     n.iter[n.iter > object$BTParams$n.iter] <- object$BTParams$n.iter
     warning("Number of trees exceeded number fit so far. Using ", paste(n.iter,collapse=" "),".")
