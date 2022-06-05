@@ -1,0 +1,32 @@
+---
+title: "Getting started with the BT package"
+author: "Gireg Willame"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{BT-usage-example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The `BT` package implements (Adaptive) Boosting Tree for *Tweedie* distributed response variables, using log-link function. 
+When presented with data, the `BT` package offers the user the ability to build predictive models and explore the influence of different variables on the response, akin to a data mining or exploration task.
+
+We remind the reader that the Tweedie distributions are special cases of the *exponential dispersion family*, having power variance functions.
+In particular, a random variable $Y$ in the exponential dispersion family belongs to the Tweedie family if:
+$$
+\mathrm{V}(\mathrm{E}(Y)) = \mathrm{E}(Y)^p \text{ , for some } p \in \{0\} \cup [1, + \infty[.
+$$
+
+To get started a user must:
+
+* have a dataset in a `data.frame`.
+* select an appropriate distribution, i.e. an appropriate Tweedie power.
+* set the training parameters for the `BT` model.
+
+Once these steps have been completed, a user can fit their `gbm` model by a call to `gbmt` and subsequently: evaluate its performance, make predictions, fit additional trees and plot the relative influence of the various predictor variables
+
+```{r}
+library("BT")
+```
+
