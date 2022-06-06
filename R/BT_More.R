@@ -29,11 +29,8 @@ BT_more <- function(BTFit_object, new.n.iter=100, is.verbose=FALSE){
 
   # Check inputs
   check_if_BT_fit(BTFit_object)
-  check_if_natural_number(new.n.iter)
-
-  if(!is.logical(is.verbose) || (length(is.verbose) > 1) || is.na(is.verbose)) {
-    stop("is.verbose must be a logical - not NA")
-  }
+  check_n_iter(new.n.iter)
+  check_is_verbose(is.verbose)
 
   if(is.null(BTFit_object$BTData)) {
     stop("keep.data was set to FALSE on original BT call - Impossible to continue the training.")

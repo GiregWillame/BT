@@ -12,7 +12,7 @@ perf_plot <- function(BTFit_object, best_iter, out_of_bag_curve,
   par(mar=c(5,4,4,4)+.1)
 
   # Get y-axis label and limits
-  ylab <- cat("Deviance Tweedie (power=", BTFit_object$distribution, ")", sep = "")
+  ylab <- paste("Tweedie deviance (power=", BTFit_object$distribution, ")", sep = "")
   if(!has_train_validation_split(BTFit_object)) {
     ylim <- switch(method,
                    cv=range(iteration_error(BTFit_object, 'train'),
