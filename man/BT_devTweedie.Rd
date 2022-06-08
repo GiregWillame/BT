@@ -33,5 +33,5 @@ D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learni
 \author{
 Gireg Willame \email{g.willame@detralytics.eu}
 
-\emph{This package is inspired by the \code{gbm3} package, originally written by Greg Ridgeway \email{greg.ridgeway@gmail.com}}.
+\emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 }
