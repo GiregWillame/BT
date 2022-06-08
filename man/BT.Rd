@@ -48,7 +48,8 @@ By default, it is set to 100.}
 computing out-of-sample estimates (also known as validation error) of the loss function. By default, it is set to 1 meaning no out-of-sample estimates.}
 
 \item{interaction.depth}{the maximum depth of variable interactions: 1 builds an additive model, 2 builds a model with up to two-way interactions, etc. By default, it is set to 4.
-Please note that if this parameter is \code{NULL}, all the trees in the expansion are built based on the \code{tree.control} parameter only.
+Please note that if this parameter is \code{NULL}, all the trees in the expansion are built based on the \code{tree.control} parameter only, independently
+of the \code{ABT} value.
 This option is devoted to advanced users only and allows them to benefit from the full flexibility of the implemented algorithm.}
 
 \item{shrinkage}{a shrinkage parameter (in the interval (0,1]) applied to each tree in the expansion. Also known as the learning rate or step-size reduction. By default, it is set to 1.}
@@ -74,7 +75,7 @@ By default, it is set to \code{FALSE}.}
 \item{cv.folds}{a positive integer representing the number of cross-validation folds to perform. If \code{cv.folds}>1 then \code{BT}, in addition to the usual fit,
 will perform a cross-validation and calculate an estimate of generalization error returned in \code{BTErrors$cv.error}. By default, it is set to 1 meaning no cross-validation.}
 
-\item{folds.id}{an optional vector of values identifying what fold each observation is in. If supplied, this parameter prevails over \code{cv.folds}.
+\item{folds.id}{an optional vector of values identifying what fold each training observation is in. If supplied, this parameter prevails over \code{cv.folds}.
 By default, \code{folds.id = NULL} meaning that no folds are defined.}
 
 \item{n.cores}{the number of cores to use for parallelization. This parameter is used during the cross-validation.
@@ -106,7 +107,5 @@ D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learni
 \author{
 Gireg Willame \email{g.willame@detralytics.eu}
 
-Julien Trufin \email{j.trufin@detralytics.eu}
-
-Michel Denuit \email{m.denuit@detralytics.eu}
+\emph{This package is inspired by the \code{gbm3} package, originally written by Greg Ridgeway \email{greg.ridgeway@gmail.com}}.
 }

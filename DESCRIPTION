@@ -13,7 +13,8 @@ Maintainer: Gireg Willame <g.willame@detralytics.eu>
 Depends: R (>= 4.0)
 Imports: rpart,
   stats,
-  statmod
+  statmod,
+  parallel
 Suggests: 
     rmarkdown,
     knitr,

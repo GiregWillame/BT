@@ -60,7 +60,5 @@ D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learni
 \author{
 Gireg Willame \email{g.willame@detralytics.eu}
 
-Julien Trufin \email{j.trufin@detralytics.eu}
-
-Michel Denuit \email{m.denuit@detralytics.eu}
+\emph{This package is inspired by the \code{gbm3} package, originally written by Greg Ridgeway \email{greg.ridgeway@gmail.com}}.
 }

@@ -55,9 +55,7 @@
 #'
 #' @author Gireg Willame \email{g.willame@@detralytics.eu}
 #'
-#' Julien Trufin \email{j.trufin@@detralytics.eu}
-#'
-#' Michel Denuit \email{m.denuit@@detralytics.eu}
+#' \emph{This package is inspired by the \code{gbm3} package, originally written by Greg Ridgeway \email{greg.ridgeway@@gmail.com}}.
 #'
 #' @seealso \code{\link{BTFit}}, \code{\link{BTCVFit}}, \code{\link{BT.perf}}, \code{\link{predict.BTFit}},
 #' \code{\link{summary.BTFit}}, \code{\link{print.BTFit}}, \code{\link{BT_cv_errors}}.

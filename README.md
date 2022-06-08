@@ -1,8 +1,15 @@
 # BT : (Adaptive) Boosting Tree for Tweedie distributed response variable.
 
+## Aknowledgements
+
+The author has been theoretically supported by Detralytics' Scientific Directors Julien Trufin and Michel Denuit.
+
+The idea behind (A)BT is similar to the one developed in the `gbm3` package, originally written by Greg Ridgeway <greg.ridgeway@gmail.com>.
+This package is inspired by the latter and some of the developed codes are then pretty similar.
+
 ## References
 
-This package is based on the original idea proposed by J. Trufin and M. Denuit.
+This package is based on the original idea proposed by Detralytics' Scientific Directors Julien Trufin and Michel Denuit.
 For more information, see **DetraNote**
 
 ## Package builder and maintainer

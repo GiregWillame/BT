@@ -16,9 +16,7 @@
 #'
 #' @author Gireg Willame \email{g.willame@@detralytics.eu}
 #'
-#' Julien Trufin \email{j.trufin@@detralytics.eu}
-#'
-#' Michel Denuit \email{m.denuit@@detralytics.eu}
+#' \emph{This package is inspired by the \code{gbm3} package, originally written by Greg Ridgeway \email{greg.ridgeway@@gmail.com}}.
 #'
 #' @seealso \code{\link{BT}}, \code{\link{BTFit}}.
 #'
@@ -44,7 +42,7 @@ predict.BTCVFit <- function(object, data, cv.folds, folds, best.iter.cv, ...){
     flag <- which(folds==index)
     result[flag] <- predict(currModel,
                             newdata = data[flag, currModel$var.names, drop=FALSE],
-                            n.trees=best.iter.cv)
+                            n.iter=best.iter.cv)
   }
   return(result)
 }

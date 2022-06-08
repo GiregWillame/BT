@@ -19,9 +19,7 @@
 #'
 #' @author Gireg Willame \email{g.willame@@detralytics.eu}
 #'
-#' Julien Trufin \email{j.trufin@@detralytics.eu}
-#'
-#' Michel Denuit \email{m.denuit@@detralytics.eu}
+#' \emph{This package is inspired by the \code{gbm3} package, originally written by Greg Ridgeway \email{greg.ridgeway@@gmail.com}}.
 #'
 #' @seealso \code{\link{BT}}, \code{\link{BTFit}}.
 #'
