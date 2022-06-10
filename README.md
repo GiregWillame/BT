@@ -9,7 +9,7 @@ This package is inspired by the latter and some of the developed codes are then 
 
 ## References
 
-This package is based on the original idea proposed by Detralytics' Scientific Directors Donatien Hainaut, Julien Trufin and Michel Denuit, elaborated in their books. For more details, see [volume1](https://link.springer.com/book/10.1007/978-3-030-25820-7), [volume2](https://link.springer.com/book/10.1007/978-3-030-57556-4) and [volume3](https://link.springer.com/book/10.1007/978-3-030-25827-6).
+This package is based on the original idea proposed by Detralytics' Scientific Directors Donatien Hainaut, Julien Trufin and Michel Denuit, elaborated in their books. For more details, see [Volume 1 - "GLMs and Extensions"](https://link.springer.com/book/10.1007/978-3-030-25820-7), [Volume 2 - "Tree-based Methods and Extensions"](https://link.springer.com/book/10.1007/978-3-030-57556-4) and [Volume 3 - "Neural Networks and Extensions"](https://link.springer.com/book/10.1007/978-3-030-25827-6).
 
 Moreover, a **DetraNote** has been written on this subject, using the `BT` algorithm.
 
