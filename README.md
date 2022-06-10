@@ -9,8 +9,7 @@ This package is inspired by the latter and some of the developed codes are then 
 
 ## References
 
-This package is based on the original idea proposed by Detralytics' Scientific Directors Donatien Hainaut, Julien Trufin and Michel Denuit, elaborated in the books
-D. Hainaut, J. Trufin and M. Denuit (2019). "Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3"", *Springer Actuarial*.
+This package is based on the original idea proposed by Detralytics' Scientific Directors Donatien Hainaut, Julien Trufin and Michel Denuit, elaborated in their books. For more details, see [volume1](https://link.springer.com/book/10.1007/978-3-030-25820-7), [volume2](https://link.springer.com/book/10.1007/978-3-030-57556-4) and [volume3](https://link.springer.com/book/10.1007/978-3-030-25827-6).
 
 Moreover, a **DetraNote** has been written on this subject, using the `BT` algorithm.
 
