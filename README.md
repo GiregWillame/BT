@@ -4,13 +4,15 @@
 
 The author thanks Detralytics' Scientific Directors Julien Trufin and Michel Denuit for their theoretical support.
 
-The idea behind (A)BT is similar to the one developed in the `gbm3` package, originally written by Greg Ridgeway <greg.ridgeway@gmail.com> (for more details see https://github.com/gbm-developers/gbm3).
+The idea behind (A)BT is akin to the one developed in the `gbm3` package, originally written by Greg Ridgeway <greg.ridgeway@gmail.com> (for more details, see https://github.com/gbm-developers/gbm3).
 This package is inspired by the latter and some of the developed codes are then pretty similar.
 
 ## References
 
-This package is based on the original idea proposed by Detralytics' Scientific Directors Julien Trufin and Michel Denuit.
-For more information, see **DetraNote**
+This package is based on the original idea proposed by Detralytics' Scientific Directors Donatien Hainaut, Julien Trufin and Michel Denuit, elaborated in
+D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
+
+Moreover, a **DetraNote** has been written on this subject, using the `BT` algorithm.
 
 ## Package builder and maintainer
 
@@ -22,13 +24,13 @@ All remarks/suggestions/improvements are warmly welcome.
 Non-production releases (bug fixes, mostly) will be released via the GitHub
 release workflow. To install from GitHub, first install `devtools` from CRAN:
 
-```R
+```r
 install.packages("devtools")
 ```
 
 Then install the `BT` package from GitHub:
 
-```R
+```r
 library("devtools")
 install_github("GiregWillame/BT")
 ```
