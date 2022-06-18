@@ -123,6 +123,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results",{
   Y <- rpois(n, ExpoR*lambda)
   Y_normalized <- Y/ExpoR
   datasetFull <- data.frame(Y,Gender,Age,Split,Sport,ExpoR, Y_normalized)
+  varName <- c("Age", "Splot", "Split", "Gender")
 
   # Run a BT algo.
   set.seed(4)
@@ -139,18 +140,146 @@ testthat::test_that("Check the BT_Relative_Influence function - Results",{
                    keep.data = T,
                    is.verbose = F,
                    cv.folds = 4,
-                   folds.id = c(rep(1, train.fraction*nrow(data)/4), rep(2, train.fraction*nrow(data)/4),
-                                rep(3, train.fraction*nrow(data)/4), rep(4, train.fraction*nrow(data)/4)),
+                   folds.id = c(rep(1, 0.8*nrow(datasetFull)/4), rep(2, 0.8*nrow(datasetFull)/4),
+                                rep(3, 0.8*nrow(datasetFull)/4), rep(4, 0.8*nrow(datasetFull)/4)),
                    n.cores = 1,
                    weights = datasetFull$ExpoR)
 
   BT_algo <- do.call(BT, paramsBT)
 
-  #BTFit_object, n.iter, rescale = FALSE, sort.it = FALSE
+  ####
   # Test n.iter coming from validation.set
-  n.iter <- BT_performance(BT_algo, "validation")
-  # Extract trees of interest.
+  ####
 
+  n.iter <- BT.performance(BT_algo, method="validation", plot.it = F)
+  # Extract trees of interest and compute relative influence.
+  treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
+  resMatrix <- matrix(NA, ncol = length(varName), nrow = seq_len(n.iter))
+  colnames(resMatrix) <- varName
+  for (iTree in seq_len(n.iter)){
+    currTree <- treesList[[iTree]]
+    for (colName in varName){
+      if (colName %in% rownames(xx$splits)){
+        resMatrix[iTree, colName] <- sum(currTree$splits[rownames(currTree$splits)==colName, 3])
+      }
+    }
+  }
+  relInf <- colSums(resMatrix)
+  relInfNormalized <- relInf/max(relInf)
+  relInfSorted <- rev(sort(relInf))
+  relInfSortedAndNormalized <- relInfSorted/max(relInfSorted)
 
+  expect_equal(relInf, BT_relative_influence(BT_algo, rescale = F, sort.it = F))
+  expect_equal(relInfNormalized, BT_relative_influence(BT_algo, rescale = T, sort.it = F))
+  expect_equal(relInfSorted, BT_relative_influence(BT_algo, rescale = F, sort.it = T))
+  expect_equal(relInfSortedAndNormalized, BT_relative_influence(BT_algo, rescale = T, sort.it = T))
+
+  ####
+  # Test n.iter coming from OOB.
+  ####
+
+  n.iter <- BT.perf(BT_algo, method = "OOB", plot.it = F)
+  # Extract trees of interest and compute relative influence.
+  treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
+  resMatrix <- matrix(NA, ncol = length(varName), nrow = seq_len(n.iter))
+  colnames(resMatrix) <- varName
+  for (iTree in seq_len(n.iter)){
+    currTree <- treesList[[iTree]]
+    for (colName in varName){
+      if (colName %in% rownames(xx$splits)){
+        resMatrix[iTree, colName] <- sum(currTree$splits[rownames(currTree$splits)==colName, 3])
+      }
+    }
+  }
+  relInf <- colSums(resMatrix)
+  relInfNormalized <- relInf/max(relInf)
+  relInfSorted <- rev(sort(relInf))
+  relInfSortedAndNormalized <- relInfSorted/max(relInfSorted)
+
+  expect_equal(relInf, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F))
+  expect_equal(relInfNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F))
+  expect_equal(relInfSorted, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
+  expect_equal(relInfSortedAndNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T))
+
+  ####
+  # Test n.iter coming from CV.
+  ####
+
+  n.iter <- BT.perf(BT_algo, method = "cv", plot.it = F)
+  # Extract trees of interest and compute relative influence.
+  treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
+  resMatrix <- matrix(NA, ncol = length(varName), nrow = seq_len(n.iter))
+  colnames(resMatrix) <- varName
+  for (iTree in seq_len(n.iter)){
+    currTree <- treesList[[iTree]]
+    for (colName in varName){
+      if (colName %in% rownames(xx$splits)){
+        resMatrix[iTree, colName] <- sum(currTree$splits[rownames(currTree$splits)==colName, 3])
+      }
+    }
+  }
+  relInf <- colSums(resMatrix)
+  relInfNormalized <- relInf/max(relInf)
+  relInfSorted <- rev(sort(relInf))
+  relInfSortedAndNormalized <- relInfSorted/max(relInfSorted)
+
+  expect_equal(relInf, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F))
+  expect_equal(relInfNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F))
+  expect_equal(relInfSorted, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
+  expect_equal(relInfSortedAndNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T))
+
+  ####
+  # Test n.iter max.
+  ####
+
+  n.iter <- BT_algo$BTParams$n.iter
+  # Extract trees of interest and compute relative influence.
+  treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
+  resMatrix <- matrix(NA, ncol = length(varName), nrow = seq_len(n.iter))
+  colnames(resMatrix) <- varName
+  for (iTree in seq_len(n.iter)){
+    currTree <- treesList[[iTree]]
+    for (colName in varName){
+      if (colName %in% rownames(xx$splits)){
+        resMatrix[iTree, colName] <- sum(currTree$splits[rownames(currTree$splits)==colName, 3])
+      }
+    }
+  }
+  relInf <- colSums(resMatrix)
+  relInfNormalized <- relInf/max(relInf)
+  relInfSorted <- rev(sort(relInf))
+  relInfSortedAndNormalized <- relInfSorted/max(relInfSorted)
+
+  expect_equal(relInf, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F))
+  expect_equal(relInfNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F))
+  expect_equal(relInfSorted, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
+  expect_equal(relInfSortedAndNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T))
+
+  ####
+  # Test n.iter random.
+  ####
+
+  n.iter <- 92
+  # Extract trees of interest and compute relative influence.
+  treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
+  resMatrix <- matrix(NA, ncol = length(varName), nrow = seq_len(n.iter))
+  colnames(resMatrix) <- varName
+  for (iTree in seq_len(n.iter)){
+    currTree <- treesList[[iTree]]
+    for (colName in varName){
+      if (colName %in% rownames(xx$splits)){
+        resMatrix[iTree, colName] <- sum(currTree$splits[rownames(currTree$splits)==colName, 3])
+      }
+    }
+  }
+  relInf <- colSums(resMatrix)
+  relInfNormalized <- relInf/max(relInf)
+  relInfSorted <- rev(sort(relInf))
+  relInfSortedAndNormalized <- relInfSorted/max(relInfSorted)
+
+  expect_equal(relInf, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F))
+  expect_equal(relInfNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F))
+  expect_equal(relInfSorted, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
+  expect_equal(relInfSortedAndNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T))
 
 })

@@ -7,7 +7,7 @@
 #' if a test set was used during the fitting, the retained number of iterations is the one corresponding to the lowest test set error ; otherwise, if cross-validation was performed, the
 #' number of iterations resulting in lowest cross-validation error will be used; otherwise, if the out-of-bag parameter was defined, the OOB error will be used to determine the optimal
 #' number of iterations; otherwise, all iterations will be used.
-#' @param rescale whether or not the results should be rescaled. Default set to \code{FALSE}.
+#' @param rescale whether or not the results should be rescaled (divided by the maximum observation). Default set to \code{FALSE}.
 #' @param sort.it whether or not the results should be (reverse) sorted. Default set to \code{FALSE}.
 #'
 #' @return Returns by default an unprocessed vector of estimated relative influences. If the \code{rescale} and \code{sort.it} arguments are used, it returns
@@ -66,7 +66,6 @@ BT_relative_influence <- function(BTFit_object, n.iter,
 
   # Sum across trees
   rel_inf_compact <- unlist(lapply(split(rel_inf_verbose, names(rel_inf_verbose)), sum))
-  # Not the case with rpart : rel_inf_compact <- rel_inf_compact[names(rel_inf_compact) != "-1"] , directly 'dropped'.
 
   # rel_inf_compact excludes variables that never entered the model
   # insert 0's for the excluded variables

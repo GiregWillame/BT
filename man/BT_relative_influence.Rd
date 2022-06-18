@@ -14,7 +14,7 @@ if a test set was used during the fitting, the retained number of iterations is 
 number of iterations resulting in lowest cross-validation error will be used; otherwise, if the out-of-bag parameter was defined, the OOB error will be used to determine the optimal
 number of iterations; otherwise, all iterations will be used.}
 
-\item{rescale}{whether or not the results should be rescaled. Default set to \code{FALSE}.}
+\item{rescale}{whether or not the results should be rescaled (divided by the maximum observation). Default set to \code{FALSE}.}
 
 \item{sort.it}{whether or not the results should be (reverse) sorted. Default set to \code{FALSE}.}
 }
