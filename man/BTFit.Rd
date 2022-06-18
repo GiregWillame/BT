@@ -56,7 +56,7 @@ Boosting Tree Model Object.
 }
 
 \references{
-D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
+D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 }
 \seealso{
 \code{\link{BT}}.

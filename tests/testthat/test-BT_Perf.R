@@ -529,15 +529,15 @@ testthat::test_that("Check the BT_Perf function - CV and OOB",{
                    tweedie.power = 1,
                    ABT = T,
                    n.iter = 200,
-                   train.fraction = 0.8,
+                   train.fraction = 1,
                    interaction.depth = 4,
                    shrinkage = 0.01,
-                   bag.fraction = 1,
+                   bag.fraction = 0.5,
                    colsample.bytree = NULL,
                    keep.data = T,
                    is.verbose = F,
                    cv.folds = 4,
-                   folds.id = c(rep(1,n*0.8/4), rep(2, n*0.8/4), rep(3, n*0.8/4), rep(4, n*0.8/4)),
+                   folds.id = c(rep(1,n/4), rep(2, n/4), rep(3, n/4), rep(4, n/4)),
                    n.cores = 1,
                    weights = datasetFull$ExpoR)
 

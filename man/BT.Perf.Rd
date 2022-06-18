@@ -29,7 +29,7 @@ best_iter_out_of_bag(BTFit_object)
 \item{BTFit_object}{a \code{\link{BTFit}} object created from an initial call to \code{\link{BT}}}
 
 \item{plot.it}{an indicator of whether or not to plot the performance measure. Setting \code{plot.it = TRUE} creates two plot.
-The first one plots the \code{object$BTErrors$training.error} (in black) as well as the \code{object$BTErrors$validation.error} and/or the \code{object$BTErrors$cv.error} depending on the \code{method} and
+The first one plots the \code{object$BTErrors$training.error} (in black) as well as the \code{object$BTErrors$validation.error} (in red) and/or the \code{object$BTErrors$cv.error} (in green) depending on the \code{method} and
 parametrization. These values are plotted as a function of the iteration number. The scale of the error measurement, shown on the left vertical axis, depends on the arguments used in the
 initial call to \code{\link{BT}} and the chosen \code{method}.}
 
@@ -52,7 +52,7 @@ Returns the estimated optimal number of iterations. The method of computation de
 Function to compute the performances of a fitted boosting tree.
 }
 \references{
-D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
+D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 }
 \seealso{
 \code{\link{BT}}, \code{\link{BT_call}}.

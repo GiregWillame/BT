@@ -14,7 +14,7 @@
 #'
 #' @seealso \code{\link{BT}}.
 #'
-#' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
+#' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 #'
 #' @keywords methods
 #' @name BTCVFit

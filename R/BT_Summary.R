@@ -22,7 +22,7 @@
 #'
 #' @seealso \code{\link{BT}}, \code{\link{BT.perf}}, \code{\link{BT_relative_influence}}
 #'
-#' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
+#' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 #'
 #' @rdname summary.BTFit
 #' @export
@@ -37,7 +37,7 @@ summary.BTFit <- function(object,
                            ...)
 {
   # Initial checks
-  check_if_natural_number(n.iter)
+  check_n_iter(n.iter) # Gireg : 16/06/2022 - change to be verified : check_if_natural_number(n.iter)
   check_if_natural_number(cBars)
   check_if_BT_fit(object)
   if(!is.logical(plot_it) || (length(plot_it) > 1) || is.na(plot_it)) {

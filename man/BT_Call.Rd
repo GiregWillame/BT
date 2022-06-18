@@ -103,7 +103,7 @@ By default, this function does not perform input checks (those are all done in \
 suppose that the user is aware of all the choices made.
 }
 \references{
-D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
+D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 }
 \seealso{
 \code{\link{BTFit}}, \code{\link{BTCVFit}}, \code{\link{BT.perf}}, \code{\link{predict.BTFit}},

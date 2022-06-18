@@ -23,7 +23,7 @@
 #'
 #' @seealso \code{\link{BT}}, \code{\link{BTFit}}.
 #'
-#' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
+#' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 #'
 #' @rdname BT_relative_influence
 #' @export
@@ -32,9 +32,9 @@ BT_relative_influence <- function(BTFit_object, n.iter,
                                rescale = FALSE, sort.it = FALSE){
   # Initial checks
   check_if_BT_fit(BTFit_object)
-  if(!is.logical(rescale) || (length(rescale) > 1))
+  if(!is.logical(rescale) || (length(rescale) > 1) || is.na(rescale))
     stop("rescale argument must be a logical")
-  if(!is.logical(sort.it) || (length(sort.it) > 1))
+  if(!is.logical(sort.it) || (length(sort.it) > 1) || is.na(sort.it))
     stop("sort.it must be a logical")
 
   # Fill in missing values
@@ -52,9 +52,12 @@ BT_relative_influence <- function(BTFit_object, n.iter,
       n.iter <- BTFit_object$BTParams$n.iter
     }
     message("n.iter not given. Using ", n.iter, " trees.")
-
-  } else if (n.iter > length(BTFit_object$BTIndivFits)){
-    stop("n.iter exceeds number in fit")
+  }
+  else{
+    check_n_iter(n.iter) # Additional checks on n.iter
+    if (n.iter > length(BTFit_object$BTIndivFits)){
+      stop("n.iter exceeds number in fit")
+    }
   }
 
   # Create relative influence for every variable
@@ -65,7 +68,7 @@ BT_relative_influence <- function(BTFit_object, n.iter,
   rel_inf_compact <- unlist(lapply(split(rel_inf_verbose, names(rel_inf_verbose)), sum))
   # Not the case with rpart : rel_inf_compact <- rel_inf_compact[names(rel_inf_compact) != "-1"] , directly 'dropped'.
 
-  # rel_inf_compact excludes those variable that never entered the model
+  # rel_inf_compact excludes variables that never entered the model
   # insert 0's for the excluded variables
   if (length(BTFit_object$var.names) != length(names(rel_inf_compact))){
     varToAdd <- BTFit_object$var.names[!(BTFit_object$var.names %in% names(rel_inf_compact))]

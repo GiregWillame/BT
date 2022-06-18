@@ -29,7 +29,7 @@ Compute predictions from cross-validated Boosting Trees model.
 This function has not been coded for public usage but rather to assess the cross-validation performances.
 }
 \references{
-D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
+D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 }
 \seealso{
 \code{\link{BT}}, \code{\link{BTFit}}.

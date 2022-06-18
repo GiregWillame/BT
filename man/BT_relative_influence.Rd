@@ -30,7 +30,7 @@ This function is not intended for end-user use. It performs the relative influen
 Note that a permutation approach is not yet implemented.
 }
 \references{
-D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
+D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 }
 \seealso{
 \code{\link{BT}}, \code{\link{BTFit}}.

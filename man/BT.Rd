@@ -98,7 +98,7 @@ Each tree in the process is built thanks to the \code{\link{rpart}} function.
 In case of cross-validation, this function prepares the folds and performs multiple calls to the fitting function \code{\link{BT_call}}.
 }
 \references{
-D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3,} \emph{Springer Actuarial}.
+D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 }
 \seealso{
 \code{\link{BTFit}}, \code{\link{BTCVFit}}, \code{\link{BT_call}}, \code{\link{BT.perf}}, \code{\link{predict.BTFit}},
