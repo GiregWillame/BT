@@ -29,27 +29,22 @@
 #' @export
 #'
 summary.BTFit <- function(object,
-                           cBars=length(object$var.names),
-                           n.iter=length(object$BTparams$n.iter),
-                           plot_it=TRUE,
-                           order_it=TRUE,
-                           method=BT_relative_influence,
-                           normalize=TRUE,
-                           ...)
+                          cBars=length(object$var.names),
+                          n.iter=object$BTParams$n.iter,
+                          plot_it=TRUE,
+                          order_it=TRUE,
+                          method=BT_relative_influence,
+                          normalize=TRUE,
+                          ...)
 {
   # Initial checks
-  check_n_iter(n.iter) # Gireg : 16/06/2022 - change to be verified : check_if_natural_number(n.iter)
-  check_if_natural_number(cBars)
+  check_n_iter(n.iter)
   check_if_BT_fit(object)
-  if(!is.logical(plot_it) || (length(plot_it) > 1) || is.na(plot_it)) {
-    stop("argument plot_it must be a logical - excluding NA")
-  }
-  if(!is.logical(order_it) || (length(order_it) > 1) || is.na(order_it)) {
-    stop("argument order_it must be a logical - excluding NA")
-  }
-  if(!is.logical(normalize) || (length(normalize) > 1) || is.na(normalize)) {
-    stop("argument normalize must be a logical - excluding NA")
-  }
+
+  if(is.null(cBars) || !(check_if_natural_number(cBars) || (cBars==0)) || (length(cBars) > 1)) {stop("cBars should be an integer.")}
+  if(!is.logical(plot_it) || (length(plot_it) > 1) || is.na(plot_it)) {stop("argument plot_it must be a logical - excluding NA")}
+  if(!is.logical(order_it) || (length(order_it) > 1) || is.na(order_it)) {stop("argument order_it must be a logical - excluding NA")}
+  if(!is.logical(normalize) || (length(normalize) > 1) || is.na(normalize)) {stop("argument normalize must be a logical - excluding NA")}
 
   # Set inputs (if required)
   if(cBars==0) cBars <- min(10, length(object$var.names))

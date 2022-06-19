@@ -7,7 +7,7 @@
 \method{summary}{BTFit}(
   object,
   cBars = length(object$var.names),
-  n.iter = length(object$BTparams$n.iter),
+  n.iter = object$BTParams$n.iter,
   plot_it = TRUE,
   order_it = TRUE,
   method = BT_relative_influence,
