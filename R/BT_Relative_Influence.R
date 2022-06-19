@@ -21,7 +21,7 @@
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'
-#' @seealso \code{\link{BT}}, \code{\link{BTFit}}.
+#' @seealso \code{\link{BT}}, \code{\link{BTFit}}, \code{\link{BT_perf}}.
 #'
 #' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 #'
@@ -40,13 +40,13 @@ BT_relative_influence <- function(BTFit_object, n.iter,
   # Fill in missing values
   if(missing(n.iter)){
     if (has_train_validation_split(BTFit_object)){
-      n.iter <- BT_performance(BTFit_object, method="validation")
+      n.iter <- BT_callPerformance(BTFit_object, method="validation")
     }
     else if ( has_cross_validation(BTFit_object) ) {
-      n.iter <- BT_performance(BTFit_object, method="cv")
+      n.iter <- BT_callPerformance(BTFit_object, method="cv")
     }
     else if (has_bagging(BTFit_object)){
-      n.iter <- BT_performance(BTFit_object, method="OOB")
+      n.iter <- BT_callPerformance(BTFit_object, method="OOB")
     }
     else{
       n.iter <- BTFit_object$BTParams$n.iter

@@ -7,7 +7,7 @@
 \method{summary}{BTFit}(
   object,
   cBars = length(object$var.names),
-  n.iter = length(object$BTIndivFits),
+  n.iter = length(object$BTparams$n.iter),
   plot_it = TRUE,
   order_it = TRUE,
   method = BT_relative_influence,
@@ -21,9 +21,9 @@
 \item{cBars}{the number of bars to plot. If \code{order=TRUE} only the variables with the \code{cBars} largest relative influence will appear in the barplot.
 If \code{order=FALSE} then the first \code{cBars} variables will appear in the barplot.}
 
-\item{n.iter}{the number of trees used to generate the plot. Only the first \code{n.trees} trees will be used.}
+\item{n.iter}{the number of trees used to compute the relative influence. Only the first \code{n.trees} trees will be used.}
 
-\item{plot_it}{an indictator as to whether the plot is generated.}
+\item{plot_it}{an indicator as to whether the plot is generated.}
 
 \item{order_it}{an indicator as to whether the plotted and/or returned relative influence are sorted.}
 
@@ -35,18 +35,19 @@ If \code{order=FALSE} then the first \code{cBars} variables will appear in the b
 }
 \value{
 Returns a data frame where the first component is the variable name and the second one is the computed relative influence, normalized to sum up to 100.
+Depending on the \code{plot_it} value, the relative influence plot will be performed.
 }
 \description{
 Computes the relative influence of each variable in the BTFit object.
 }
 \details{
-Can be added.
+Please note that the relative influence for variables having an original \strong{negative} relative influence is forced to 0.
 }
 \references{
 D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 }
 \seealso{
-\code{\link{BT}}, \code{\link{BT.perf}}, \code{\link{BT_relative_influence}}
+\code{\link{BT}}, \code{\link{BT_relative_influence}}.
 }
 \author{
 Gireg Willame \email{g.willame@detralytics.eu}

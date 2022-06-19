@@ -11,7 +11,7 @@
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'
-#' @seealso \code{\link{BT}}, \code{\link{BT_relative_influence}}
+#' @seealso \code{\link{BT}}, \code{\link{BT_relative_influence}}, \code{\link{BT_perf}}.
 #'
 #' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 #'
@@ -64,15 +64,15 @@ print_perf_measures <- function(x) {
 
   # OOB best iteration.
   if (has_bagging(x)){
-    best_iter <- print(BT_performance(x, method="OOB"))
+    best_iter <- print(BT_callPerformance(x, method="OOB"))
   }
   # CV best iteration
   if (has_cross_validation(x)) {
-    best_iter <- print(BT_performance(x, method="cv"))
+    best_iter <- print(BT_callPerformance(x, method="cv"))
   }
   # Validation set best iteration
   if (has_train_validation_split(x)) {
-    best_iter <- print(BT_performance(x, method="validation"))
+    best_iter <- print(BT_callPerformance(x, method="validation"))
   }
 
   return(best_iter)

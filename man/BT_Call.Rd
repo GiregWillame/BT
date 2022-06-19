@@ -106,7 +106,7 @@ suppose that the user is aware of all the choices made.
 D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 }
 \seealso{
-\code{\link{BTFit}}, \code{\link{BTCVFit}}, \code{\link{BT.perf}}, \code{\link{predict.BTFit}},
+\code{\link{BTFit}}, \code{\link{BTCVFit}}, \code{\link{BT_perf}}, \code{\link{predict.BTFit}},
 \code{\link{summary.BTFit}}, \code{\link{print.BTFit}}, \code{\link{BT_cv_errors}}.
 }
 \author{

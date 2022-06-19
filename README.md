@@ -4,8 +4,9 @@
 
 The author thanks Detralytics' Scientific Directors Julien Trufin and Michel Denuit for the close collaboration.
 
-The idea behind (A)BT is akin to the one developed in the `gbm3` package, originally written by Greg Ridgeway <greg.ridgeway@gmail.com> (for more details, see https://github.com/gbm-developers/gbm3).
-This package is inspired by the latter and some of the developed codes are then pretty similar.
+The idea behind (A)BT is akin to the Gradient Boosting Methods. 
+This package is therefore inspired by the `gbm3` one, originally written by Greg Ridgeway <greg.ridgeway@gmail.com> (for more details, see https://github.com/gbm-developers/gbm3).
+Some of the developed codes are then pretty similar.
 
 ## References
 

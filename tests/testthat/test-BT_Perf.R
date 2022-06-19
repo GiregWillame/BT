@@ -6,7 +6,7 @@
 #
 ########################
 
-# BT.perf <- function(BTFit_object,
+# BT_perf <- function(BTFit_object,
 #                     plot.it=TRUE,
 #                     oobag.curve=FALSE,
 #                     overlay=TRUE,
@@ -57,45 +57,45 @@ testthat::test_that("Check the BT_Perf function - Inputs",{
 
   # Checks the inputs values.
   # Check BT Object.
-  expect_error(BT.perf("Stupid Object"))
-  expect_error(BT.perf(list(a=c(1,2,3))))
+  expect_error(BT_perf("Stupid Object"))
+  expect_error(BT_perf(list(a=c(1,2,3))))
 
   # plot.it has to be boolean.
-  plot.it <- 1 ;  expect_error(BT.perf(BT_algo, plot.it = plot.it))
-  plot.it <- 0.4 ; expect_error(BT.perf(BT_algo, plot.it = plot.it))
-  plot.it <- 2.785 ; expect_error(BT.perf(BT_algo, plot.it = plot.it))
-  plot.it <- c(3, 4) ; expect_error(BT.perf(BT_algo, plot.it = plot.it))
-  plot.it <- NULL ; expect_error(BT.perf(BT_algo, plot.it = plot.it))
-  plot.it <- NA ; expect_error(BT.perf(BT_algo, plot.it = plot.it))
-  plot.it <- "Text" ; expect_error(BT.perf(BT_algo, plot.it = plot.it))
+  plot.it <- 1 ;  expect_error(BT_perf(BT_algo, plot.it = plot.it))
+  plot.it <- 0.4 ; expect_error(BT_perf(BT_algo, plot.it = plot.it))
+  plot.it <- 2.785 ; expect_error(BT_perf(BT_algo, plot.it = plot.it))
+  plot.it <- c(3, 4) ; expect_error(BT_perf(BT_algo, plot.it = plot.it))
+  plot.it <- NULL ; expect_error(BT_perf(BT_algo, plot.it = plot.it))
+  plot.it <- NA ; expect_error(BT_perf(BT_algo, plot.it = plot.it))
+  plot.it <- "Text" ; expect_error(BT_perf(BT_algo, plot.it = plot.it))
 
   # Same goes for overlay and oobag.curve
-  oobag.curve <- 1 ;  expect_error(BT.perf(BT_algo, oobag.curve = oobag.curve))
-  oobag.curve <- 0.4 ; expect_error(BT.perf(BT_algo, oobag.curve = oobag.curve))
-  oobag.curve <- 2.785 ; expect_error(BT.perf(BT_algo, oobag.curve = oobag.curve))
-  oobag.curve <- c(3, 4) ; expect_error(BT.perf(BT_algo, oobag.curve = oobag.curve))
-  oobag.curve <- NULL ; expect_error(BT.perf(BT_algo, oobag.curve = oobag.curve))
-  oobag.curve <- NA ; expect_error(BT.perf(BT_algo, oobag.curve = oobag.curve))
-  oobag.curve <- "Text" ; expect_error(BT.perf(BT_algo, oobag.curve = oobag.curve))
+  oobag.curve <- 1 ;  expect_error(BT_perf(BT_algo, oobag.curve = oobag.curve))
+  oobag.curve <- 0.4 ; expect_error(BT_perf(BT_algo, oobag.curve = oobag.curve))
+  oobag.curve <- 2.785 ; expect_error(BT_perf(BT_algo, oobag.curve = oobag.curve))
+  oobag.curve <- c(3, 4) ; expect_error(BT_perf(BT_algo, oobag.curve = oobag.curve))
+  oobag.curve <- NULL ; expect_error(BT_perf(BT_algo, oobag.curve = oobag.curve))
+  oobag.curve <- NA ; expect_error(BT_perf(BT_algo, oobag.curve = oobag.curve))
+  oobag.curve <- "Text" ; expect_error(BT_perf(BT_algo, oobag.curve = oobag.curve))
 
-  overlay <- 1 ;  expect_error(BT.perf(BT_algo, overlay = overlay))
-  overlay <- 0.4 ; expect_error(BT.perf(BT_algo, overlay = overlay))
-  overlay <- 2.785 ; expect_error(BT.perf(BT_algo, overlay = overlay))
-  overlay <- c(3, 4) ; expect_error(BT.perf(BT_algo, overlay = overlay))
-  overlay <- NULL ; expect_error(BT.perf(BT_algo, overlay = overlay))
-  overlay <- NA ; expect_error(BT.perf(BT_algo, overlay = overlay))
-  overlay <- "Text" ; expect_error(BT.perf(BT_algo, overlay = overlay))
+  overlay <- 1 ;  expect_error(BT_perf(BT_algo, overlay = overlay))
+  overlay <- 0.4 ; expect_error(BT_perf(BT_algo, overlay = overlay))
+  overlay <- 2.785 ; expect_error(BT_perf(BT_algo, overlay = overlay))
+  overlay <- c(3, 4) ; expect_error(BT_perf(BT_algo, overlay = overlay))
+  overlay <- NULL ; expect_error(BT_perf(BT_algo, overlay = overlay))
+  overlay <- NA ; expect_error(BT_perf(BT_algo, overlay = overlay))
+  overlay <- "Text" ; expect_error(BT_perf(BT_algo, overlay = overlay))
 
   # Method has to be either 'validation', 'cv' or 'OOB' (if defined)
-  method <- 'Test' ; expect_error(BT.perf(BT_algo, method = method))
-  method <- 1 ;  expect_error(BT.perf(BT_algo, method = method))
-  method <- 0.4 ; expect_error(BT.perf(BT_algo, method = method))
-  # method <- 2.785 ; expect_error(BT.perf(BT_algo, method = method))
-  method <- c(3, 4) ; expect_error(BT.perf(BT_algo, method = method))
-  method <- NULL ; expect_error(BT.perf(BT_algo, method = method))
-  method <- NA ; expect_error(BT.perf(BT_algo, method = method))
-  method <- T ; expect_error(BT.perf(BT_algo, method = method))
-  method <- F ; expect_error(BT.perf(BT_algo, method = method))
+  method <- 'Test' ; expect_error(BT_perf(BT_algo, method = method))
+  method <- 1 ;  expect_error(BT_perf(BT_algo, method = method))
+  method <- 0.4 ; expect_error(BT_perf(BT_algo, method = method))
+  # method <- 2.785 ; expect_error(BT_perf(BT_algo, method = method))
+  method <- c(3, 4) ; expect_error(BT_perf(BT_algo, method = method))
+  method <- NULL ; expect_error(BT_perf(BT_algo, method = method))
+  method <- NA ; expect_error(BT_perf(BT_algo, method = method))
+  method <- T ; expect_error(BT_perf(BT_algo, method = method))
+  method <- F ; expect_error(BT_perf(BT_algo, method = method))
 
   # Main has to be mainly text - managed by plot function.
 
@@ -145,23 +145,23 @@ testthat::test_that("Check the BT_Perf function - Validation only",{
   BT_algo <- do.call(BT, paramsBT)
 
   # Not all methods allowed.
-  method <- 'cv' ; expect_error(BT.perf(BT_algo, method = method))
-  method <- 'OOB' ;  expect_error(BT.perf(BT_algo, method = method))
+  method <- 'cv' ; expect_error(BT_perf(BT_algo, method = method))
+  method <- 'OOB' ;  expect_error(BT_perf(BT_algo, method = method))
 
   # Check results.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = F), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = F), "Using validation method...")
   # Plotted results.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = T), "Using validation method...")
   # Plotted results with overlay (no changes, only for OOB).
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = T, overlay = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = T, overlay = T), "Using validation method...")
   # No OOB curve expected.
-  expect_error(expect_message(BT.perf(BT_algo, plot.it = T, oobag.curve = T), "Using validation method..."))
+  expect_error(expect_message(BT_perf(BT_algo, plot.it = T, oobag.curve = T), "Using validation method..."))
 
   # No error expected if plot.it is set to False, whatever the other values.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = F, oobag.curve = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = F, oobag.curve = T), "Using validation method...")
 
   # Should be similar to the one with the correct method called.
-  BT_perf_validation_rerun <- BT.perf(BT_algo, plot.it = F, method = 'validation')
+  BT_perf_validation_rerun <- BT_perf(BT_algo, plot.it = F, method = 'validation')
 
   expect_equal(class(BT_perf_validation), class(BT_perf_validation_rerun))
   expect_equal(BT_perf_validation, BT_perf_validation_rerun)
@@ -217,20 +217,20 @@ testthat::test_that("Check the BT_Perf function - OOB only",{
 
 
   # Not all methods allowed.
-  method <- 'validation' ; expect_error(BT.perf(BT_algo, method = method))
-  method <- 'cv' ;  expect_error(BT.perf(BT_algo, method = method))
+  method <- 'validation' ; expect_error(BT_perf(BT_algo, method = method))
+  method <- 'cv' ;  expect_error(BT_perf(BT_algo, method = method))
 
   # Check results - Second message linked to OOB worst estimation than cv.
-  expect_message(expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = F), "Using OOB method..."))
+  expect_message(expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = F), "Using OOB method..."))
   # Plotted results.
-  expect_message(expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T), "Using OOB method..."))
+  expect_message(expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T), "Using OOB method..."))
   # Plotted results with overlay.
-  expect_message(expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, overlay = T), "Using OOB method..."))
+  expect_message(expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, overlay = T), "Using OOB method..."))
   # Plot results with OOB curve.
-  expect_message(expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, oobag.curve = T), "Using OOB method..."))
+  expect_message(expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, oobag.curve = T), "Using OOB method..."))
 
   # Should be similar to the one with the correct method called.
-  expect_message(BT_perf_OOB_rerun <- BT.perf(BT_algo, plot.it = F, method = 'OOB')) # only worst estimation expected here.
+  expect_message(BT_perf_OOB_rerun <- BT_perf(BT_algo, plot.it = F, method = 'OOB')) # only worst estimation expected here.
 
   expect_equal(class(BT_perf_OOB), class(BT_perf_OOB_rerun))
   expect_equal(BT_perf_OOB, BT_perf_OOB_rerun)
@@ -294,23 +294,23 @@ testthat::test_that("Check the BT_Perf function - CV only",{
   BT_algo <- do.call(BT, paramsBT)
 
   # Not all methods allowed.
-  method <- 'validation' ; expect_error(BT.perf(BT_algo, method = method))
-  method <- 'OOB' ;  expect_error(BT.perf(BT_algo, method = method))
+  method <- 'validation' ; expect_error(BT_perf(BT_algo, method = method))
+  method <- 'OOB' ;  expect_error(BT_perf(BT_algo, method = method))
 
   # Check results.
-  expect_message(BT_perf_cv <- BT.perf(BT_algo, plot.it = F), "Using cv method...")
+  expect_message(BT_perf_cv <- BT_perf(BT_algo, plot.it = F), "Using cv method...")
   # Plotted results.
-  expect_message(BT_perf_cv <- BT.perf(BT_algo, plot.it = T), "Using cv method...")
+  expect_message(BT_perf_cv <- BT_perf(BT_algo, plot.it = T), "Using cv method...")
   # Plotted results with overlay (no changes, only for OOB).
-  expect_message(BT_perf_cv <- BT.perf(BT_algo, plot.it = T, overlay = T), "Using cv method...")
+  expect_message(BT_perf_cv <- BT_perf(BT_algo, plot.it = T, overlay = T), "Using cv method...")
   # No OOB curve expected.
-  expect_error(BT.perf(BT_algo, plot.it = T, oobag.curve = T))
+  expect_error(BT_perf(BT_algo, plot.it = T, oobag.curve = T))
 
   # No error expected if plot.it is set to False, whatever the other values.
-  expect_message(BT_perf_cv <- BT.perf(BT_algo, plot.it = F, oobag.curve = T), "Using cv method...")
+  expect_message(BT_perf_cv <- BT_perf(BT_algo, plot.it = F, oobag.curve = T), "Using cv method...")
 
   # Should be similar to the one with the correct method called.
-  BT_perf_cv_rerun <- BT.perf(BT_algo, plot.it = F, method = 'cv')
+  BT_perf_cv_rerun <- BT_perf(BT_algo, plot.it = F, method = 'cv')
 
   expect_equal(class(BT_perf_cv), class(BT_perf_cv_rerun))
   expect_equal(BT_perf_cv, BT_perf_cv_rerun)
@@ -365,19 +365,19 @@ testthat::test_that("Check the BT_Perf function - Validation and OOB",{
   BT_algo <- do.call(BT, paramsBT)
 
   # Not all methods allowed.
-  method <- 'cv' ; expect_error(BT.perf(BT_algo, method = method))
+  method <- 'cv' ; expect_error(BT_perf(BT_algo, method = method))
 
   # Check results.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = F), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = F), "Using validation method...")
   # Plotted results.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = T), "Using validation method...")
   # Plotted results with overlay (no changes, only for OOB).
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = T, overlay = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = T, overlay = T), "Using validation method...")
   # No error expected if plot.it is set to False, whatever the other values.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = F, oobag.curve = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = F, oobag.curve = T), "Using validation method...")
 
   # Should be similar to the one with the correct method called.
-  BT_perf_validation_rerun <- BT.perf(BT_algo, plot.it = F, method = 'validation')
+  BT_perf_validation_rerun <- BT_perf(BT_algo, plot.it = F, method = 'validation')
 
   expect_equal(class(BT_perf_validation), class(BT_perf_validation_rerun))
   expect_equal(BT_perf_validation, BT_perf_validation_rerun)
@@ -390,14 +390,14 @@ testthat::test_that("Check the BT_Perf function - Validation and OOB",{
 
   # Test if OOB can be called correctly.
 
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = F, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = F, method = 'OOB'))
 
   # Check plot results.
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, method = 'OOB'))
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, overlay = T, method = 'OOB')) # Similar if oobag.curve not called.
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, overlay = T, method = 'OOB')) # Similar if oobag.curve not called.
 
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, overlay = F, oobag.curve = T, method = 'OOB'))
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, overlay = T, oobag.curve = T, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, overlay = F, oobag.curve = T, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, overlay = T, oobag.curve = T, method = 'OOB'))
 
   # Check values.
   x <- seq_len(BT_algo$BTParams$n.iter)
@@ -456,22 +456,22 @@ testthat::test_that("Check the BT_Perf function - validation and CV",{
   BT_algo <- do.call(BT, paramsBT)
 
   # Not all methods allowed.
-  method <- 'OOB' ; expect_error(BT.perf(BT_algo, method = method))
+  method <- 'OOB' ; expect_error(BT_perf(BT_algo, method = method))
 
   # Check results.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = F), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = F), "Using validation method...")
   # Plotted results.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = T), "Using validation method...")
   # Plotted results with overlay (no changes, only for OOB).
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = T, overlay = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = T, overlay = T), "Using validation method...")
   # No error expected if plot.it is set to False, whatever the other values.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = F, oobag.curve = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = F, oobag.curve = T), "Using validation method...")
   # Error expected if plot.it = T and oobag.curve = T, whatever the overlay.
-  expect_error(expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = T, oobag.curve = T, overlay = T), "Using validation method..."))
-  expect_error(expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = T, oobag.curve = T, overlay = F), "Using validation method..."))
+  expect_error(expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = T, oobag.curve = T, overlay = T), "Using validation method..."))
+  expect_error(expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = T, oobag.curve = T, overlay = F), "Using validation method..."))
 
   # Should be similar to the one with the correct method called.
-  BT_perf_validation_rerun <- BT.perf(BT_algo, plot.it = F, method = 'validation')
+  BT_perf_validation_rerun <- BT_perf(BT_algo, plot.it = F, method = 'validation')
 
   expect_equal(class(BT_perf_validation), class(BT_perf_validation_rerun))
   expect_equal(BT_perf_validation, BT_perf_validation_rerun)
@@ -484,14 +484,14 @@ testthat::test_that("Check the BT_Perf function - validation and CV",{
 
   # Test if cv can be called correctly.
 
-  BT_perf_cv <- BT.perf(BT_algo, plot.it = F, method = 'cv')
+  BT_perf_cv <- BT_perf(BT_algo, plot.it = F, method = 'cv')
 
   # Check plot results.
-  BT_perf_cv <- BT.perf(BT_algo, plot.it = T, method = 'cv')
-  BT_perf_cv <- BT.perf(BT_algo, plot.it = T, overlay = T, method = 'cv') # Similar if oobag.curve not called.
+  BT_perf_cv <- BT_perf(BT_algo, plot.it = T, method = 'cv')
+  BT_perf_cv <- BT_perf(BT_algo, plot.it = T, overlay = T, method = 'cv') # Similar if oobag.curve not called.
 
-  expect_error(BT.perf(BT_algo, plot.it = T, overlay = F, oobag.curve = T, method = 'cv'))
-  expect_error(BT.perf(BT_algo, plot.it = T, overlay = T, oobag.curve = T, method = 'cv'))
+  expect_error(BT_perf(BT_algo, plot.it = T, overlay = F, oobag.curve = T, method = 'cv'))
+  expect_error(BT_perf(BT_algo, plot.it = T, overlay = T, oobag.curve = T, method = 'cv'))
 
   # Check values.
   expect_equal(BT_perf_cv, which.min(BT_algo$BTErrors$cv.error))
@@ -544,22 +544,22 @@ testthat::test_that("Check the BT_Perf function - CV and OOB",{
   BT_algo <- do.call(BT, paramsBT)
 
   # Not all methods allowed.
-  method <- 'validation' ; expect_error(BT.perf(BT_algo, method = method))
+  method <- 'validation' ; expect_error(BT_perf(BT_algo, method = method))
   # Check results.
-  expect_message(BT_perf_cv <- BT.perf(BT_algo, plot.it = F), "Using cv method...")
+  expect_message(BT_perf_cv <- BT_perf(BT_algo, plot.it = F), "Using cv method...")
   # Plotted results.
-  expect_message(BT_perf_cv <- BT.perf(BT_algo, plot.it = T), "Using cv method...")
+  expect_message(BT_perf_cv <- BT_perf(BT_algo, plot.it = T), "Using cv method...")
   # Plotted results with overlay.
-  expect_message(BT_perf_cv <- BT.perf(BT_algo, plot.it = T, overlay = T), "Using cv method...")
+  expect_message(BT_perf_cv <- BT_perf(BT_algo, plot.it = T, overlay = T), "Using cv method...")
   # Should be similar than before + oobag.curve w and w/o overlay.
-  expect_message(BT.perf(BT_algo, plot.it = T, oobag.curve = T), "Using cv method...")
-  expect_message(BT.perf(BT_algo, plot.it = T, oobag.curve = T, overlay = F), "Using cv method...")
+  expect_message(BT_perf(BT_algo, plot.it = T, oobag.curve = T), "Using cv method...")
+  expect_message(BT_perf(BT_algo, plot.it = T, oobag.curve = T, overlay = F), "Using cv method...")
 
   # No error expected if plot.it is set to False, whatever the other values.
-  expect_message(BT_perf_cv <- BT.perf(BT_algo, plot.it = F, oobag.curve = T), "Using cv method...")
+  expect_message(BT_perf_cv <- BT_perf(BT_algo, plot.it = F, oobag.curve = T), "Using cv method...")
 
   # Should be similar to the one with the correct method called.
-  BT_perf_cv_rerun <- BT.perf(BT_algo, plot.it = F, method = 'cv')
+  BT_perf_cv_rerun <- BT_perf(BT_algo, plot.it = F, method = 'cv')
 
   expect_equal(class(BT_perf_cv), class(BT_perf_cv_rerun))
   expect_equal(BT_perf_cv, BT_perf_cv_rerun)
@@ -572,14 +572,14 @@ testthat::test_that("Check the BT_Perf function - CV and OOB",{
 
   # Test if OOB can be called correctly.
 
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = F, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = F, method = 'OOB'))
 
   # Check plot results.
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, method = 'OOB'))
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, overlay = T, method = 'OOB')) # Similar if oobag.curve not called.
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, overlay = T, method = 'OOB')) # Similar if oobag.curve not called.
 
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, overlay = F, oobag.curve = T, method = 'OOB'))
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, overlay = T, oobag.curve = T, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, overlay = F, oobag.curve = T, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, overlay = T, oobag.curve = T, method = 'OOB'))
 
   # Check values.
   x <- seq_len(BT_algo$BTParams$n.iter)
@@ -639,16 +639,16 @@ testthat::test_that("Check the BT_Perf function - Validation, OOB and CV",{
   BT_algo <- do.call(BT, paramsBT)
 
   # Check results.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = F), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = F), "Using validation method...")
   # Plotted results.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = T), "Using validation method...")
   # Plotted results with overlay (no changes, only for OOB).
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = T, overlay = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = T, overlay = T), "Using validation method...")
   # No error expected if plot.it is set to False, whatever the other values.
-  expect_message(BT_perf_validation <- BT.perf(BT_algo, plot.it = F, oobag.curve = T), "Using validation method...")
+  expect_message(BT_perf_validation <- BT_perf(BT_algo, plot.it = F, oobag.curve = T), "Using validation method...")
 
   # Should be similar to the one with the correct method called.
-  BT_perf_validation_rerun <- BT.perf(BT_algo, plot.it = F, method = 'validation')
+  BT_perf_validation_rerun <- BT_perf(BT_algo, plot.it = F, method = 'validation')
 
   expect_equal(class(BT_perf_validation), class(BT_perf_validation_rerun))
   expect_equal(BT_perf_validation, BT_perf_validation_rerun)
@@ -661,14 +661,14 @@ testthat::test_that("Check the BT_Perf function - Validation, OOB and CV",{
 
   # Test if OOB can be called correctly.
 
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = F, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = F, method = 'OOB'))
 
   # Check plot results.
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, method = 'OOB'))
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, overlay = T, method = 'OOB')) # Similar if oobag.curve not called.
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, overlay = T, method = 'OOB')) # Similar if oobag.curve not called.
 
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, overlay = F, oobag.curve = T, method = 'OOB'))
-  expect_message(BT_perf_OOB <- BT.perf(BT_algo, plot.it = T, overlay = T, oobag.curve = T, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, overlay = F, oobag.curve = T, method = 'OOB'))
+  expect_message(BT_perf_OOB <- BT_perf(BT_algo, plot.it = T, overlay = T, oobag.curve = T, method = 'OOB'))
 
   # Check values.
   x <- seq_len(BT_algo$BTParams$n.iter)
@@ -686,14 +686,14 @@ testthat::test_that("Check the BT_Perf function - Validation, OOB and CV",{
 
   # Test if cv can be called correctly.
 
-  BT_perf_cv <- BT.perf(BT_algo, plot.it = F, method = 'cv')
+  BT_perf_cv <- BT_perf(BT_algo, plot.it = F, method = 'cv')
 
   # Check plot results.
-  BT_perf_cv <- BT.perf(BT_algo, plot.it = T, method = 'cv')
-  BT_perf_cv <- BT.perf(BT_algo, plot.it = T, overlay = T, method = 'cv') # Similar if oobag.curve not called.
+  BT_perf_cv <- BT_perf(BT_algo, plot.it = T, method = 'cv')
+  BT_perf_cv <- BT_perf(BT_algo, plot.it = T, overlay = T, method = 'cv') # Similar if oobag.curve not called.
 
-  BT_perf_cv <- BT.perf(BT_algo, plot.it = T, overlay = F, oobag.curve = T, method = 'cv')
-  BT_perf_cv <- BT.perf(BT_algo, plot.it = T, overlay = T, oobag.curve = T, method = 'cv')
+  BT_perf_cv <- BT_perf(BT_algo, plot.it = T, overlay = F, oobag.curve = T, method = 'cv')
+  BT_perf_cv <- BT_perf(BT_algo, plot.it = T, overlay = T, oobag.curve = T, method = 'cv')
 
   # Check values.
   expect_equal(BT_perf_cv, which.min(BT_algo$BTErrors$cv.error))

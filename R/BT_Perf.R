@@ -26,10 +26,10 @@
 #'
 #' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 #'
-#' @rdname BT.Perf
+#' @rdname BT_perf
 #' @export
 #'
-BT.perf <- function(BTFit_object,
+BT_perf <- function(BTFit_object,
                      plot.it=TRUE,
                      oobag.curve=FALSE,
                      overlay=TRUE,
@@ -39,7 +39,7 @@ BT.perf <- function(BTFit_object,
   if(!is.logical(plot.it) || (length(plot.it)) > 1 || is.na(plot.it))
     stop("plot.it must be a logical - excluding NA")
 
-  performance <- BT_performance(BTFit_object, method)
+  performance <- BT_callPerformance(BTFit_object, method)
   if (plot.it) {
     plot(performance,
          out_of_bag_curve=oobag.curve,
@@ -50,10 +50,8 @@ BT.perf <- function(BTFit_object,
   as.numeric(performance)
 }
 
-#' @rdname BT.Perf
-#' @export
-#'
-BT_performance <- function(BTFit_object, method){
+#' @keywords internal
+BT_callPerformance <- function(BTFit_object, method){
 
   # Check inputs
   check_if_BT_fit(BTFit_object)
@@ -104,7 +102,7 @@ plot.BTPerformance <- function(x, out_of_bag_curve=FALSE, overlay=TRUE, main="",
             main)
 }
 
-#' @rdname BT.Perf
+#' @rdname BT_perf
 #' @export
 #'
 best_iter_validation <- function(BTFit_object){
@@ -118,7 +116,7 @@ best_iter_validation <- function(BTFit_object){
   return(best_iter_val)
 }
 
-#' @rdname BT.Perf
+#' @rdname BT_perf
 #' @export
 #'
 best_iter_cv <- function(BTFit_object) {
@@ -132,7 +130,7 @@ best_iter_cv <- function(BTFit_object) {
   return(best_iter_cv)
 }
 
-#' @rdname BT.Perf
+#' @rdname BT_perf
 #' @export
 #'
 best_iter_out_of_bag <- function(BTFit_object){

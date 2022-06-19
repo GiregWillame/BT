@@ -56,7 +56,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Inputs",{
 
   # Check the n.iter parameter.
   expect_message(tempRes <- BT_relative_influence(BT_algo))
-  expect_equal(tempRes, BT_relative_influence(BT_algo, BT_performance(BT_algo, "validation")))
+  expect_equal(tempRes, BT_relative_influence(BT_algo, BT_callPerformance(BT_algo, "validation")))
 
   n.iter <- 100
   # Check rescale parameter.
@@ -91,7 +91,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Inputs",{
   BT_algo <- do.call(BT, paramsBT)
   # Check the n.iter parameter.
   expect_message(tempRes <- BT_relative_influence(BT_algo))
-  expect_message(tempResExpected_NbIter <- BT_performance(BT_algo, "OOB"))
+  expect_message(tempResExpected_NbIter <- BT_callPerformance(BT_algo, "OOB"))
   expect_equal(tempRes, BT_relative_influence(BT_algo, tempResExpected_NbIter))
 
   # Change inputs - test cv
@@ -99,7 +99,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Inputs",{
   BT_algo <- do.call(BT, paramsBT)
   # Check the n.iter parameter.
   expect_message(tempRes <- BT_relative_influence(BT_algo))
-  expect_equal(tempRes, BT_relative_influence(BT_algo, BT_performance(BT_algo, "cv")))
+  expect_equal(tempRes, BT_relative_influence(BT_algo, BT_callPerformance(BT_algo, "cv")))
 
 })
 
@@ -123,7 +123,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results",{
   Y <- rpois(n, ExpoR*lambda)
   Y_normalized <- Y/ExpoR
   datasetFull <- data.frame(Y,Gender,Age,Split,Sport,ExpoR, Y_normalized)
-  varName <- c("Age", "Splot", "Split", "Gender")
+  varName <- c("Age", "Sport", "Split", "Gender")
 
   # Run a BT algo.
   set.seed(4)
@@ -151,15 +151,15 @@ testthat::test_that("Check the BT_Relative_Influence function - Results",{
   # Test n.iter coming from validation.set
   ####
 
-  n.iter <- BT.performance(BT_algo, method="validation", plot.it = F)
+  n.iter <- BT_callPerformance(BT_algo, method="validation")
   # Extract trees of interest and compute relative influence.
   treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
-  resMatrix <- matrix(NA, ncol = length(varName), nrow = seq_len(n.iter))
+  resMatrix <- matrix(0, ncol = length(varName), nrow = n.iter)
   colnames(resMatrix) <- varName
   for (iTree in seq_len(n.iter)){
     currTree <- treesList[[iTree]]
     for (colName in varName){
-      if (colName %in% rownames(xx$splits)){
+      if (colName %in% rownames(currTree$splits)){
         resMatrix[iTree, colName] <- sum(currTree$splits[rownames(currTree$splits)==colName, 3])
       }
     }
@@ -169,51 +169,28 @@ testthat::test_that("Check the BT_Relative_Influence function - Results",{
   relInfSorted <- rev(sort(relInf))
   relInfSortedAndNormalized <- relInfSorted/max(relInfSorted)
 
-  expect_equal(relInf, BT_relative_influence(BT_algo, rescale = F, sort.it = F))
-  expect_equal(relInfNormalized, BT_relative_influence(BT_algo, rescale = T, sort.it = F))
+  expect_equal(relInf[BT_algo$var.names], BT_relative_influence(BT_algo, rescale = F, sort.it = F)[BT_algo$var.names])
+  expect_equal(relInfNormalized[BT_algo$var.names], BT_relative_influence(BT_algo, rescale = T, sort.it = F)[BT_algo$var.names])
   expect_equal(relInfSorted, BT_relative_influence(BT_algo, rescale = F, sort.it = T))
   expect_equal(relInfSortedAndNormalized, BT_relative_influence(BT_algo, rescale = T, sort.it = T))
-
-  ####
-  # Test n.iter coming from OOB.
-  ####
-
-  n.iter <- BT.perf(BT_algo, method = "OOB", plot.it = F)
-  # Extract trees of interest and compute relative influence.
-  treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
-  resMatrix <- matrix(NA, ncol = length(varName), nrow = seq_len(n.iter))
-  colnames(resMatrix) <- varName
-  for (iTree in seq_len(n.iter)){
-    currTree <- treesList[[iTree]]
-    for (colName in varName){
-      if (colName %in% rownames(xx$splits)){
-        resMatrix[iTree, colName] <- sum(currTree$splits[rownames(currTree$splits)==colName, 3])
-      }
-    }
-  }
-  relInf <- colSums(resMatrix)
-  relInfNormalized <- relInf/max(relInf)
-  relInfSorted <- rev(sort(relInf))
-  relInfSortedAndNormalized <- relInfSorted/max(relInfSorted)
-
-  expect_equal(relInf, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F))
-  expect_equal(relInfNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F))
-  expect_equal(relInfSorted, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
-  expect_equal(relInfSortedAndNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T))
 
   ####
   # Test n.iter coming from CV.
   ####
 
-  n.iter <- BT.perf(BT_algo, method = "cv", plot.it = F)
+  paramsBT$train.fraction <- 1
+  paramsBT$folds.id <- c(rep(1, nrow(datasetFull)/4), rep(2, nrow(datasetFull)/4), rep(3, nrow(datasetFull)/4), rep(4, nrow(datasetFull)/4))
+  BT_algo <- do.call(BT, paramsBT)
+
+  n.iter <- BT_perf(BT_algo, method = "cv", plot.it = F)
   # Extract trees of interest and compute relative influence.
   treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
-  resMatrix <- matrix(NA, ncol = length(varName), nrow = seq_len(n.iter))
+  resMatrix <- matrix(0, ncol = length(varName), nrow = n.iter)
   colnames(resMatrix) <- varName
   for (iTree in seq_len(n.iter)){
     currTree <- treesList[[iTree]]
     for (colName in varName){
-      if (colName %in% rownames(xx$splits)){
+      if (colName %in% rownames(currTree$splits)){
         resMatrix[iTree, colName] <- sum(currTree$splits[rownames(currTree$splits)==colName, 3])
       }
     }
@@ -223,10 +200,40 @@ testthat::test_that("Check the BT_Relative_Influence function - Results",{
   relInfSorted <- rev(sort(relInf))
   relInfSortedAndNormalized <- relInfSorted/max(relInfSorted)
 
-  expect_equal(relInf, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F))
-  expect_equal(relInfNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F))
-  expect_equal(relInfSorted, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
+  expect_equal(relInf[BT_algo$var.names], BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F)[BT_algo$var.names])
+  expect_equal(relInfNormalized[BT_algo$var.names], BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F)[BT_algo$var.names])
+  expect_equal(relInfSorted, BT_relative_influence(BT_algo, rescale = F, n.iter, sort.it = T))
   expect_equal(relInfSortedAndNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T))
+
+  ####
+  # Test n.iter coming from OOB.
+  ####
+
+  paramsBT$cv.folds <- 1 ; paramsBT$folds.id <- NULL
+  BT_algo <- do.call(BT, paramsBT)
+
+  n.iter <- BT_perf(BT_algo, method = "OOB", plot.it = F)
+  # Extract trees of interest and compute relative influence.
+  treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
+  resMatrix <- matrix(0, ncol = length(varName), nrow = n.iter)
+  colnames(resMatrix) <- varName
+  for (iTree in seq_len(n.iter)){
+    currTree <- treesList[[iTree]]
+    for (colName in varName){
+      if (colName %in% rownames(currTree$splits)){
+        resMatrix[iTree, colName] <- sum(currTree$splits[rownames(currTree$splits)==colName, 3])
+      }
+    }
+  }
+  relInf <- colSums(resMatrix)
+  relInfNormalized <- relInf/max(relInf)
+  relInfSorted <- rev(sort(relInf))
+  relInfSortedAndNormalized <- relInfSorted/max(relInfSorted)
+
+  expect_equal(relInf[BT_algo$var.names], BT_relative_influence(BT_algo, rescale = F, sort.it = F)[BT_algo$var.names])
+  expect_equal(relInfNormalized[BT_algo$var.names], BT_relative_influence(BT_algo, rescale = T, sort.it = F)[BT_algo$var.names])
+  expect_equal(relInfSorted, BT_relative_influence(BT_algo, rescale = F, sort.it = T))
+  expect_equal(relInfSortedAndNormalized, BT_relative_influence(BT_algo, rescale = T, sort.it = T))
 
   ####
   # Test n.iter max.
@@ -235,12 +242,12 @@ testthat::test_that("Check the BT_Relative_Influence function - Results",{
   n.iter <- BT_algo$BTParams$n.iter
   # Extract trees of interest and compute relative influence.
   treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
-  resMatrix <- matrix(NA, ncol = length(varName), nrow = seq_len(n.iter))
+  resMatrix <- matrix(0, ncol = length(varName), nrow = n.iter)
   colnames(resMatrix) <- varName
   for (iTree in seq_len(n.iter)){
     currTree <- treesList[[iTree]]
     for (colName in varName){
-      if (colName %in% rownames(xx$splits)){
+      if (colName %in% rownames(currTree$splits)){
         resMatrix[iTree, colName] <- sum(currTree$splits[rownames(currTree$splits)==colName, 3])
       }
     }
@@ -250,8 +257,8 @@ testthat::test_that("Check the BT_Relative_Influence function - Results",{
   relInfSorted <- rev(sort(relInf))
   relInfSortedAndNormalized <- relInfSorted/max(relInfSorted)
 
-  expect_equal(relInf, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F))
-  expect_equal(relInfNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F))
+  expect_equal(relInf[BT_algo$var.names], BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F)[BT_algo$var.names])
+  expect_equal(relInfNormalized[BT_algo$var.names], BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F)[BT_algo$var.names])
   expect_equal(relInfSorted, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
   expect_equal(relInfSortedAndNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T))
 
@@ -262,12 +269,12 @@ testthat::test_that("Check the BT_Relative_Influence function - Results",{
   n.iter <- 92
   # Extract trees of interest and compute relative influence.
   treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
-  resMatrix <- matrix(NA, ncol = length(varName), nrow = seq_len(n.iter))
+  resMatrix <- matrix(0, ncol = length(varName), nrow = n.iter)
   colnames(resMatrix) <- varName
   for (iTree in seq_len(n.iter)){
     currTree <- treesList[[iTree]]
     for (colName in varName){
-      if (colName %in% rownames(xx$splits)){
+      if (colName %in% rownames(currTree$splits)){
         resMatrix[iTree, colName] <- sum(currTree$splits[rownames(currTree$splits)==colName, 3])
       }
     }
@@ -277,8 +284,8 @@ testthat::test_that("Check the BT_Relative_Influence function - Results",{
   relInfSorted <- rev(sort(relInf))
   relInfSortedAndNormalized <- relInfSorted/max(relInfSorted)
 
-  expect_equal(relInf, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F))
-  expect_equal(relInfNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F))
+  expect_equal(relInf[BT_algo$var.names], BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F)[BT_algo$var.names])
+  expect_equal(relInfNormalized[BT_algo$var.names], BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F)[BT_algo$var.names])
   expect_equal(relInfSorted, BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
   expect_equal(relInfSortedAndNormalized, BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T))
 

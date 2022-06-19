@@ -19,7 +19,7 @@ perf_plot <- function(BTFit_object, best_iter, out_of_bag_curve,
                              iteration_error(BTFit_object, 'cv')),
                    validation=range(iteration_error(BTFit_object, 'train'),
                               iteration_error(BTFit_object, 'validation')),
-                   OOB=range(iteration_error(BTFit_object, 'train'))) # Those are the only 3 possibilities allowed by the main BT_performance function, no further test needed.
+                   OOB=range(iteration_error(BTFit_object, 'train'))) # Those are the only 3 possibilities allowed by the main BT_callPerformance function, no further test needed.
   } else {
     ylim <- range(iteration_error(BTFit_object, 'train'),
                   iteration_error(BTFit_object, 'validation'))

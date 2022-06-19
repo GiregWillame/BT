@@ -27,7 +27,7 @@ Print the different input parameters as well as obtained results (best iteration
 D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 }
 \seealso{
-\code{\link{BT}}, \code{\link{BT_relative_influence}}
+\code{\link{BT}}, \code{\link{BT_relative_influence}}, \code{\link{BT_perf}}.
 }
 \author{
 Gireg Willame \email{g.willame@detralytics.eu}

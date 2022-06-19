@@ -5,14 +5,20 @@
 #' Compute the deviance for the Tweedie family case.
 #'
 #' @param y a vector containing the observed values.
-#' @param mu a vector contraining the fitted values.
-#' @param w a vector of weights. If no weights are needed, please
-#' @param tweedieVal a numeric representing the Tweedie Power. It has to be a positive numeric outside of the interval ]0,1[.
+#' @param mu a vector containing the fitted values.
+#' @param w an optional vector of weights.
+#' @param tweedieVal a numeric representing the Tweedie Power. It has to be a positive number outside of the interval ]0,1[.
 #'
 #' @return A vector of individual deviance contribution.
 #'
 #' @details
-#' This function computes the Tweedie related deviance. The latter is defined as
+#' This function computes the Tweedie related deviance. The latter is defined as:
+#'
+#' \deqn{d(y, mu, w) = w (y-mu)^2, if tweedieVal = 0;}
+#' \deqn{d(y, mu, w) = 2 w (y log(y/mu) + mu - y), if tweedieVal = 1;}
+#' \deqn{d(y, mu, w) = 2 w (log(mu/y) + y/mu - 1), if tweedieVal = 2;}
+#' \deqn{d(y, mu, w) = 2 w (max(y,0)^(2-p)/((1-p)(2-p)) - y mu^(1-p)/(1-p) + mu^(2-p)/(2-p)), else.}
+#'
 #'
 #' @author Gireg Willame \email{g.willame@@detralytics.eu}
 #'
