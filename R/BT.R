@@ -52,7 +52,7 @@
 #' @param cv.folds a positive integer representing the number of cross-validation folds to perform. If \code{cv.folds}>1 then \code{BT}, in addition to the usual fit,
 #' will perform a cross-validation and calculate an estimate of generalization error returned in \code{BTErrors$cv.error}. By default, it is set to 1 meaning no cross-validation.
 #'
-#' @param folds.id an optional vector of values identifying what fold each training observation is in. If supplied, this parameter prevails over \code{cv.folds}.
+#' @param folds.id an optional vector of values identifying what fold each observation is in. If supplied, this parameter prevails over \code{cv.folds}.
 #' By default, \code{folds.id = NULL} meaning that no folds are defined.
 #'
 #' @param n.cores the number of cores to use for parallelization. This parameter is used during the cross-validation.

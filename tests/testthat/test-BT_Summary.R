@@ -7,15 +7,6 @@
 #
 ########################
 
-# summary.BTFit <- function(object,
-#                           cBars=length(object$var.names),
-#                           n.iter=length(object$BTparams$n.iter),
-#                           plot_it=TRUE,
-#                           order_it=TRUE,
-#                           method=BT_relative_influence,
-#                           normalize=TRUE,
-#                           ...)
-
 testthat::test_that("Check the BT_Summary function - Inputs",{
 
   # Create datasets.
@@ -282,41 +273,41 @@ testthat::test_that("Check the BT_Summary function - Results",{
   # With n.iter > max n.iter performed => we expect the same results as previously obtained and warning message
   n.iter <- 450
 
-  expect_equal(expect_warning(summary(BT_algo, plot_it = F, n.iter = n.iter, order_it = F, normalize = F),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=BT_algo$var.names, rel_inf=ri))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = F, n.iter = n.iter, order_it = T, normalize = F),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=orderVarNames, rel_inf=orderedRI))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = F, n.iter = n.iter, order_it = F, normalize = T),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=BT_algo$var.names, rel_inf=normalizedRI))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = F, n.iter = n.iter),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=orderVarNames, rel_inf=normalizedAndOrderedRI))
+  expect_warning(res<-summary(BT_algo, plot_it = F, n.iter = n.iter, order_it = F, normalize = F), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=BT_algo$var.names, rel_inf=ri))
+  expect_warning(res <- summary(BT_algo, plot_it = F, n.iter = n.iter, order_it = T, normalize = F), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=orderVarNames, rel_inf=orderedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = F, n.iter = n.iter, order_it = F, normalize = T), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=BT_algo$var.names, rel_inf=normalizedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = F, n.iter = n.iter), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=orderVarNames, rel_inf=normalizedAndOrderedRI))
 
   # Visual check.
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=orderVarNames, rel_inf=normalizedAndOrderedRI))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter, cBars = 0),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=orderVarNames, rel_inf=normalizedAndOrderedRI))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter, cBars = 44),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=orderVarNames, rel_inf=normalizedAndOrderedRI))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter, cBars = 3),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=orderVarNames, rel_inf=normalizedAndOrderedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=orderVarNames, rel_inf=normalizedAndOrderedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter, cBars = 0), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=orderVarNames, rel_inf=normalizedAndOrderedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter, cBars = 44), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=orderVarNames, rel_inf=normalizedAndOrderedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter, cBars = 3), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=orderVarNames, rel_inf=normalizedAndOrderedRI))
 
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = F, normalize = T),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=BT_algo$var.names, rel_inf=normalizedRI))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = F, normalize = T, cBars = 0),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=BT_algo$var.names, rel_inf=normalizedRI))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = F, normalize = T, cBars = 44),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=BT_algo$var.names, rel_inf=normalizedRI))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = F, normalize = T, cBars = 3),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=BT_algo$var.names, rel_inf=normalizedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = F, normalize = T), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=BT_algo$var.names, rel_inf=normalizedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = F, normalize = T, cBars = 0), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=BT_algo$var.names, rel_inf=normalizedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = F, normalize = T, cBars = 44), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=BT_algo$var.names, rel_inf=normalizedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = F, normalize = T, cBars = 3), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=BT_algo$var.names, rel_inf=normalizedRI))
 
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = T, normalize = F),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=orderVarNames, rel_inf=orderedRI))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = T, normalize = F, cBars = 0),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=orderVarNames, rel_inf=orderedRI))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = T, normalize = F, cBars = 44),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=orderVarNames, rel_inf=orderedRI))
-  expect_equal(expect_warning(summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = T, normalize = F, cBars = 3),
-                              "Exceeded total number of BT terms. Results use n.iter=200 terms.\n"), data.frame(var=orderVarNames, rel_inf=orderedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = T, normalize = F), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=orderVarNames, rel_inf=orderedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = T, normalize = F, cBars = 0), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=orderVarNames, rel_inf=orderedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = T, normalize = F, cBars = 44), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=orderVarNames, rel_inf=orderedRI))
+  expect_warning(res <- summary(BT_algo, plot_it = T, n.iter = n.iter, order_it = T, normalize = F, cBars = 3), "Exceeded total number of BT terms. Results use n.iter=200 terms.\n")
+  expect_equal(res, data.frame(var=orderVarNames, rel_inf=orderedRI))
 
 })
