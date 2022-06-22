@@ -36,8 +36,8 @@ initial call to \code{\link{BT}}.}
 \item{overlay}{if set to \code{TRUE} and \code{oobag.curve=TRUE} then a right y-axis is added and the estimated cumulative improvement in the loss function is
 plotted versus the iteration number.}
 
-\item{method}{indicates the method used to estimate the optimal number of boosting iterations. Setting \code{method = "OOB"} computes the out-of-bag estimate and \code{method = "test"}
-uses the test (or validation) dataset to compute an out-of-sample estimate. Finally, setting \code{method = "cv"} extracts the optimal number of iterations using cross-validation, if
+\item{method}{indicates the method used to estimate the optimal number of boosting iterations. Setting \code{method = "OOB"} computes the out-of-bag estimate and \code{method = "validation"}
+uses the validation dataset to compute an out-of-sample estimate. Finally, setting \code{method = "cv"} extracts the optimal number of iterations using cross-validation, if
 \code{\link{BT}} was called with \code{cv.folds > 1}. If missing, a guessing method is applied.}
 
 \item{main}{optional paramter that allows the user to define specific plot title.}
