@@ -158,7 +158,6 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
                               "tree.control", "train.fraction", "interaction.depth", "bag.fraction", "shrinkage", "n.iter",
                               "colsample.bytree", "keep.data", "is.verbose"), envir = environment())
   BT_cv_results <- parLapply(cl, seq_len(cv.folds), function(xx){
-    if (is.verbose) message('CV : ', xx, '\n')
     valIndex <- which(folds==xx) ; trainIndex <- setdiff(1:length(folds), valIndex)
     BT_call(training.set[trainIndex,], training.set[valIndex,], tweedie.power, respVar, w, explVar, ABT,
             tree.control, train.fraction, interaction.depth, bag.fraction, shrinkage, n.iter, colsample.bytree,
