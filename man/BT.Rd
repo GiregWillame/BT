@@ -97,6 +97,70 @@ Perform the (Adaptive) Boosting Trees algorithm. This prepare the inputs and cal
 Each tree in the process is built thanks to the \code{\link{rpart}} function.
 In case of cross-validation, this function prepares the folds and performs multiple calls to the fitting function \code{\link{BT_call}}.
 }
+\examples{
+## Create some dataset.
+set.seed(4)
+n <- 10000
+
+Gender <- factor(sample(c("male","female"), n, replace=TRUE))
+Age <- sample(c(18:65), n, replace=TRUE)
+Split <- factor(sample(c("yes","no"), n, replace=TRUE))
+Sport <- factor(sample(c("yes","no"), n, replace=TRUE))
+
+lambda <- 0.1*ifelse(Gender=="male", 1.1, 1)
+lambda <- lambda*(1+1/(Age-17)^0.5)
+lambda <- lambda*ifelse(Sport=="yes", 1.15, 1)
+
+ExpoR <- runif(n)
+
+Y <- rpois(n, ExpoR*lambda)
+Y_normalized <- Y/ExpoR
+
+dataset <- data.frame(Y,Gender,Age,Split,Sport,ExpoR, Y_normalized)
+
+## Fit a Boosting Tree model.
+BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"), # formula
+              data = dataset, # data
+              tweedie.power = 1, # Poisson model.
+              ABT = TRUE, # Adaptive Boosting Tree
+              n.iter = 200,
+              train.fraction = 0.8,
+              interaction.depth = 3,
+              shrinkage = 0.01,
+              bag.fraction = 0.5,
+              colsample.bytree = 2, # 2 explanatory variable used at each iteration.
+              keep.data = FALSE, # Do not keep a data copy.
+              is.verbose = FALSE, # Do not print progress.
+              cv.folds = 3, # 3-cv will be performed.
+              folds.id = NULL ,
+              n.cores = 1,
+              weights = ExpoR) # <=> Poisson model on response Y with ExpoR in offset.
+
+## Determine the model performance and plot results.
+best_iter_val <- BT_perf(BT_algo, method='validation')
+best_iter_oob <- BT_perf(BT_algo, method='OOB', oobag.curve = TRUE)
+best_iter_cv <- BT_perf(BT_algo, method ='cv', oobag.curve = TRUE)
+
+best_iter <- best_iter_val
+
+## Variable influence and plot results.
+# Based on the first iteration.
+variable_influence1 <- summary(BT_algo, n.iter = 1)
+# Using all iterations up to best_iter.
+variable_influence_best_iter <- summary(BT_algo, n.iter = best_iter)
+
+##  Print results : call, best_iters and summarized relative influence.
+print(BT_algo)
+
+## Model predictions.
+# Predict on the link scale, using only the best_iter tree.
+pred_single_iter <- predict(BT_algo, newdata = dataset,
+                            n.iter = best_iter, type = 'link', single.iter = TRUE)
+# Predict on the response scale, using the first best_iter.
+pred_best_iter <- predict(BT_algo, newdata = dataset,
+                          n.iter = best_iter, type = 'response')
+
+}
 \references{
 D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 }
