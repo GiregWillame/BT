@@ -23,6 +23,7 @@ BT(
   tree.control = rpart.control(xval = 0, maxdepth = (if (!is.null(interaction.depth)) {
         interaction.depth } else {     10 }), cp = 0, minsplit = 2),
   weights = NULL,
+  seed = NULL,
   ...
 )
 }
@@ -87,6 +88,9 @@ See \code{\link{rpart.control}} for more information.}
 \item{weights}{optional vector of weights used in the fitting process. These weights must be positive but does not need to be normalized.
 By default, it is set to \code{NULL} which corresponds to an uniform weight of 1 for each observation.}
 
+\item{seed}{optional number used as seed. Please note that if \code{cv.folds}>1, the \code{parLapply} function is called.
+Therefore, the seed (if defined) used inside each fold will be a multiple of the \code{seed} parameter.}
+
 \item{\dots}{not currently used.}
 }
 \value{
@@ -134,7 +138,8 @@ BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"
               cv.folds = 3, # 3-cv will be performed.
               folds.id = NULL ,
               n.cores = 1,
-              weights = ExpoR) # <=> Poisson model on response Y with ExpoR in offset.
+              weights = ExpoR, # <=> Poisson model on response Y with ExpoR in offset.
+              seed = NULL)
 
 ## Determine the model performance and plot results.
 best_iter_val <- BT_perf(BT_algo, method='validation')

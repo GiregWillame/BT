@@ -9,13 +9,13 @@
 #'
 #' @return Returns a new \code{\link{BTFit}} object containing the initial call as well as the new iterations performed.
 #'
+#' @details Please note there is no seed set in this function. If user wants to obtain reproducible results, the upfront usage of \code{set.seed} is suggested.
+#'
 #' @author Gireg Willame \email{g.willame@@detralytics.eu}
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'
 #' @seealso \code{\link{BT}}, \code{\link{BTFit}}.
-#'
-#' @details It needs to be further tested.
 #'
 #' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
 #'
@@ -61,7 +61,7 @@ BT_more <- function(BTFit_object, new.n.iter=100, is.verbose=FALSE){
 
   # Store correct parameters
   BT_more_fit$cv.folds <- BTFit_object$cv.folds
-  BT_more_fit$call <- BTFit_object$call ; BT_more_fit$Terms <- BTFit_object$Terms
+  BT_more_fit$call <- the_call ; BT_more_fit$Terms <- BTFit_object$Terms
 
   # Transfer old results across
   BT_more_fit$BTInit <- BTFit_object$BTInit

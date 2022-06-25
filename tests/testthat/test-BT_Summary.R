@@ -47,7 +47,7 @@ testthat::test_that("Check the BT_Summary function - Inputs",{
                    n.cores = 1,
                    weights = datasetFull$ExpoR)
 
-  expect_message(BT_algo <- do.call(BT, paramsBT))
+  BT_algo <- do.call(BT, paramsBT)
 
   # Check n.iter
   n.iter <- 0 ; expect_error(summary(BT_algo, n.iter=n.iter))
@@ -140,7 +140,7 @@ testthat::test_that("Check the BT_Summary function - Results",{
                    n.cores = 1,
                    weights = datasetFull$ExpoR)
 
-  expect_message(BT_algo <- do.call(BT, paramsBT))
+  BT_algo <- do.call(BT, paramsBT)
 
   ####
   # Check results with validation n.iter.

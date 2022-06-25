@@ -64,6 +64,9 @@
 #' @param weights optional vector of weights used in the fitting process. These weights must be positive but does not need to be normalized.
 #' By default, it is set to \code{NULL} which corresponds to an uniform weight of 1 for each observation.
 #'
+#' @param seed optional number used as seed. Please note that if \code{cv.folds}>1, the \code{parLapply} function is called.
+#' Therefore, the seed (if defined) used inside each fold will be a multiple of the \code{seed} parameter.
+#'
 #' @param \dots not currently used.
 #'
 #' @return a \code{BTFit} object.
@@ -114,7 +117,8 @@
 #'               cv.folds = 3, # 3-cv will be performed.
 #'               folds.id = NULL ,
 #'               n.cores = 1,
-#'               weights = ExpoR) # <=> Poisson model on response Y with ExpoR in offset.
+#'               weights = ExpoR, # <=> Poisson model on response Y with ExpoR in offset.
+#'               seed = NULL)
 #'
 #' ## Determine the model performance and plot results.
 #' best_iter_val <- BT_perf(BT_algo, method='validation')
@@ -147,7 +151,9 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
                colsample.bytree = NULL, keep.data = TRUE, is.verbose = FALSE,
                cv.folds = 1, folds.id = NULL, n.cores = 1,
                tree.control = rpart.control(xval = 0, maxdepth = (if(!is.null(interaction.depth)){interaction.depth} else{10}), cp = 0, minsplit = 2),
-               weights = NULL, ...){
+               weights = NULL, seed = NULL, ...){
+
+  if (!is.null(seed)) set.seed(seed)
 
   the_call <- match.call()
   mf <- match.call(expand.dots = FALSE)
@@ -221,6 +227,7 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
                               "tree.control", "train.fraction", "interaction.depth", "bag.fraction", "shrinkage", "n.iter",
                               "colsample.bytree", "keep.data", "is.verbose"), envir = environment())
   BT_cv_results <- parLapply(cl, seq_len(cv.folds), function(xx){
+    if (!is.null(seed)) set.seed(seed*(xx+1))
     valIndex <- which(folds==xx) ; trainIndex <- setdiff(1:length(folds), valIndex)
     BT_call(training.set[trainIndex,], training.set[valIndex,], tweedie.power, respVar, w, explVar, ABT,
             tree.control, train.fraction, interaction.depth, bag.fraction, shrinkage, n.iter, colsample.bytree,

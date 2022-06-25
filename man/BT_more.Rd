@@ -21,7 +21,7 @@ Method to perform additional iterations of the Boosting Tree algorithm, starting
 This does not support further cross-validation. Moreover, this approach is only allowed if \code{keep.data=TRUE} in the original call.
 }
 \details{
-It needs to be further tested.
+Please note there is no seed set in this function. If user wants to obtain reproducible results, the upfront usage of \code{set.seed} is suggested.
 }
 \references{
 D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.

@@ -73,6 +73,7 @@ BT_call <- function(training.set, validation.set, tweedie.power, respVar, w, exp
   BT <- list()
 
   # Init GLM + Init error.
+  if (is.verbose) message('bag.fraction is not used for the initialization fit.')
   init <- BT_callInit(training.set, validation.set, tweedie.power, respVar, w)
   initF <- list(initFit = init$initFit, training.error = init$trainingError, validation.error = init$validationError)
   currTrainScore <- init$currTrainScore ; currValScore <- init$currValScore
@@ -94,7 +95,6 @@ BT_call <- function(training.set, validation.set, tweedie.power, respVar, w, exp
 #' @export
 #'
 BT_callInit <- function(training.set, validation.set, tweedie.power, respVar, w){
-  message('bag.fraction is not used for the initialization fit.')
   tempVecWeights <- training.set[,w]
   initFit <- glm(formula = as.formula(paste(respVar, "~1")), data=training.set, family=tweedie(var.power=tweedie.power, link.power=0),
                  weights = tempVecWeights) # To be further checked...
