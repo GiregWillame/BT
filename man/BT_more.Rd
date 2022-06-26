@@ -4,7 +4,7 @@
 \alias{BT_more}
 \title{Perform additionnal boosting.}
 \usage{
-BT_more(BTFit_object, new.n.iter = 100, is.verbose = FALSE)
+BT_more(BTFit_object, new.n.iter = 100, is.verbose = FALSE, seed = NULL)
 }
 \arguments{
 \item{BTFit_object}{a \code{\link{BTFit}} object.}
@@ -12,6 +12,8 @@ BT_more(BTFit_object, new.n.iter = 100, is.verbose = FALSE)
 \item{new.n.iter}{number of new boosting iterations to perform.}
 
 \item{is.verbose}{a logical specifying whether or not the additional fitting should run "noisely" with feedback on progress provided to the user.}
+
+\item{seed}{optional seed used to perform the new iterations. By default, no seed is set.}
 }
 \value{
 Returns a new \code{\link{BTFit}} object containing the initial call as well as the new iterations performed.
@@ -19,9 +21,6 @@ Returns a new \code{\link{BTFit}} object containing the initial call as well as 
 \description{
 Method to perform additional iterations of the Boosting Tree algorithm, starting from an initial \code{\link{BTFit}} object.
 This does not support further cross-validation. Moreover, this approach is only allowed if \code{keep.data=TRUE} in the original call.
-}
-\details{
-Please note there is no seed set in this function. If user wants to obtain reproducible results, the upfront usage of \code{set.seed} is suggested.
 }
 \references{
 D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.

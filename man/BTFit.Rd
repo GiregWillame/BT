@@ -20,6 +20,8 @@ Moreover, if a cross-validation approach was performed, a vector of cross-valida
 
 \item{w}{a vector containing the weights used.}
 
+\item{seed}{the used seed, if any.}
+
 \item{BTData}{if \code{keep.data=TRUE}, an object of class \code{BTData} containing the \code{training.set} and \code{validation.set} (can be NULL if not used). These data frames are reduced
 to the used variables, that are the response and explanatory variables. Note that in case of cross-validation, even if \code{keep.data=TRUE} the folds will not be kept. In fact, only the data
 frames related to the original fit (i.e. on the whole training set) will be saved.}

@@ -66,7 +66,7 @@ testthat::test_that("Check the BT_Summary function - Inputs",{
   cBars <- NULL ; expect_error(summary(BT_algo, cBars=cBars))
   cBars <- NA ; expect_error(summary(BT_algo, cBars=cBars))
   cBars <- "Text" ; expect_error(summary(BT_algo, cBars=cBars))
-  cBars <- F ; expect_error(summary(BT_algo, cBars=cBars))
+  # cBars <- F ; expect_error(summary(BT_algo, cBars=cBars)) # cBars = F -> considered as 0.
 
   # Check plot_it
   plot_it <- 1 ;  expect_error(summary(BT_algo, plot_it=plot_it))

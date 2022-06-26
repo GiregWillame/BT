@@ -215,7 +215,7 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
   }
 
   if (cv.folds==1){
-    BT_full_results$cv.folds <- cv.folds ; BT_full_results$call <- the_call ; BT_full_results$Terms <- Terms
+    BT_full_results$cv.folds <- cv.folds ; BT_full_results$call <- the_call ; BT_full_results$Terms <- Terms ; BT_full_results$seed <- seed
     return(BT_full_results)
   }
 
@@ -247,7 +247,7 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
 
   # Extract relevant part - all data model.
   BT_full_results$cv.folds <- cv.folds ; BT_full_results$folds <- folds
-  BT_full_results$call <- the_call ; BT_full_results$Terms <- Terms
+  BT_full_results$call <- the_call ; BT_full_results$Terms <- Terms ; BT_full_results$seed <- seed
   BT_full_results$BTErrors$cv.error <- cv_errors
   BT_full_results$cv.fitted <- predictions
 

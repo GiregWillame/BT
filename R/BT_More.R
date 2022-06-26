@@ -6,10 +6,9 @@
 #' @param BTFit_object a \code{\link{BTFit}} object.
 #' @param new.n.iter number of new boosting iterations to perform.
 #' @param is.verbose a logical specifying whether or not the additional fitting should run "noisely" with feedback on progress provided to the user.
+#' @param seed optional seed used to perform the new iterations. By default, no seed is set.
 #'
 #' @return Returns a new \code{\link{BTFit}} object containing the initial call as well as the new iterations performed.
-#'
-#' @details Please note there is no seed set in this function. If user wants to obtain reproducible results, the upfront usage of \code{set.seed} is suggested.
 #'
 #' @author Gireg Willame \email{g.willame@@detralytics.eu}
 #'
@@ -22,7 +21,10 @@
 #' @rdname BT_more
 #' @export
 #'
-BT_more <- function(BTFit_object, new.n.iter=100, is.verbose=FALSE){
+BT_more <- function(BTFit_object, new.n.iter=100, is.verbose=FALSE, seed = NULL){
+
+  # Set the seed (if any) and store the call.
+  if (!is.null(seed)) set.seed(seed)
   the_call <- match.call()
 
   # Check inputs
@@ -61,7 +63,7 @@ BT_more <- function(BTFit_object, new.n.iter=100, is.verbose=FALSE){
 
   # Store correct parameters
   BT_more_fit$cv.folds <- BTFit_object$cv.folds
-  BT_more_fit$call <- the_call ; BT_more_fit$Terms <- BTFit_object$Terms
+  BT_more_fit$call <- the_call ; BT_more_fit$Terms <- BTFit_object$Terms ; BT_more_fit$seed <- seed
 
   # Transfer old results across
   BT_more_fit$BTInit <- BTFit_object$BTInit

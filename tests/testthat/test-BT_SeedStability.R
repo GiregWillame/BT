@@ -149,6 +149,7 @@ testthat::test_that("Stability in results with seed - With CV",{
                  seed = 4)
 
   # Second BT algo run.
+  Sys.sleep(5)
   BT_algo2 <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
                  data = datasetFull,
                  tweedie.power = 1,
@@ -168,6 +169,7 @@ testthat::test_that("Stability in results with seed - With CV",{
                  seed = 4)
 
   # Third BT algo run - multiple cores.
+  Sys.sleep(5)
   BT_algo3 <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
                  data = datasetFull,
                  tweedie.power = 1,
@@ -182,11 +184,12 @@ testthat::test_that("Stability in results with seed - With CV",{
                  is.verbose = F,
                  cv.folds = 4,
                  folds.id = NULL,
-                 n.cores = 4,
+                 n.cores = 2, # 4 (originally) is working - but to use devtools::check(), CRAN allows max 2 cores...
                  weights = ExpoR,
                  seed = 4)
 
   # Fourth BT algo run - multiple cores.
+  Sys.sleep(5)
   BT_algo4 <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
                  data = datasetFull,
                  tweedie.power = 1,
@@ -201,11 +204,12 @@ testthat::test_that("Stability in results with seed - With CV",{
                  is.verbose = F,
                  cv.folds = 4,
                  folds.id = NULL,
-                 n.cores = 6,
+                 n.cores = 2, # 6 (originally) is working - but to use devtools::check(), CRAN allows max 2 cores...
                  weights = ExpoR,
                  seed = 4)
 
   # Fifth BT algo run - Seed defined outside -> should obtain same results except CV.
+  Sys.sleep(5)
   set.seed(4)
   BT_algo5 <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
                  data = datasetFull,
@@ -225,6 +229,7 @@ testthat::test_that("Stability in results with seed - With CV",{
                  weights = ExpoR)
 
   # Sixth BT algo run - Different seed : Expect different results.
+  Sys.sleep(5)
   BT_algo6 <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
                  data = datasetFull,
                  tweedie.power = 1,
@@ -244,6 +249,7 @@ testthat::test_that("Stability in results with seed - With CV",{
                  seed = 895)
 
   # Seventh BT algo run - Should be similar to 6 !
+  Sys.sleep(5)
   BT_algo7 <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
                  data = datasetFull,
                  tweedie.power = 1,
@@ -258,7 +264,7 @@ testthat::test_that("Stability in results with seed - With CV",{
                  is.verbose = F,
                  cv.folds = 4,
                  folds.id = NULL,
-                 n.cores = 5,
+                 n.cores = 2, # 5 (originally) is working - but to use devtools::check(), CRAN allows max 2 cores...
                  weights = ExpoR,
                  seed = 895)
 
