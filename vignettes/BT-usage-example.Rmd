@@ -17,16 +17,75 @@ In particular, a random variable $Y$ in the exponential dispersion family belong
 $$
 \mathrm{V}(\mathrm{E}(Y)) = \mathrm{E}(Y)^p \text{ , for some } p \in \{0\} \cup [1, + \infty[.
 $$
+The following well-known distributions are part of the Tweedie family:
 
-To get started a user must:
+* Gaussian distribution, with $p = 0$.
+* Poisson distribution, with $p = 1$.
+* Poisson-Gamma compound distribution, with $p \in ]1,2[$.
+* Gamma distribution, with $p = 2$.
+* Inverse Gaussian distribution, with $p = 3$.
+
+To get started with the package a user must:
 
 * have a dataset in a `data.frame`.
-* select an appropriate distribution, i.e. an appropriate Tweedie power.
-* set the training parameters for the `BT` model.
+* set the appropriate parameters for the `BT` model.
 
-Once these steps have been completed, a user can fit their `gbm` model by a call to `gbmt` and subsequently: evaluate its performance, make predictions, fit additional trees and plot the relative influence of the various predictor variables
+Once these steps have been completed, a user can fit their `BT` model by a call to `BT` and subsequently: evaluate its performance, make predictions, fit additional trees and plot the relative influence of the various predictor variables
 
-```{r}
+```{r, message=FALSE, echo=FALSE}
 library("BT")
 ```
+
+## Define a database
+
+To demonstrate the `BT` usage, we'll use a simulated database where the response variable is Poisson distributed.
+The built database contains $n = 100000$ records as well as the following simulated variables (with their interpretation in an insurance MTPL context):
+
+* $Y$, the Poisson distributed response variable (e.g. the number of claims).
+* $Gender$, $Age$ and $Sport$ which are directly linked to the response variable (e.g. resp. the policyholder's gender and age, the vehicle type).
+* $Split$ which is not linked to the response variable.
+* $ExpoR$ which corresponds to the time-exposure (e.g. the well-known exposure-to-risk).
+* Based on these variables, we define the rate as $Y_normalize = Y/ExpoR$.
+
+
+```{r}
+set.seed(4)
+n <- 100000
+
+Gender <- factor(sample(c("male","female"),n,replace=TRUE))
+Age <- sample(c(18:65),n,replace=TRUE)
+Split <- factor(sample(c("yes","no"),n,replace=TRUE))
+Sport <- factor(sample(c("yes","no"),n,replace=TRUE))
+
+lambda <- 0.1*ifelse(Gender=="male",1.1,1)
+lambda <- lambda*(1+1/(Age-17)^0.5)
+lambda <- lambda*ifelse(Sport=="yes",1.15,1)
+
+ExpoR <- runif(n)
+
+Y <- rpois(n, ExpoR*lambda)
+Y_normalized <- Y/ExpoR
+
+dataset <- data.frame(Y,Gender,Age,Split,Sport,ExpoR, Y_normalized)
+```
+
+## Define the `BT` parameters
+
+Once the database has been imported, the user needs to define the different parameters that will be passed to the algorithm.
+In this case, the parameters should not be stored upfront in a specific object and a simple call using the argument can be made.
+We list below all the available parameters:
+
+* `formula`: a symbolic description of the model to be fit. We emphasize that the offset are not supported with out approach. 
+* `data`: the database on which the computations will be performed. 
+* `tweedie.power`: the Tweedie power referencing to the response variable distribution.
+* `ABT`: bool value to define whether we fit a Boosting Tree (=FALSE) or an Adaptive Boosting Tree (=TRUE).
+* `n.iter`: the number of iterations to user in the fitting.
+* `train.fraction`: the percentage of the `data` that will be used as training set. The remaining part will be used as validation set.
+* `interaction.depth`: the maximum number of splits in a tree present in the expansion.
+
+### Response variable distribution
+
+As already mentioned, the simulated response variable $Y$ follows a Poisson distribution. 
+This first step can normally be achieved thanks to a short database analysis.
+
 
