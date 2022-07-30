@@ -68,14 +68,14 @@ testthat::test_that("Same values as with the offset approach",{
   validation_error <- sum(BT::BT_devTweedie(validation.set$Y, pred_validation, tweedieVal=1))/nrow(validation.set)
 
   # Similar intercept expected.
-  expect_equal(resBT$initFit$coefficients[[1]], resGLM$coefficients[[1]])
+  expect_equal(log(resBT$initFit), resGLM$coefficients[[1]])
 
   # Similar predictions.
-  expect_equal(exp(resBT$currTrainScore)*training.set$ExpoR, pred_training)
-  expect_equal(exp(resBT$currValScore)*validation.set$ExpoR, pred_validation)
+  expect_equal(exp(resBT$currTrainScore)*training.set$ExpoR, unname(pred_training))
+  expect_equal(exp(resBT$currValScore)*validation.set$ExpoR, unname(pred_validation))
   # Should be similar to the intercept.
-  expect_equal(unname(unlist(resBT$currTrainScore)), rep(resBT$initFit$coefficients[[1]], nrow(training.set)))
-  expect_equal(unname(unlist(resBT$currValScore)), rep(resBT$initFit$coefficients[[1]], nrow(validation.set)))
+  expect_equal(unname(unlist(resBT$currTrainScore)), rep(resGLM$coefficients[[1]], nrow(training.set)))
+  expect_equal(unname(unlist(resBT$currValScore)), rep(resGLM$coefficients[[1]], nrow(validation.set)))
 
   # Similar deviance.
   expect_equal(train_error, resBT$trainingError)

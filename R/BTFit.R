@@ -5,7 +5,7 @@
 #' @description These are objects representing fitted boosting trees.
 #'
 #' @return
-#' \item{initF}{an object of class \code{BTInit} containing the initial GLM fit \code{initFit}, the initial \code{training.error} and the initial \code{validation.error} if any.}
+#' \item{BTInit}{an object of class \code{BTInit} containing the initial fitted value \code{initFit}, the initial \code{training.error} and the initial \code{validation.error} if any.}
 #'
 #' \item{BTErrors}{an object of class \code{BTErrors} containing the vectors of errors for each iterations performed (excl. the initialization). More precisely, it contains the \code{training.error},
 #' \code{validation.error} if \code{train.fraction}<1 and the \code{oob.improvement} if \code{bag.fraction} < 1.
@@ -56,7 +56,19 @@
 #'
 #' @seealso \code{\link{BT}}.
 #'
-#' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
+#' @references M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries ||: Tree-Based Methods and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |||: Neural Networks and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2022). \strong{Response versus gradient boosting trees, GLMs and neural networks under Tweedie loss and log-link}.
+#' Accepted for publication in \emph{Scandinavian Actuarial Journal}.
+#'
+#' M. Denuit, J. Huyghe and J. Trufin (2022). \strong{Boosting cost-complexity pruned trees on Tweedie responses: The ABT machine for insurance ratemaking}.
+#' Paper submitted for publication.
+#'
+#' M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses with Tweedie loss functions}. Paper submitted for publication.
 #'
 #' @keywords methods
 #' @name BTFit

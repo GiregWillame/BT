@@ -60,7 +60,19 @@
 #' @seealso \code{\link{BTFit}}, \code{\link{BTCVFit}}, \code{\link{BT_perf}}, \code{\link{predict.BTFit}},
 #' \code{\link{summary.BTFit}}, \code{\link{print.BTFit}}, \code{\link{BT_cv_errors}}.
 #'
-#' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
+#' @references M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries ||: Tree-Based Methods and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |||: Neural Networks and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2022). \strong{Response versus gradient boosting trees, GLMs and neural networks under Tweedie loss and log-link}.
+#' Accepted for publication in \emph{Scandinavian Actuarial Journal}.
+#'
+#' M. Denuit, J. Huyghe and J. Trufin (2022). \strong{Boosting cost-complexity pruned trees on Tweedie responses: The ABT machine for insurance ratemaking}.
+#' Paper submitted for publication.
+#'
+#' M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses with Tweedie loss functions}. Paper submitted for publication.
 #'
 #' @rdname BT_Call
 #' @export
@@ -95,16 +107,14 @@ BT_call <- function(training.set, validation.set, tweedie.power, respVar, w, exp
 #' @export
 #'
 BT_callInit <- function(training.set, validation.set, tweedie.power, respVar, w){
-  tempVecWeights <- training.set[,w]
-  initFit <- glm(formula = as.formula(paste(respVar, "~1")), data=training.set, family=tweedie(var.power=tweedie.power, link.power=0),
-                 weights = tempVecWeights) # To be further checked...
-  currTrainScore <- log(initFit$fitted.values) # Return value on score scale.
+  initFit <- sum(training.set[,w]*training.set[,respVar])/sum(training.set[,w])
+  currTrainScore <- rep(log(initFit), nrow(training.set)) # Return value on score scale.
   trainingError <- sum(BT_devTweedie(training.set[, respVar], exp(currTrainScore),
                                      tweedieVal = tweedie.power, w=training.set[,w]))/nrow(training.set)#sum(mf$originalWeights)
 
   currValScore <- NULL ; validationError <- NULL
   if (!is.null(validation.set)){
-    currValScore <- predict(initFit, newdata=validation.set, type="link") # Return value on score scale.
+    currValScore <- rep(log(initFit), nrow(validation.set)) # Return value on score scale.
     validationError <- sum(BT_devTweedie(validation.set[, respVar], exp(currValScore),
                                          tweedieVal = tweedie.power, w=validation.set[,w]))/nrow(validation.set)
   }
@@ -156,8 +166,9 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
     # We need to prune the tree. If interaction.depth is NULL then the maxdepth approach is chosen and no pruning needed.
     if (!is.null(interaction.depth)){
       if (!ABT){
-        # interaction.depth defined and no ABT approach.
-        # To be continued.
+        # interaction.depth defined and BT approach chosen.
+        vecIndex <- sort(as.numeric(rownames(currFit$frame[currFit$frame$var != "<leaf>",])))
+        if (interaction.depth < len(vecIndex)) currFit <- snip.rpart(currFit, toss=vecIndex[seq(interaction.depth+1, length(vecIndex))])
       } else{
         # interaction.depth defined and ABT approach chosen.
         currFit <- prune(currFit, cp=currFit$cptable[, "CP"][max(which(currFit$cptable[, "nsplit"] <= interaction.depth))])

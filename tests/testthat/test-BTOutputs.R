@@ -83,7 +83,6 @@ testthat::test_that("Checks BT outputs",{
   expect_equal(BT_algo$cv.folds, 1)
 
   expect_equal(length(BT_algo$fitted.values), nrow(training.set))
-  expect_equal(class(BT_algo$BTInit$initFit)[1], "glm")
   expect_equal(length(BT_algo$BTInit$training.error), 1)
   expect_equal(BT_algo$BTInit$validation.error, NULL)
 
@@ -130,7 +129,6 @@ testthat::test_that("Checks BT outputs",{
   expect_equal(BT_algo$cv.folds, 1)
 
   expect_equal(length(BT_algo$fitted.values), nrow(training.set)*BT_algo$BTParams$train.fraction)
-  expect_equal(class(BT_algo$BTInit$initFit)[1], "glm")
   expect_equal(length(BT_algo$BTInit$training.error), 1)
   expect_equal(length(BT_algo$BTInit$validation.error), 1)
 

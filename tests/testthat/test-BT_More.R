@@ -162,9 +162,7 @@ testthat::test_that("BT_More checks - Results",{
 
   # Same initial fit.
   expect_equal(class(BT_algo_contd$BTInit), class(BT_algo_full$BTInit))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$fitted.values), unname(BT_algo_full$BTInit$initFit$fitted.values))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$coefficients), unname(BT_algo_full$BTInit$initFit$coefficients))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$call), unname(BT_algo_full$BTInit$initFit$call))
+  expect_equal(BT_algo_contd$BTInit$initFit, BT_algo_full$BTInit$initFit)
   expect_equal(BT_algo_contd$BTInit$training.error, BT_algo_full$BTInit$training.error)
   expect_equal(BT_algo_contd$BTInit$validation.error, BT_algo_full$BTInit$validation.error)
 
@@ -203,9 +201,7 @@ testthat::test_that("BT_More checks - Results",{
 
   # Same initial fit.
   expect_equal(class(BT_algo_contd_v2$BTInit), class(BT_algo_full$BTInit))
-  expect_equal(unname(BT_algo_contd_v2$BTInit$initFit$fitted.values), unname(BT_algo_full$BTInit$initFit$fitted.values))
-  expect_equal(unname(BT_algo_contd_v2$BTInit$initFit$coefficients), unname(BT_algo_full$BTInit$initFit$coefficients))
-  expect_equal(unname(BT_algo_contd_v2$BTInit$initFit$call), unname(BT_algo_full$BTInit$initFit$call))
+  expect_equal(BT_algo_contd_v2$BTInit$initFit, BT_algo_full$BTInit$initFit)
   expect_equal(BT_algo_contd_v2$BTInit$training.error, BT_algo_full$BTInit$training.error)
   expect_equal(BT_algo_contd_v2$BTInit$validation.error, BT_algo_full$BTInit$validation.error)
 
@@ -286,9 +282,7 @@ testthat::test_that("BT_More checks - Results - Seed stability",{
 
   # Same initial fit.
   expect_equal(class(BT_algo_contd$BTInit), class(BT_algo_contd_v2$BTInit))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$fitted.values), unname(BT_algo_contd_v2$BTInit$initFit$fitted.values))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$coefficients), unname(BT_algo_contd_v2$BTInit$initFit$coefficients))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$call), unname(BT_algo_contd_v2$BTInit$initFit$call))
+  expect_equal(BT_algo_contd$BTInit$initFit, BT_algo_contd_v2$BTInit$initFit)
   expect_equal(BT_algo_contd$BTInit$training.error, BT_algo_contd_v2$BTInit$training.error)
   expect_equal(BT_algo_contd$BTInit$validation.error, BT_algo_contd_v2$BTInit$validation.error)
 
@@ -331,9 +325,7 @@ testthat::test_that("BT_More checks - Results - Seed stability",{
 
   # Same initial fit.
   expect_equal(class(BT_algo_contd$BTInit), class(BT_algo_contd_v3$BTInit))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$fitted.values), unname(BT_algo_contd_v3$BTInit$initFit$fitted.values))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$coefficients), unname(BT_algo_contd_v3$BTInit$initFit$coefficients))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$call), unname(BT_algo_contd_v3$BTInit$initFit$call))
+  expect_equal(BT_algo_contd$BTInit$initFit, BT_algo_contd_v3$BTInit$initFit)
   expect_equal(BT_algo_contd$BTInit$training.error, BT_algo_contd_v3$BTInit$training.error)
   expect_equal(BT_algo_contd$BTInit$validation.error, BT_algo_contd_v3$BTInit$validation.error)
 
@@ -373,9 +365,7 @@ testthat::test_that("BT_More checks - Results - Seed stability",{
 
   # Same initial fit.
   expect_equal(class(BT_algo_contd$BTInit), class(BT_algo_contd_v4$BTInit))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$fitted.values), unname(BT_algo_contd_v4$BTInit$initFit$fitted.values))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$coefficients), unname(BT_algo_contd_v4$BTInit$initFit$coefficients))
-  expect_equal(unname(BT_algo_contd$BTInit$initFit$call), unname(BT_algo_contd_v4$BTInit$initFit$call))
+  expect_equal(BT_algo_contd$BTInit$initFit, BT_algo_contd_v4$BTInit$initFit)
   expect_equal(BT_algo_contd$BTInit$training.error, BT_algo_contd_v4$BTInit$training.error)
   expect_equal(BT_algo_contd$BTInit$validation.error, BT_algo_contd_v4$BTInit$validation.error)
 

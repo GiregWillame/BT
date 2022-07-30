@@ -72,8 +72,8 @@ testthat::test_that("BT_Predict function checks - Check results",{
   trainSet <- training.set[seq(1, paramsList$train.fraction*nrow(training.set)),]
   valSet <- training.set[setdiff(seq(1, nrow(training.set)), seq(1, paramsList$train.fraction*nrow(training.set))),]
 
-  glmTrain <- log(BT_algo$BTInit$initFit$fitted.values)
-  glmVal <- predict(BT_algo$BTInit$initFit, newdata = valSet, type = 'link')
+  glmTrain <- rep(log(BT_algo$BTInit$initFit), nrow(trainSet))
+  glmVal <- rep(log(BT_algo$BTInit$initFit), nrow(valSet))
   predTrain <- list() ; predVal <- list()
   for (iTree in seq(1, 200)){
     predTrain_current <- log(predict(BT_algo$BTIndivFits[[iTree]], newdata = trainSet, type = 'vector'))
@@ -328,8 +328,8 @@ testthat::test_that("BT_Predict function checks - keep.data set to TRUE",{
   trainSet <- training.set[seq(1, paramsList$train.fraction*nrow(training.set)),]
   valSet <- training.set[setdiff(seq(1, nrow(training.set)), seq(1, paramsList$train.fraction*nrow(training.set))),]
 
-  glmTrain <- log(BT_algo$BTInit$initFit$fitted.values)
-  glmVal <- predict(BT_algo$BTInit$initFit, newdata = valSet, type = 'link')
+  glmTrain <- rep(log(BT_algo$BTInit$initFit), nrow(trainSet))
+  glmVal <- rep(log(BT_algo$BTInit$initFit), nrow(valSet))
   predTrain <- list() ; predVal <- list()
   for (iTree in seq(1, 200)){
     predTrain_current <- log(predict(BT_algo$BTIndivFits[[iTree]], newdata = trainSet, type = 'vector'))

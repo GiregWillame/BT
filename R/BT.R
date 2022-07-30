@@ -78,7 +78,19 @@
 #' @seealso \code{\link{BTFit}}, \code{\link{BTCVFit}}, \code{\link{BT_call}}, \code{\link{BT_perf}}, \code{\link{predict.BTFit}},
 #' \code{\link{summary.BTFit}}, \code{\link{print.BTFit}}, \code{\link{BT_cv_errors}}.
 #'
-#' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
+#' @references M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries ||: Tree-Based Methods and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |||: Neural Networks and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2022). \strong{Response versus gradient boosting trees, GLMs and neural networks under Tweedie loss and log-link}.
+#' Accepted for publication in \emph{Scandinavian Actuarial Journal}.
+#'
+#' M. Denuit, J. Huyghe and J. Trufin (2022). \strong{Boosting cost-complexity pruned trees on Tweedie responses: The ABT machine for insurance ratemaking}.
+#' Paper submitted for publication.
+#'
+#' M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses with Tweedie loss functions}. Paper submitted for publication.
 #'
 #' @examples
 #' ## Create some dataset.
@@ -170,7 +182,8 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
   #originalFormula <- formula # Keep a track of the original formula if there's any change with variable subsampling.
 
   if(!is.null(attr(Terms, "offset"))){
-    stop("Offset are not supported. For Poisson model with log-link function, weights (=offset) and response variable (=Frequency rate, i.e. ClaimNb/Offset) can instead be used.")
+    stop("Offset are not supported. For Tweedie model with log-link function, weights (=offset)
+         and response rate variable (=Original response variable/Offset) can instead be used.")
   }
 
   if (is.null(model.weights(mf))){mf$w <- rep(1, nrow(mf))}

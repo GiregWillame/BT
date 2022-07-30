@@ -26,7 +26,19 @@
 #'
 #' @seealso \code{\link{BT}}, \code{\link{BTFit}}.
 #'
-#' @references D. Hainaut, J. Trufin and M. Denuit (2019). \dQuote{Effective Statistical Learning Methods for Actuaries, volume 1, 2 & 3}, \emph{Springer Actuarial}.
+#' @references M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries ||: Tree-Based Methods and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |||: Neural Networks and Extensions}, \emph{Springer Actuarial}.
+#'
+#' M. Denuit, D. Hainaut and J. Trufin (2022). \strong{Response versus gradient boosting trees, GLMs and neural networks under Tweedie loss and log-link}.
+#' Accepted for publication in \emph{Scandinavian Actuarial Journal}.
+#'
+#' M. Denuit, J. Huyghe and J. Trufin (2022). \strong{Boosting cost-complexity pruned trees on Tweedie responses: The ABT machine for insurance ratemaking}.
+#' Paper submitted for publication.
+#'
+#' M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses with Tweedie loss functions}. Paper submitted for publication.
 #'
 #' @rdname predict.BTFit
 #' @export
@@ -86,8 +98,7 @@ predict.BTFit <- function(object, newdata, n.iter, type = "link", single.iter=FA
     lastIter <- max(n.iter)
     shrinkage <- object$BTParams$shrinkage
 
-    currPred <- predict(object$BTInit$initFit, newdata=newdata, type = "link") # GLM used as first prediction.
-
+    currPred <- rep(log(object$BTInit$initFit), nrow(newdata)) # GLM used as first prediction.
 
     for (iIter in seq(1, lastIter)){
       currPred <- currPred + shrinkage*log(predict(object$BTIndivFits[[iIter]], newdata = newdata, type = "vector"))

@@ -9,13 +9,34 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+# Agenda w/ Julien & Michel.
+
+* BT package presentation.
+* Relative influence:
+  * Method discussion.
+  * What if colsample by tree used in relative influence.
+* Next developments (to be prioritized):
+  * Extension to classical BT.
+  * Extension to the whole Tweedie family.
+  * Extra-features:
+    * PDP/Other ?
+    * Relative influence via permutation.
+    * ...
+  * Writing.
+
+# BT 
+
 The `BT` package implements (Adaptive) Boosting Tree for *Tweedie* distributed response variables, using log-link function. 
-When presented with data, the `BT` package offers the user the ability to build predictive models and explore the influence of different variables on the response, akin to a data mining or exploration task.
+When presented with data, the `BT` package offers the user the ability to build predictive models and explore the influence of different variables on the response, akin to a data mining or exploration task. 
+The built package is based on the original idea proposed by D. Hainaut, J. Trufin and M. Denuit. For more theoretical details, we refer to the following references:
+
+* D. Hainaut, J. Trufin and M. Denuit (2019). "Effective Statistical Learning Methods for Actuaries", vol. 1, 2 and 3. *Springer Actuarial*.
+* Other articles/references.
 
 We remind the reader that the Tweedie distributions are special cases of the *exponential dispersion family*, having power variance functions.
 In particular, a random variable $Y$ in the exponential dispersion family belongs to the Tweedie family if:
 $$
-\mathrm{V}(\mathrm{E}(Y)) = \mathrm{E}(Y)^p \text{ , for some } p \in \{0\} \cup [1, + \infty[.
+\mathrm{Var}(\mathrm{E}(Y)) = \mathrm{E}(Y)^p \text{ , for some } p \in \{0\} \cup [1, + \infty[.
 $$
 The following well-known distributions are part of the Tweedie family:
 
@@ -25,6 +46,8 @@ The following well-known distributions are part of the Tweedie family:
 * Gamma distribution, with $p = 2$.
 * Inverse Gaussian distribution, with $p = 3$.
 
+**We emphasize that the current package is limited to the Adaptive Boosting Tree methods and is only available for the Poisson distributed response variable.**
+
 To get started with the package a user must:
 
 * have a dataset in a `data.frame`.
@@ -32,20 +55,21 @@ To get started with the package a user must:
 
 Once these steps have been completed, a user can fit their `BT` model by a call to `BT` and subsequently: evaluate its performance, make predictions, fit additional trees and plot the relative influence of the various predictor variables
 
-```{r, message=FALSE, echo=FALSE}
-library("BT")
+```{r}
+library(BT)
 ```
+
 
 ## Define a database
 
 To demonstrate the `BT` usage, we'll use a simulated database where the response variable is Poisson distributed.
 The built database contains $n = 100000$ records as well as the following simulated variables (with their interpretation in an insurance MTPL context):
 
-* $Y$, the Poisson distributed response variable (e.g. the number of claims).
-* $Gender$, $Age$ and $Sport$ which are directly linked to the response variable (e.g. resp. the policyholder's gender and age, the vehicle type).
-* $Split$ which is not linked to the response variable.
-* $ExpoR$ which corresponds to the time-exposure (e.g. the well-known exposure-to-risk).
-* Based on these variables, we define the rate as $Y_normalize = Y/ExpoR$.
+* `Y`, the Poisson distributed response variable (e.g. the number of claims).
+* `Gender`, `Age` and `Sport` which are directly linked to the response variable (e.g. resp. the policyholder's gender and age, the vehicle type).
+* `Split` which is not linked to the response variable.
+* `ExpoR` which corresponds to the time-exposure (e.g. the well-known exposure-to-risk).
+* Based on these variables, we define the rate as `Y_normalize = Y/ExpoR`.
 
 
 ```{r}
@@ -82,10 +106,267 @@ We list below all the available parameters:
 * `n.iter`: the number of iterations to user in the fitting.
 * `train.fraction`: the percentage of the `data` that will be used as training set. The remaining part will be used as validation set.
 * `interaction.depth`: the maximum number of splits in a tree present in the expansion.
+* `shrinkage`: acts as regularization for additional iterations - the smaller the shrinkage generally the better the performance of the fit. However, smaller shrinkage implies that the number of trees may need to be increased to achieve a certain performance.
+* `bag.fraction`: the fraction of the training observations randomly sub-sampled to fit a tree in each iteration.  This has the effect of reducing the variance of the boosted model.
+* `colsample.bytree`: the number of variables randomly sampled that will be used to build the next tree in the expansion.
+* `keep.data`: allows the user the save the different databases used during the algorithm in a `BTData` object.
+* `is.verbose`: whether the algorithm evolution has to be printed out.
+* `cv.folds`: the number of cross-validation folds to create. If set to 1 (by default), no cross-validation is performed.
+* `folds.id`: used in case of cross-validation. If defined, allows the user to specify in what fold each observation belongs. If `cv.folds` is greater than 1 and `folds.id` is well defined, the latter will take over.
+* `n.cores`: in case of cross-validation, the number of cores used to perform the parallelization. Please note that in the cross-validation context, a call to the `parLapply` function is made (whatever the number of cores). This parameter is originally set to `cv.folds`.
+* `tree.control`: the proposed algorithm is based on the `rpart` package. This parameter will be used to originally build each tree in the expansion. We emphasize that if the `interaction.depth` is set to `NULL`, each tree in the expansion will be built thanks to this parameters with no further treatment. We recommend this option for advanced user only.
+* `weights`: a vector representing the weight given to each observation. By default, each observation as the same weight (=1).
+* `seed`: some of the parameters bring randomness during the algorithm. This parameter allows the user to replicate the results.
 
-### Response variable distribution
+We emphasize that performing a cross-validation will produce a first global model trained on the full training set as well as different cv related `BT` models.
+The former will generally further be used while the later will help to e.g. determine the performances.
 
-As already mentioned, the simulated response variable $Y$ follows a Poisson distribution. 
+## Application to the created database
+
+Let us now build the first model. Let us note/suppose that:
+
+* As already mentioned, the simulated response variable `Y` follows a Poisson distribution (i.e. `tweedie.power` equals to 1).
 This first step can normally be achieved thanks to a short database analysis.
+* The user wants to use all available explanatory variables to explain the response variable `Y`. 
+In usual MTPL pricing, the `ExpoR` variable allows to consider the time-exposure to risk (e.g. the Policyholder contract's duration). 
+The latter variable is thus generally set in offset.
+In a Tweedie framework with log-link function, we emphasize that working with offset is equivalent to build a model on the rate response variable and adjusted weights. More precisely, the variable `Y_normalized` will be used as response variables with weights given by `ExpoR` (instead of original values, i.e. 1).
+This choice was made during modelling by the author.
+* We'll work in the context of Adaptive Boosting Tree and perform 300 iterations (=`n.iter`).
+* The `interaction.depth` and `shrinkage` parameters will respectively be set to 4 and 0.01.
+* The `train.fraction` will be set to 0.8, meaning that the first `0.8*nrow(data)` will be considered as training set and the remaining `data` records as validation set. Moreover, random effects such as bagging and columns sample for each tree will be defined. The `bag.fraction` and `colsample.bytree` parameters will respectively be set to 0.5 and 2.
+* 3-cv will be performed for this example.
+
+```{r}
+BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
+              data = dataset,
+              tweedie.power = 1,
+              ABT = T,
+              n.iter = 300,
+              train.fraction = 0.8,
+              interaction.depth = 4,
+              shrinkage = 0.01,
+              bag.fraction = 0.5,
+              colsample.bytree = 2,
+              keep.data = T,
+              is.verbose = F,
+              cv.folds = 3,
+              folds.id = NULL,
+              n.cores = 1,
+              weights = ExpoR,
+              seed = 44)
+```
+
+Now that the first fit is made, we'll focus on the different results/functions that are available within the package.
+
+### `BT` outputs
+
+Multiple results are stored in the `BT_algo` run (namely, a `BTFit` object)
+
+First of all, almost all the parameters that have been used during the call are stored in the result object:
+
+```{r}
+# 'Fitting parameters
+BT_algo$call
+BT_algo$distribution
+BT_algo$BTParams
+BT_algo$keep.data
+BT_algo$is.verbose
+BT_algo$seed
+BT_algo$cv.folds # #used folds
+head(BT_algo$folds, 10) # folds created.
+# Name of weights, response and explnatory variables used
+BT_algo$w
+BT_algo$response
+BT_algo$var.name
+```
+
+One can then continue by having a look at the initialization that is performed as well as the related errors:
+
+```{r}
+# Tweedie with intercept only.
+BT_algo$BTInit$initFit 
+# Init training error
+BT_algo$BTInit$training.error
+# Init validation error
+BT_algo$BTInit$validation.error
+```
+
+
+If `keep.data = TRUE`, the created training and validation set are also returned:
+
+```{r}
+head(BT_algo$BTData$training.set, 5)
+head(BT_algo$BTData$validation.set, 5)
+```
+
+One can also have a look at the fitted values (on the score scale) as well as the errors computed across the different iterations (on training set, validation set, the OOB improvement and the cross-validation error):
+
+```{r}
+# Obtained fitting results at the end - Full BT and CV. 
+head(BT_algo$fitted.values)
+head(BT_algo$cv.fitted) # cv fitted.
+# Errors computed.
+head(BT_algo$BTErrors$training.error)
+head(BT_algo$BTErrors$validation.error)
+head(BT_algo$BTErrors$oob.improvement)
+head(BT_algo$BTErrors$cv.error)
+```
+
+Finaly, we note that all the trees fitted during the algorithm are stored in the `BTIndivFits` list:
+
+```{r}
+BT_algo$BTIndivFits[[1]] # First tree in the expansion
+# One can also access to the usual tree outputs.
+head(BT_algo$BTIndivFits[[1]]$frame)
+```
+
+### `BT_perf` function
+
+This function allows the user to determine the best number of iterations that has to be performed. This one also depends on the type of errors that are available/have been computed during training phase.
+
+* The `training.error` is automatically computed. Please note that in case of bagging used, this corresponds to the in-bag errors (i.e. a random sub-selection of the original training set).
+* If a `train.fraction` has properly be defined, a `validation.error` will be computed on the validation set.
+* If a `bag.fraction` has properly be defined, an `oob.improvement` vector will be computed.
+* If cross-validation parameters have been filled, a `cv.error` will be computed.
+
+These values are stored in the `BTErrors` object as previously shown.
+
+Depending on the chosen approach, the following methods can be applied to compute the best number of iterations.
+
+* If user wants to use the `validation.error`, the `argmin(BT$BTErrors$validation.error)` will be returned as optimal iteration.
+* If user wants to use the `oob.improvement`, the `argmin(-cumsum(BT$BTErrors$oob.improvement))` will be returned as optimal iteration. To be precise, the `oob.improvement` are not used as such but a smoothed version of it.
+* If user wants to use the `cv.error`, the `argmin(BT$BTErrors$cv.error)` will be returned as optimal iteration.
+
+We now present the function arguments:
+
+* `BTFit_object`: a `BT` algorithm result. In our case, `BT_algo`.
+* `method`: Allows the user to specify the method that has to be applied to compute the best number of iterations. This can be set to `validation`, `OOB` or `cv` depending whether the user wants to use `validation.error`, `oob.improvement` or `cv.error` as previously explained. 
+We emphasize that without specifying the `method` argument a best guest approach will be performed.
+* `plot.it`, `oobag.curve`, `overlay` and `main`: plot related parameters. If desired, the `BT_perf` function plots the computed errors alongside returning the optimal iteration.
+
+```{r}
+optimal_perf_validation <- BT_perf(BT_algo, method='validation')
+optimal_perf_oob <- BT_perf(BT_algo, method='OOB', oobag.curve = TRUE, overlay = TRUE)
+optimal_perf_cv <- BT_perf(BT_algo, method='cv')
+optimal_perf_best_guest <- BT_perf(BT_algo, plot.it = FALSE)
+```
+
+### `summary`
+
+This function allows to compute the relative influence and plot it. 
+It is in fact a wrapper for the `BT_relative_influence` which is not intended to be used per end-user.
+
+Up to now, the computation of the relative influence isn't available for the permutation approach. This one should still be developed.
+
+Regarding the currently developed method, we used the results furnished by `rpart.object`. In fact, each tree in the expansion is built thanks to this package and is stored in the `BT$BTIndivFits` list. Looking at each tree, one can then observe the following values (for the first tree as example):
+
+```{r}
+BT_algo$BTIndivFits[[1]]$splits
+```
+
+Looking at the `rpart.object` help file, the following definition is given for the `splits` matrix.
+
+*a numeric matrix describing the splits: only present if there are any. The row label is the name of the split variable, and columns are `count`, the number of observations (which are not missing and are of positive weight) sent left or right by the split (for competitor splits this is the number that would have been sent left or right had this split been used, for surrogate splits it is the number missing the primary split variable which were decided using this surrogate), `ncat`, the number of categories or levels for the variable (`+/-1` for a continuous variable),*
+**`improve`, which is the improvement in deviance given by this split, or, for surrogates, the concordance of the surrogate with the primary,** 
+*and `index`, the numeric split point.  The last column `adj` gives the adjusted concordance for surrogate splits. For a factor, the `index` column contains the row number of the csplit matrix.  For a continuous variable, the sign of `ncat` determines whether the subset `x < cutpoint` or `x > cutpoint` is sent to the left.*
+
+The idea is therefore to summarize the `improve` values across all variables and trees in the expansion. In other words, for each built tree, we will summarize the improvement across variables. We'll then add it up with other iterations to obtain a matrix containing the variable improvements through the iterations.
+This improvement in therefore considered as the relative influence.
+
+One can then present the function arguments:
+
+* `object`: a `BTFit` object, i.e. the result of the `BT` call.
+* `n.iter`: the number of iterations to use to compute the relative influence. This parameter is often set to the optimal number of iterations. 
+Per default, all the built trees will be used.
+* `method`: the function that has to be called to compute the relative influence. As previously mentioned, only one approach is currently available. This parameter should therefore remains set to its default value.
+* `normalize`: if the user wants to normalize the relative influence such that the sum over all normalized relative influence sum up to 100.
+* `order_it`: indicates whether the user wants to sort the relative influence or not.
+* `cBars` and `plot_it`: relative influence plot related parameters, respectively the number of bars to plot in the barplot and a boolean specifying whether the plot is expected or not.
+
+```{r}
+summary(BT_algo)
+```
+
+
+### `predict` function
+
+Using the global fit on the training set (the unique fit if no cross-validation), one can predict (S3 method) on a new database. 
+Here are the function arguments:
+
+* `object`: a `BTFit` object
+* `newdata`: the new data set used to realize the predictions.
+* `n.iter`: the number of boosting iterations (i.e. the number of trees) used to perform the predictions. Usually, all the iterations (i.e. the trees) up to the best one are considered to build the predictions. 
+Please note that this parameter can be a vector. In such a case, a matrix containing the predictions for each element in `n.iter` will be returned.
+* `type`: Specify if one wants to predict on the response or the link scale. 
+* `single.iter`: If set to `TRUE` only the `n.iter` tree will be used to predict (i.e. not all the trees up to `n.iter`).
+
+Please note that if the `keep.data` argument was set to `TRUE` and if the `newdata` is not specified, the prediction will be achieved on the original training set.
+
+```{r}
+# Predict (response scale) using all trees up to best validation iteration. 
+head(predict(BT_algo, n.iter = optimal_perf_validation, type = 'response'), 10)
+# Predict (link scale) using all trees up the best iteration OOB/CV.
+head(predict(BT_algo, newdata = dataset, n.iter = c(optimal_perf_oob, optimal_perf_cv), type = 'link'), 10) 
+# Predict using only the 40th tree.
+head(predict(BT_algo, n.iter = 40, type = 'response', single.iter = TRUE), 10) 
+```
+
+### `print` function
+
+One can also print the `BTFit` object (i.e. the result of the `BT` call) using the `print` S3 method. The later will display the call, the relative influence and the best iteration depending on the methods (i.e. `validation`, `OOB` and `cv`) available.
+
+```{r}
+print(BT_algo)
+```
+
+
+### `BT_more` function
+
+Sometimes, it might be useful to continue the training on further iterations. 
+This can happen e.g. if the initial `n.iter` parameter was not set high enough and that the best iteration computed corresponds to this value, meaning that the minimal error (and the related iteration) has yet to be found.
+This training continuation can be performed thanks to the `BT_more` function. This one has the following argument:
+
+* `BTFit_object`: an initial `BT` call on which we want to continue the training/perform more iterations.
+* `new.n.iter`: number of new boosting/tree iterations to compute. In total, the `BT` object will end up with `n.iter + new.n.iter` iterations.
+* `is.verbose`: whether or not the user wants to display algorithm evolution.
+* `seed`: optional parameter that allows reproducible example.
+
+It will then return a `BTFit` object (as the `BT` function does) augmented by the new boosting iterations.
+
+We emphasize that the call to this function call only be made if the original `BT` call:
+* has no cross-validation;
+* has been computed with `keep.data` parameter set to `TRUE`.
+
+We thus need to re-fit the first example (with `cv.folds` set to 1 and `keep.data=TRUE`) to show the usage of this function.
+
+```{r}
+BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
+              data = dataset,
+              tweedie.power = 1,
+              ABT = T,
+              n.iter = 300,
+              train.fraction = 0.8,
+              interaction.depth = 4,
+              shrinkage = 0.01,
+              bag.fraction = 0.5,
+              colsample.bytree = 2,
+              keep.data = T,
+              is.verbose = F,
+              cv.folds = 1,
+              folds.id = NULL,
+              n.cores = 1,
+              weights = ExpoR,
+              seed = 44)
+```
+
+We can then call the `BT_more` function to perform 100 new iterations and use the new object as an usual `BTFit` one.
+
+```{r}
+BT_algo_contd <- BT_more(BT_algo, new.n.iter = 100, seed = 404)
+# See parameter, predict, ...
+BT_algo_contd$BTParams$n.iter
+head(predict(BT_algo_contd, n.iter = 350, type='link'), 10)
+```
 
 

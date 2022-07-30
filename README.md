@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # BT : (Adaptive) Boosting Tree for Tweedie distributed response variable.
 
 ## Aknowledgements
@@ -5,12 +10,22 @@
 The author thanks Detralytics' Scientific Directors Julien Trufin and Michel Denuit for the close collaboration.
 
 The idea behind (A)BT is akin to the Gradient Boosting Methods. 
-This package is therefore inspired by the `gbm3` one, originally written by Greg Ridgeway <greg.ridgeway@gmail.com> (for more details, see https://github.com/gbm-developers/gbm3).
+This package is therefore inspired by the `gbm3` one, originally written by Greg Ridgeway <greg.ridgeway@gmail.com> (for more details, please refer to the following [url](https://github.com/gbm-developers/gbm3)).
 Some of the developed codes are then pretty similar.
 
 ## References
 
-This package is based on the original idea proposed by Detralytics' Scientific Directors Donatien Hainaut, Julien Trufin and Michel Denuit, elaborated in their books. For more details, see [Volume 1 - "GLMs and Extensions"](https://link.springer.com/book/10.1007/978-3-030-25820-7), [Volume 2 - "Tree-based Methods and Extensions"](https://link.springer.com/book/10.1007/978-3-030-57556-4) and [Volume 3 - "Neural Networks and Extensions"](https://link.springer.com/book/10.1007/978-3-030-25827-6).
+This package is based on the original idea proposed by Detralytics' Scientific Directors M. Denuit, D. Hainaut and J. Trufin. We refer the user to the following
+books and articles:
+
+* M. Denuit, D. Hainaut and J. Trufin (2019). [**Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions**](https://link.springer.com/book/10.1007/978-3-030-25820-7), *Springer Actuarial*.
+* M. Denuit, D. Hainaut and J. Trufin (2019). [**Effective Statistical Learning Methods for Actuaries ||: Tree-Based Methods and Extensions**](https://link.springer.com/book/10.1007/978-3-030-57556-4), *Springer Actuarial*.
+* M. Denuit, D. Hainaut and J. Trufin (2019). [**Effective Statistical Learning Methods for Actuaries |||: Neural Networks and Extensions**](https://link.springer.com/book/10.1007/978-3-030-25827-6), *Springer Actuarial*.
+* M. Denuit, D. Hainaut and J. Trufin (2022). **Response versus gradient boosting trees, GLMs and neural networks under Tweedie loss and log-link**. 
+Accepted for publication in *Scandinavian Actuarial Journal*.
+* M. Denuit, J. Huyghe and J. Trufin (2022). **Boosting cost-complexity pruned trees on Tweedie responses: The ABT machine for insurance ratemaking**.
+Paper submitted for publication.
+* M. Denuit, J. Trufin and T. Verdebout (2022). **Boosting on the responses with Tweedie loss functions**. Paper submitted for publication.
 
 Moreover, a **DetraNote** has been written on this subject, using the `BT` algorithm.
 
