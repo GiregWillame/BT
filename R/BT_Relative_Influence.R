@@ -9,6 +9,8 @@
 #' number of iterations; otherwise, all iterations will be used.
 #' @param rescale whether or not the results should be rescaled (divided by the maximum observation). Default set to \code{FALSE}.
 #' @param sort.it whether or not the results should be (reverse) sorted. Default set to \code{FALSE}.
+#' @param consider.competing whether or not competing split should be considered in the relative influence computation. Default set to \code{FALSE}.
+#' @param consider.surrogates whether or not surrogates should be considered in the relative influence computation. Default set to \code{FALSE}.
 #'
 #' @return Returns by default an unprocessed vector of estimated relative influences. If the \code{rescale} and \code{sort.it} arguments are used, it returns
 #' a processed version of the same vector.
@@ -41,7 +43,8 @@
 #' @export
 #'
 BT_relative_influence <- function(BTFit_object, n.iter,
-                               rescale = FALSE, sort.it = FALSE){
+                               rescale = FALSE, sort.it = FALSE,
+                               consider.competing = FALSE, consider.surrogates = FALSE){
   # Initial checks
   check_if_BT_fit(BTFit_object)
   if(!is.logical(rescale) || (length(rescale) > 1) || is.na(rescale))
@@ -74,7 +77,11 @@ BT_relative_influence <- function(BTFit_object, n.iter,
 
   # Create relative influence for every variable
   rel_inf_verbose <- unlist(lapply(BTFit_object$BTIndivFits[seq(1, n.iter)],
-                                   get_rel_inf_of_vars))
+                                   function(xx){
+                                     get_rel_inf_of_vars(xx, considerCompeting = consider.competing, considerSurrogates = consider.surrogates)
+                                     }
+                                   )
+                            )
 
   # Sum across trees
   rel_inf_compact <- unlist(lapply(split(rel_inf_verbose, names(rel_inf_verbose)), sum))
@@ -98,7 +105,36 @@ BT_relative_influence <- function(BTFit_object, n.iter,
 
 #### Helper function ####
 #' @keywords internal
-get_rel_inf_of_vars <- function(rpart_object) {
-  if (!is.null(rpart_object$splits)) return(lapply(split(rpart_object$splits[,3], names(rpart_object$splits[,3])), sum)) # 3 - Improvement
-  else (return(list())) # With rpart : splits isn't returned if we've a single node (i.e. no splits).
+get_rel_inf_of_vars <- function(rpart_object, considerCompeting, considerSurrogates){
+  if (!is.null(rpart_object$splits) & (nrow(rpart_object$splits) > 0)){
+    frameWithoutLeafs <- rpart_object$frame[rpart_object$frame$var != "<leaf>",]
+    generateVec <- function(ncompete, nsurrogate){
+      c("PrimarySplit", rep("CompetingSplit", ncompete), rep("SurrogateSplit", nsurrogate))
+    }
+    typeOfSplitList <- mapply(generateVec, frameWithoutLeafs$ncompete, frameWithoutLeafs$nsurrogate, SIMPLIFY = FALSE)
+    primarySplitRef <-unlist(sapply(seq(1, length(typeOfSplitList)), function(xx) rep(xx, length(typeOfSplitList[[xx]]))))
+    typeOfSplitVec <- unlist(typeOfSplitList)
+    filterVec <- c("PrimarySplit")
+
+    ## According to rpart doc, need to rescale for anova method.
+    scaledImportance <- rpart_object$splits[,"improve"]
+    indexSurrogate <- (typeOfSplitVec=="SurrogateSplit")
+    if (rpart_object$method == "anova"){
+      scaledImportance[!indexSurrogate] <- rpart_object$splits[!indexSurrogate, "improve"] * frameWithoutLeafs[primarySplitRef[!indexSurrogate], "dev"]
+    }
+    ## According to rpart doc, need to adjust the surrogates as well.
+    if (considerSurrogates){
+      scaledImportance[indexSurrogate] <- (scaledImportance[typeOfSplitVec=="PrimarySplit"][primarySplitRef[indexSurrogate]] *
+                                             rpart_object$splits[indexSurrogate, "adj"])
+      filterVec <- c(filterVec, "SurrogateSplit")
+    }
+    filterVec <- if(considerCompeting) c(filterVec, "CompetingSplit") else filterVec
+    indexFilter <- which(typeOfSplitVec %in% filterVec)
+    return(lapply(split(scaledImportance[indexFilter], names(scaledImportance[indexFilter])), sum))
+  }
+  else (return(list()))
 }
+#get_rel_inf_of_vars <- function(rpart_object) {
+#  if (!is.null(rpart_object$splits)) return(lapply(split(rpart_object$splits[,3], names(rpart_object$splits[,3])), sum)) # 3 - Improvement
+#  else (return(list())) # With rpart : splits isn't returned if we've a single node (i.e. no splits).
+#}

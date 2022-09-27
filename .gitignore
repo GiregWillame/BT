@@ -36,4 +36,5 @@ bin-release/
 *.Rproj
 
 tests/testthat/test-BT_ResultsComparison.R
+tests/testthat/test-BT_ResultsComparison2.R
 inst/doc

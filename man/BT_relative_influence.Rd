@@ -4,7 +4,14 @@
 \alias{BT_relative_influence}
 \title{Method for estimating the relative influence.}
 \usage{
-BT_relative_influence(BTFit_object, n.iter, rescale = FALSE, sort.it = FALSE)
+BT_relative_influence(
+  BTFit_object,
+  n.iter,
+  rescale = FALSE,
+  sort.it = FALSE,
+  consider.competing = FALSE,
+  consider.surrogates = FALSE
+)
 }
 \arguments{
 \item{BTFit_object}{a \code{\link{BTFit}} object.}
@@ -17,6 +24,10 @@ number of iterations; otherwise, all iterations will be used.}
 \item{rescale}{whether or not the results should be rescaled (divided by the maximum observation). Default set to \code{FALSE}.}
 
 \item{sort.it}{whether or not the results should be (reverse) sorted. Default set to \code{FALSE}.}
+
+\item{consider.competing}{whether or not competing split should be considered in the relative influence computation. Default set to \code{FALSE}.}
+
+\item{consider.surrogates}{whether or not surrogates should be considered in the relative influence computation. Default set to \code{FALSE}.}
 }
 \value{
 Returns by default an unprocessed vector of estimated relative influences. If the \code{rescale} and \code{sort.it} arguments are used, it returns

@@ -168,7 +168,7 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
       if (!ABT){
         # interaction.depth defined and BT approach chosen.
         vecIndex <- sort(as.numeric(rownames(currFit$frame[currFit$frame$var != "<leaf>",])))
-        if (interaction.depth < len(vecIndex)) currFit <- snip.rpart(currFit, toss=vecIndex[seq(interaction.depth+1, length(vecIndex))])
+        if (interaction.depth < length(vecIndex)) currFit <- snip.rpart(currFit, toss=vecIndex[seq(interaction.depth+1, length(vecIndex))])
       } else{
         # interaction.depth defined and ABT approach chosen.
         currFit <- prune(currFit, cp=currFit$cptable[, "CP"][max(which(currFit$cptable[, "nsplit"] <= interaction.depth))])

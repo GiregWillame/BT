@@ -4,7 +4,7 @@
 \alias{BTFit}
 \title{BTFit}
 \value{
-\item{initF}{an object of class \code{BTInit} containing the initial GLM fit \code{initFit}, the initial \code{training.error} and the initial \code{validation.error} if any.}
+\item{BTInit}{an object of class \code{BTInit} containing the initial fitted value \code{initFit}, the initial \code{training.error} and the initial \code{validation.error} if any.}
 
 \item{BTErrors}{an object of class \code{BTErrors} containing the vectors of errors for each iterations performed (excl. the initialization). More precisely, it contains the \code{training.error},
 \code{validation.error} if \code{train.fraction}<1 and the \code{oob.improvement} if \code{bag.fraction} < 1.

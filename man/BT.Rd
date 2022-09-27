@@ -21,7 +21,7 @@ BT(
   folds.id = NULL,
   n.cores = 1,
   tree.control = rpart.control(xval = 0, maxdepth = (if (!is.null(interaction.depth)) {
-        interaction.depth } else {     10 }), cp = 0, minsplit = 2),
+        interaction.depth } else {     10 }), cp = -Inf, minsplit = 2),
   weights = NULL,
   seed = NULL,
   ...

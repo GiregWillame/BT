@@ -2,7 +2,8 @@
 title: "Getting started with the BT package"
 author: "Gireg Willame"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{BT-usage-example}
   %\VignetteEngine{knitr::rmarkdown}
@@ -11,18 +12,19 @@ vignette: >
 
 # Agenda w/ Julien & Michel.
 
-* BT package presentation.
+* References updated.
 * Relative influence:
-  * Method discussion.
-  * What if colsample by tree used in relative influence.
-* Next developments (to be prioritized):
-  * Extension to classical BT.
+  * Correction made/methodology.
+  * What if colsample by tree is used in relative influence ?
+* Extension to classical BT.
+* Next developments:
   * Extension to the whole Tweedie family.
-  * Extra-features:
-    * PDP/Other ?
-    * Relative influence via permutation.
-    * ...
   * Writing.
+
+  
+```{r, echo=FALSE}
+write("TMPDIR = 'C:\\Users\\Gireg Willame\\Desktop\\TMP'", file=file.path(Sys.getenv('R_USER'), '.Renviron'))
+```
 
 # BT 
 
@@ -30,8 +32,12 @@ The `BT` package implements (Adaptive) Boosting Tree for *Tweedie* distributed r
 When presented with data, the `BT` package offers the user the ability to build predictive models and explore the influence of different variables on the response, akin to a data mining or exploration task. 
 The built package is based on the original idea proposed by D. Hainaut, J. Trufin and M. Denuit. For more theoretical details, we refer to the following references:
 
-* D. Hainaut, J. Trufin and M. Denuit (2019). "Effective Statistical Learning Methods for Actuaries", vol. 1, 2 and 3. *Springer Actuarial*.
-* Other articles/references.
+* M. Denuit, D. Hainaut and J. Trufin (2019). **Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions**, *Springer Actuarial*.
+* M. Denuit, D. Hainaut and J. Trufin (2019). **Effective Statistical Learning Methods for Actuaries ||: Tree-Based Methods and Extensions**, *Springer Actuarial*.
+* M. Denuit, D. Hainaut and J. Trufin (2019). **Effective Statistical Learning Methods for Actuaries |||: Neural Networks and Extensions**, *Springer Actuarial*.
+* M. Denuit, D. Hainaut and J. Trufin (2022). **Response versus gradient boosting trees, GLMs and neural networks under Tweedie loss and log-link**, Accepted for publication in *Scandinavian Actuarial Journal*.
+* M. Denuit, J. Huyghe and J. Trufin (2022). **Boosting cost-complexity pruned trees on Tweedie responses: The ABT machine for insurance ratemaking**. Paper submitted for publication.
+* M. Denuit, J. Trufin and T. Verdebout (2022). **Boosting on the responses with Tweedie loss functions**. Paper submitted for publication.
 
 We remind the reader that the Tweedie distributions are special cases of the *exponential dispersion family*, having power variance functions.
 In particular, a random variable $Y$ in the exponential dispersion family belongs to the Tweedie family if:
@@ -46,7 +52,7 @@ The following well-known distributions are part of the Tweedie family:
 * Gamma distribution, with $p = 2$.
 * Inverse Gaussian distribution, with $p = 3$.
 
-**We emphasize that the current package is limited to the Adaptive Boosting Tree methods and is only available for the Poisson distributed response variable.**
+**We emphasize that the current package is limited to the *(*Adaptive*)* Boosting Tree methods and is only available for the Poisson distributed response variable.**
 
 To get started with the package a user must:
 
@@ -134,7 +140,7 @@ In a Tweedie framework with log-link function, we emphasize that working with of
 This choice was made during modelling by the author.
 * We'll work in the context of Adaptive Boosting Tree and perform 300 iterations (=`n.iter`).
 * The `interaction.depth` and `shrinkage` parameters will respectively be set to 4 and 0.01.
-* The `train.fraction` will be set to 0.8, meaning that the first `0.8*nrow(data)` will be considered as training set and the remaining `data` records as validation set. Moreover, random effects such as bagging and columns sample for each tree will be defined. The `bag.fraction` and `colsample.bytree` parameters will respectively be set to 0.5 and 2.
+* The `train.fraction` will be set to 0.8, meaning that the first `0.8*nrow(data)` will be considered as training set and the remaining `data` records as validation set. Moreover, random effects such as bagging and columns sample for each tree will be defined. The `bag.fraction` and `colsample.bytree` parameters will respectively be set to 0.5 and 3.
 * 3-cv will be performed for this example.
 
 ```{r}
@@ -147,7 +153,7 @@ BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"
               interaction.depth = 4,
               shrinkage = 0.01,
               bag.fraction = 0.5,
-              colsample.bytree = 2,
+              colsample.bytree = 3,
               keep.data = T,
               is.verbose = F,
               cv.folds = 3,
@@ -196,7 +202,7 @@ BT_algo$BTInit$validation.error
 If `keep.data = TRUE`, the created training and validation set are also returned:
 
 ```{r}
-head(BT_algo$BTData$training.set, 5)
+head(BT_algo$BTData$training.set)
 head(BT_algo$BTData$validation.set, 5)
 ```
 
@@ -262,17 +268,26 @@ Up to now, the computation of the relative influence isn't available for the per
 Regarding the currently developed method, we used the results furnished by `rpart.object`. In fact, each tree in the expansion is built thanks to this package and is stored in the `BT$BTIndivFits` list. Looking at each tree, one can then observe the following values (for the first tree as example):
 
 ```{r}
+BT_algo$BTIndivFits[[1]]$frame
+BT_algo$BTIndivFits[[1]]$frame[BT_algo$BTIndivFits[[1]]$frame$var != "<leaf>",]
 BT_algo$BTIndivFits[[1]]$splits
 ```
 
-Looking at the `rpart.object` help file, the following definition is given for the `splits` matrix.
+Looking at the `rpart.object` help file, the following definition is given for the `frame` and `splits` matrix.
+
+*a data frame with one row for each node in the tree. The `row.names` of `frame` contain the (unique) node numbers that follow a binary ordering indexed by node depth.* *Columns of `frame` include `var`, a factor giving the names of the variables used in the split at each node (leaf nodes are denoted by the level "<leaf>"), `n`, the number of observations reaching the node, `wt`, the sum of case weights for observations reaching the node, `dev`, the deviance of the node, `yval`, the fitted value of the response at the node, and `splits`, a two column matrix of left and right split labels for each node. Also included in the `frame` are `complexity`, the complexity parameter at which this split will collapse, `ncompete`, the number of competitor splits recorded, and `nsurrogate`, the number of surrogate splits recorded.*
+
+*Extra response information which may be present is in `yval2`, which contains the number of events at the node (poisson tree), or a matrix containing the fitted class, the class counts for each node, the class probabilities and the ‘node probability’ (classification trees).*
 
 *a numeric matrix describing the splits: only present if there are any. The row label is the name of the split variable, and columns are `count`, the number of observations (which are not missing and are of positive weight) sent left or right by the split (for competitor splits this is the number that would have been sent left or right had this split been used, for surrogate splits it is the number missing the primary split variable which were decided using this surrogate), `ncat`, the number of categories or levels for the variable (`+/-1` for a continuous variable),*
 **`improve`, which is the improvement in deviance given by this split, or, for surrogates, the concordance of the surrogate with the primary,** 
 *and `index`, the numeric split point.  The last column `adj` gives the adjusted concordance for surrogate splits. For a factor, the `index` column contains the row number of the csplit matrix.  For a continuous variable, the sign of `ncat` determines whether the subset `x < cutpoint` or `x > cutpoint` is sent to the left.*
 
-The idea is therefore to summarize the `improve` values across all variables and trees in the expansion. In other words, for each built tree, we will summarize the improvement across variables. We'll then add it up with other iterations to obtain a matrix containing the variable improvements through the iterations.
+The idea is therefore to summarize the `improve` values for each splitting node (excl. surrogates and competing ones) across all variables and trees in the expansion. 
+In other words, for each built tree, we will summarize the improvement across variables. We'll then add it up with other iterations to obtain a matrix containing the variable improvements through the iterations.
 This improvement in therefore considered as the relative influence.
+
+Please note that this algorithm has been adapted from `rpart` itself and therefore cover special cases (e.g. need to rescale for `anova` method).
 
 One can then present the function arguments:
 
@@ -350,7 +365,7 @@ BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"
               interaction.depth = 4,
               shrinkage = 0.01,
               bag.fraction = 0.5,
-              colsample.bytree = 2,
+              colsample.bytree = 3,
               keep.data = T,
               is.verbose = F,
               cv.folds = 1,
@@ -369,4 +384,120 @@ BT_algo_contd$BTParams$n.iter
 head(predict(BT_algo_contd, n.iter = 350, type='link'), 10)
 ```
 
+## Comparison between Adaptive Boosting Tree and Boosting Tree
+
+In our first example, we decided to fit an Adaptive Boosting Tree approach. However, one can be interested in fitting a Boosting Tree one.
+We note that the cross-validation is relevant for the later case while it might not be needed for the former one. In fact, by construction the Adaptive Boosting Tree
+will naturally ends up to root node, which will not bring more information. This is then a natural stopping criterion.
+
+Let's fit a classical BT with the same parameters. All the presentation already made can be transposed in this specific case as well.
+
+```{r}
+classical_BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
+                        data = dataset,
+                        tweedie.power = 1,
+                        ABT = F,
+                        n.iter = 300,
+                        train.fraction = 0.8,
+                        interaction.depth = 4,
+                        shrinkage = 0.01,
+                        bag.fraction = 0.5,
+                        colsample.bytree = 3,
+                        keep.data = T,
+                        is.verbose = F,
+                        cv.folds = 3,
+                        folds.id = NULL,
+                        n.cores = 1,
+                        weights = ExpoR,
+                        seed = 44)
+```
+
+One of the main purpose of Boosting Tree is to keep a constant number of internal nodes (= `interaction.depth`). On the other hand, this value should decrease for the Adaptive approach.
+
+
+```{r}
+table(sapply(seq(1, 300), function(xx){nrow(classical_BT_algo$BTIndivFits[[xx]]$frame[classical_BT_algo$BTIndivFits[[xx]]$frame$var != "<leaf>",])}))
+whichNot4 <- which(sapply(seq(1, 300), function(xx){nrow(classical_BT_algo$BTIndivFits[[xx]]$frame[classical_BT_algo$BTIndivFits[[xx]]$frame$var != "<leaf>",])}) !=4)
+temp <- (lapply(whichNot4, function(xx){unique(classical_BT_algo$BTIndivFits[[xx]]$frame$var)}))
+temp ; table(unlist(temp))
+table(sapply(seq(1, 300), function(xx){nrow(BT_algo$BTIndivFits[[xx]]$frame[BT_algo$BTIndivFits[[xx]]$frame$var != "<leaf>",])}))
+```
+
+Please note that if e.g. `colsample.bytree` has been set to 2, one could have faced the following situation which is totally explainable due to database construction.
+
+```{r}
+classical_BT_algo_temp <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
+                        data = dataset,
+                        tweedie.power = 1,
+                        ABT = F,
+                        n.iter = 300,
+                        train.fraction = 0.8,
+                        interaction.depth = 4,
+                        shrinkage = 0.01,
+                        bag.fraction = 0.5,
+                        colsample.bytree = 2,
+                        keep.data = T,
+                        is.verbose = F,
+                        cv.folds = 3,
+                        folds.id = NULL,
+                        n.cores = 1,
+                        weights = ExpoR,
+                        seed = 44)
+
+table(sapply(seq(1, 300), function(xx){nrow(classical_BT_algo_temp$BTIndivFits[[xx]]$frame[classical_BT_algo_temp$BTIndivFits[[xx]]$frame$var != "<leaf>",])}))
+whichNot4 <- which(sapply(seq(1, 300), function(xx){nrow(classical_BT_algo_temp$BTIndivFits[[xx]]$frame[classical_BT_algo_temp$BTIndivFits[[xx]]$frame$var != "<leaf>",])}) !=4)
+temp <- (lapply(whichNot4, function(xx){unique(classical_BT_algo_temp$BTIndivFits[[xx]]$frame$var)}))
+temp[1:5] ; table(unlist(temp))
+```
+
+### Tree construction in Boosting Tree.
+
+All the trees in the expansion are built thanks to `rpart` package. The default `tree.control` are set such to grow the biggest tree possible. 
+However, as in other boosting package, it might happen that some of the built trees do not reach the expected `interaction.depth`.
+As we fully rely on `rpart` (we do not have full expansion control), in some specific cases we emphasize that some of the grown trees might not be able to meet the above requirement (i.e. the original `rpart` grown tree contains less than `interaction.depth` internal nodes).
+
+As the user might be aware of, it's not so obvious to build tree for a given `interaction.depth` only relying on the `rpart` package.
+We then want to explain how the trees are built in such approach.
+
+Let's built a `rpart` object as it's done during `BT` and analyze it.
+
+```{r}
+library(rpart)
+library(rpart.plot)
+tree <- rpart(Y ~ Gender+Age+Split+Sport+offset(log(ExpoR)),
+              data = dataset,
+              method = "poisson",
+              control = rpart.control(cp = -Inf, maxdepth = 4, xval = 0, minsplit = 2))
+rpart.plot(tree)
+```
+
+Thanks to the `snip.rpart` function, one can snip the trees to a given specific size. This functions take the following two arguments:
+
+* `x`	fitted model object of class "rpart". This is assumed to be the result of some function that produces an object with the same named components as that returned by the `rpart` function.
+* `toss` an integer vector containing indices (node numbers) of all subtrees to be snipped off. If missing, user selects branches to snip off as described below.
+
+Therefore by selecting the correct node indices, one can delete the undesired subtrees and then ending up with a tree containing the wished number of internal nodes.
+To do this selection, one has to look into the `rpart$frame` dataframe.
+
+```{r}
+frame <- tree$frame
+frame_woLeaf <- frame[frame$var != "<leaf>",] ; frame_woLeaf
+```
+
+By construction, one can observe that the node number are attributed in a level-wised fashion, i.e. the root node will have index 1, the first left (resp. right) internal node will receive index 2 (resp. 3), the deep two nodes will receive index (from left to right) 4, 5, 6 and 7, ...
+
+To keep only `interaction.depth` internal nodes one then needs to drop all nodes with index greater than `interaction.depth`. The tree returned following this approach will of course be grown level-wise. Please note that using such trick can also help to different trees (e.g. leaf-wise, all splits to right, ...).
+
+We emphasize that this `snip.rpart` code can also be used to snip subtrees visually (user can snip using its mouse). This was in fact the first idea behind this function.
+
+One can then prune the tree. Please note that the prediction are coherent with the new pruning whereas the `variable.importance` field is not updated accordingly.
+
+```{r}
+vecIndex <- sort(as.numeric(rownames(frame_woLeaf)))
+treeSnipped <- rpart::snip.rpart(tree, toss=vecIndex[seq(4+1, length(vecIndex))])
+rpart.plot(treeSnipped)
+```
+
+To be precise, please note that we added an extra condition to handle cases where the initially built tree contains less than `interaction.depth` internal nodes. 
+In this case, the original built tree is kept and consists in the biggest possible tree that one can built using `rpart` (this kind of case can happen as we observed in the example above - i.e. the variables don't allow to have enough splits or, more generally, the user expects a "too big" tree).
 
