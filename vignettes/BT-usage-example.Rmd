@@ -463,12 +463,10 @@ Let's built a `rpart` object as it's done during `BT` and analyze it.
 
 ```{r}
 library(rpart)
-library(rpart.plot)
 tree <- rpart(Y ~ Gender+Age+Split+Sport+offset(log(ExpoR)),
               data = dataset,
               method = "poisson",
               control = rpart.control(cp = -Inf, maxdepth = 4, xval = 0, minsplit = 2))
-rpart.plot(tree)
 ```
 
 Thanks to the `snip.rpart` function, one can snip the trees to a given specific size. This functions take the following two arguments:
@@ -495,7 +493,8 @@ One can then prune the tree. Please note that the prediction are coherent with t
 ```{r}
 vecIndex <- sort(as.numeric(rownames(frame_woLeaf)))
 treeSnipped <- rpart::snip.rpart(tree, toss=vecIndex[seq(4+1, length(vecIndex))])
-rpart.plot(treeSnipped)
+frame <- treeSnipped$frame
+frame_woLeaf <- frame[frame$var != "<leaf>",] ; frame_woLeaf
 ```
 
 To be precise, please note that we added an extra condition to handle cases where the initially built tree contains less than `interaction.depth` internal nodes. 
