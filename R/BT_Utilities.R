@@ -146,4 +146,47 @@ check_if_BTCV_fit <- function(object){
   assertInherits(object, "BTCVFit")
 }
 
+############################
+# Splitting strategy.
+############################
+
+#' @keywords internal
+BT_splittingStrategy <- function(rpart_object, interaction.depth){
+
+  ff <- rpart_object$frame
+  # No split available - rootnode.
+  if (is.null(rpart_object$splits) || nrow(rpart_object$splits)==0){return()}
+
+  # Points to primary splits in ff
+  fpri <- which(ff$var != "<leaf>")
+  # Points to primaries in the splits matrix
+  spri <- 1 + cumsum(c(0, 1 + ff$ncompete[fpri] + ff$nsurrogate[fpri]))
+  spri <- spri[seq_along(fpri)]
+
+  # Add improvements to primary splits in ff and special treatment for anova.
+  ff <- cbind(ff[fpri,], "improve"=rpart_object$splits[spri, "improve"])
+  if (rpart_object$method == "anova") ff$improve <- ff$improve * ff$dev
+
+  ff$node <- as.numeric(rownames(ff))
+  ff <- ff[order(ff$improve, decreasing = T), c("node", "improve")]
+
+  for (i in seq(1, interaction.depth)){
+    if (i==1){
+      # Initialization
+      nodeToKeep <- c(1)
+      nodeCandidates <- c(2, 3)
+    }else{
+      # Be sure we consider only positive improvement (normally not needed, managed by rpart)
+      nodeIndex <- match(nodeCandidates, ff[ff$improve >0, "node"])
+      if (all(is.na(nodeIndex))){
+        # No further splits possible.
+        return(setdiff(ff$node, nodeToKeep))
+      }
+      bestSplittingNode <- nodeCandidates[which.min(nodeIndex)]
+      nodeToKeep <- c(nodeToKeep, bestSplittingNode)
+      nodeCandidates <- c(setdiff(nodeCandidates, bestSplittingNode), c(2*bestSplittingNode, 2*bestSplittingNode + 1))
+    }
+  }
+  return(setdiff(ff$node, nodeToKeep))
+}
 

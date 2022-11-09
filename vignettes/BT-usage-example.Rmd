@@ -21,9 +21,12 @@ vignette: >
   * Extension to the whole Tweedie family.
   * Writing.
 
-  
+
 ```{r, echo=FALSE}
-write("TMPDIR = 'C:\\Users\\Gireg Willame\\Desktop\\TMP'", file=file.path(Sys.getenv('R_USER'), '.Renviron'))
+# write("TMPDIR = 'C:\\Users\\Gireg Willame\\Desktop\\TMP'", file=file.path(Sys.getenv('R_USER'), '.Renviron'))
+# knitr::opts_chunk$set(
+#    fig.path = "c:/Users/Gireg Willame/Desktop/TMP/Figures"
+# )
 ```
 
 # BT 
@@ -461,12 +464,18 @@ We then want to explain how the trees are built in such approach.
 
 Let's built a `rpart` object as it's done during `BT` and analyze it.
 
-```{r}
+```{r fig.height = 5, fig.width = 5, fig.align = "center"}
 library(rpart)
 tree <- rpart(Y ~ Gender+Age+Split+Sport+offset(log(ExpoR)),
               data = dataset,
               method = "poisson",
-              control = rpart.control(cp = -Inf, maxdepth = 4, xval = 0, minsplit = 2))
+              control = rpart.control(cp = -Inf, maxdepth = 4, xval = 0, minsplit = 2, maxsurrogate = 0, maxcompete = 0))
+
+frame_woLeaf <- tree$frame[tree$frame$var != "<leaf>",] ; frame_woLeaf
+
+# par(xpd=TRUE)
+# plot(tree, compress=TRUE, uniform = T, branch = 0.5)
+# text(tree, minlength = 4, splits = T, use.n = T, digits = 2, cex=0.65)
 ```
 
 Thanks to the `snip.rpart` function, one can snip the trees to a given specific size. This functions take the following two arguments:
@@ -475,28 +484,58 @@ Thanks to the `snip.rpart` function, one can snip the trees to a given specific 
 * `toss` an integer vector containing indices (node numbers) of all subtrees to be snipped off. If missing, user selects branches to snip off as described below.
 
 Therefore by selecting the correct node indices, one can delete the undesired subtrees and then ending up with a tree containing the wished number of internal nodes.
-To do this selection, one has to look into the `rpart$frame` dataframe.
-
-```{r}
-frame <- tree$frame
-frame_woLeaf <- frame[frame$var != "<leaf>",] ; frame_woLeaf
-```
+To do this selection, one has to look into the `rpart$frame` and `rpart$splits``dataframes.
 
 By construction, one can observe that the node number are attributed in a level-wised fashion, i.e. the root node will have index 1, the first left (resp. right) internal node will receive index 2 (resp. 3), the deep two nodes will receive index (from left to right) 4, 5, 6 and 7, ...
 
 To keep only `interaction.depth` internal nodes one then needs to drop all nodes with index greater than `interaction.depth`. The tree returned following this approach will of course be grown level-wise. Please note that using such trick can also help to different trees (e.g. leaf-wise, all splits to right, ...).
 
+To keep only `interaction.detph` internal nodes a specific splitting strategy is applied. This one is similar to the strategy used in `gbm3` and consists in:
+
+* If `interaction.depth` is set to 1, it is sufficient to reduce the original tree to the root node and its children.
+* If `interaction.depth` is greater than 1, the idea is to build the subtree with an iterative fashion.
+  * Assume that we've built a subtree with `k < interaction.depth` splits.
+  * We'll consider all the improvement for this subtree's children. That's looking at the best terminal node in terms of deviance improvement.
+  * For the children that is optimal for the above criteria, one can then split it. The original child now becomes a parent node while two more terminal nodes are created.
+  * The process is repeated until `interaction.depth` splits are defined or that no further splits can be found. In the latter case, one can then end up with tree smaller than expected.
+  Please note that only positive improvements are considered during the process.
+
 We emphasize that this `snip.rpart` code can also be used to snip subtrees visually (user can snip using its mouse). This was in fact the first idea behind this function.
 
-One can then prune the tree. Please note that the prediction are coherent with the new pruning whereas the `variable.importance` field is not updated accordingly.
+One can then prune the tree. Please note that the predictions are coherent with the new pruning whereas the `variable.importance` field is not updated accordingly.
 
-```{r}
-vecIndex <- sort(as.numeric(rownames(frame_woLeaf)))
-treeSnipped <- rpart::snip.rpart(tree, toss=vecIndex[seq(4+1, length(vecIndex))])
-frame <- treeSnipped$frame
-frame_woLeaf <- frame[frame$var != "<leaf>",] ; frame_woLeaf
+```{r fig.height = 5, fig.width = 5, fig.align = "center"}
+ff <- tree$frame[tree$frame$var != "<leaf>",]
+ff <- cbind(ff, tree$splits)
+ff$node <- as.numeric(rownames(ff))
+ff <- ff[order(ff$improve, decreasing = T), c("node", "improve")]
+
+interaction.depth <- 4
+for (i in seq(1, interaction.depth)){
+  if (i==1){
+    # Initialization
+    nodeToKeep <- c(1)
+    nodeCandidates <- c(2, 3)
+  }else{
+    # Be sure we consider only positive improvement (normally not needed, managed by rpart)
+    nodeIndex <- match(nodeCandidates, ff[ff$improve >0, "node"])
+    if (all(is.na(nodeIndex))){
+      # No further splits possible.
+      return(setdiff(ff$node, nodeToKeep))
+    }
+    bestSplittingNode <- nodeCandidates[which.min(nodeIndex)]
+    nodeToKeep <- c(nodeToKeep, bestSplittingNode)
+    nodeCandidates <- c(setdiff(nodeCandidates, bestSplittingNode), c(2*bestSplittingNode, 2*bestSplittingNode + 1))
+  }
+}
+
+treeSnipped <- rpart::snip.rpart(tree, toss=setdiff(ff$node, nodeToKeep))
+
+frame_woLeaf <- treeSnipped$frame[treeSnipped$frame$var != "<leaf>",] ; frame_woLeaf
+
+#par(xpd=TRUE)
+#plot(treeSnipped, compress=TRUE, uniform = T, branch = 0.5)
+#text(treeSnipped, minlength = 4, splits = T, use.n = T, digits = 2, cex=0.9)
 ```
 
-To be precise, please note that we added an extra condition to handle cases where the initially built tree contains less than `interaction.depth` internal nodes. 
-In this case, the original built tree is kept and consists in the biggest possible tree that one can built using `rpart` (this kind of case can happen as we observed in the example above - i.e. the variables don't allow to have enough splits or, more generally, the user expects a "too big" tree).
 

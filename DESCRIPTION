@@ -1,6 +1,6 @@
 Package: BT
 Title: (Adaptive) Boosting Trees Algorithm
-Version: 0.2
+Version: 0.3
 Date: June, 2022
 Authors@R: 
     c(person("Gireg", "Willame", email = "g.willame@detralytics.eu", role = c("aut", "cre", "cph")),
