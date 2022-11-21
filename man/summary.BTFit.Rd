@@ -62,7 +62,7 @@ M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses 
 \code{\link{BT}}, \code{\link{BT_relative_influence}}.
 }
 \author{
-Gireg Willame \email{g.willame@detralytics.eu}
+Gireg Willame \email{gireg.willame@gmail.com}
 
 \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 }

@@ -18,9 +18,9 @@
 #' iterations, and so on.
 #'
 #' As for the fit, the predictions do not include any offset term.
-#' In the Poisson case, please remind that a weighted approach is initally favored.
+#' In the Poisson case, please remind that a weighted approach is initially favored.
 #'
-#' @author Gireg Willame \email{g.willame@@detralytics.eu}
+#' @author Gireg Willame \email{gireg.willame@@gmail.com}
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'

@@ -20,8 +20,8 @@ Vector containing the cross-validation errors w.r.t. the boosting iteration.
 Function to compute the cross-validation error.
 }
 \details{
-This function computes the the global cross-validation error as a function of the boosting iteration. Differently said, this measure is obtained by
-computing the weighted average of out-of-fold errors.
+This function computes the global cross-validation error as a function of the boosting iteration. Differently said, this measure is obtained by
+computing the average of out-of-fold errors.
 }
 \references{
 M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions}, \emph{Springer Actuarial}.
@@ -42,7 +42,7 @@ M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses 
 \code{\link{BT}}.
 }
 \author{
-Gireg Willame \email{g.willame@detralytics.eu}
+Gireg Willame \email{gireg.willame@gmail.com}
 
 \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 }

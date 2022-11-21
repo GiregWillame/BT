@@ -51,8 +51,7 @@ BT_callBoosting(
 
 \item{validation.set}{a held-out data frame containing all the related variables on which one wants to assess the algorithm performance. This can be NULL.}
 
-\item{tweedie.power}{the tweedie power related to the chosen distribution. This parameter should be a positive integer not defined in the interval (0,1). By default, it is set to 1.
-Currently, the only Poisson approach is developed.}
+\item{tweedie.power}{Experimental parameter currently not used - Set to 1 referring to Poisson distribution.}
 
 \item{respVar}{the name of the target/response variable.}
 
@@ -67,7 +66,8 @@ Currently, the only Poisson approach is developed.}
 \item{train.fraction}{the first \code{train.fraction * nrows(data)} observations are used to fit the \code{BT} and the remainder are used for
 computing out-of-sample estimates (also known as validation error) of the loss function. It is mainly used to report the value in the \code{BTFit} object.}
 
-\item{interaction.depth}{the maximum depth of variable interactions: 1 builds an additive model, 2 builds a model with up to two-way interactions, etc. By default, it is set to 4.
+\item{interaction.depth}{the maximum depth of variable interactions: 1 builds an additive model, 2 builds a model with up to two-way interactions, etc.
+This parameter can also be interpreted as the maximum number of non-terminal nodes. By default, it is set to 4.
 Please note that if this parameter is \code{NULL}, all the trees in the expansion are built based on the \code{tree.control} parameter only.
 This option is devoted to advanced users only and allows them to benefit from the full flexibility of the implemented algorithm.}
 
@@ -122,7 +122,7 @@ M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses 
 \code{\link{summary.BTFit}}, \code{\link{print.BTFit}}, \code{\link{BT_cv_errors}}.
 }
 \author{
-Gireg Willame \email{g.willame@detralytics.eu}
+Gireg Willame \email{gireg.willame@gmail.com}
 
 \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 }

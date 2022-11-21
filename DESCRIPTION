@@ -1,15 +1,11 @@
 Package: BT
 Title: (Adaptive) Boosting Trees Algorithm
 Version: 0.3
-Date: June, 2022
+Date: November, 2022
 Authors@R: 
-    c(person("Gireg", "Willame", email = "g.willame@detralytics.eu", role = c("aut", "cre", "cph")),
-    person("Julien", "Trufin", email = "j.trufin@detralytics.eu", role = "cph"),
-    person("Michel", "Denuit", email = "m.denuit@detralytics.eu", role = "cph"))
-Author: Gireg Willame [aut, cre, cph],
-  Julien Trufin [cph],
-  Michel Denuit [cph]
-Maintainer: Gireg Willame <g.willame@detralytics.eu>
+    c(person("Gireg", "Willame", email = "gireg.willame@gmail.com", role = c("aut", "cre", "cph")))
+Author: Gireg Willame [aut, cre, cph]
+Maintainer: Gireg Willame <gireg.willame@gmail.com>
 Depends: R (>= 4.0)
 Imports: rpart,
   stats,
@@ -19,9 +15,9 @@ Suggests:
     rmarkdown,
     knitr,
     testthat (>= 3.0.0)
-Description: This package aims to perform the (Adaptive) Boosting Trees Algorithm for Tweedie distributed response variables, using log-link function.
+Description: This package aims to perform the (Adaptive) Boosting Trees Algorithm for Poisson distributed response variables, using log-link function.
   The code approach is similar to the one used in gbm/gbm3. Moreover, each tree in the expansion is built thanks to the rpart package.
-URL: https://detralytics.com/
+URL: https://github.com/GiregWillame/BT/
 BugReports: https://github.com/GiregWillame/BT/issues/
 License: GPL (>= 3)
 Encoding: UTF-8

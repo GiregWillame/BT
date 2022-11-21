@@ -7,7 +7,7 @@
 #'
 #' @details Print the different input parameters as well as obtained results (best iteration/performance & relative influence) given the chosen approach.
 #'
-#' @author Gireg Willame \email{g.willame@@detralytics.eu}
+#' @author Gireg Willame \email{gireg.willame@@gmail.com}
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'

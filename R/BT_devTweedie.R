@@ -20,7 +20,7 @@
 #' \deqn{d(y, mu, w) = 2 w (max(y,0)^(2-p)/((1-p)(2-p)) - y mu^(1-p)/(1-p) + mu^(2-p)/(2-p)), else.}
 #'
 #'
-#' @author Gireg Willame \email{g.willame@@detralytics.eu}
+#' @author Gireg Willame \email{gireg.willame@@gmail.com}
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'

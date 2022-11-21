@@ -10,8 +10,7 @@
 #' @param data an optional data frame containing the variables in the model. By default the variables are taken from \code{environment(formula)}, typically the environment from which
 #' \code{BT} is called. If \code{keep.data=TRUE} in the initial call to \code{BT} then \code{BT} stores a copy with the object (up to the variables used).
 #'
-#' @param tweedie.power the tweedie power related to the chosen distribution. This parameter should be a positive integer not defined in the interval (0,1). By default, it is set to 1.
-#' Currently, the only Poisson approach is developed.
+#' @param tweedie.power Experimental parameter currently not used - Set to 1 referring to Poisson distribution.
 #'
 #' @param ABT a boolean parameter. If \code{ABT=TRUE} an adaptive boosting tree algorithm is built whereas if \code{ABT=FALSE} an usual boosting tree algorithm is run.
 #' By default, it is set to \code{TRUE}.
@@ -24,7 +23,8 @@
 #' @param train.fraction the first \code{train.fraction * nrows(data)} observations are used to fit the \code{BT} and the remainder are used for
 #' computing out-of-sample estimates (also known as validation error) of the loss function. By default, it is set to 1 meaning no out-of-sample estimates.
 #'
-#' @param interaction.depth the maximum depth of variable interactions: 1 builds an additive model, 2 builds a model with up to two-way interactions, etc. By default, it is set to 4.
+#' @param interaction.depth the maximum depth of variable interactions: 1 builds an additive model, 2 builds a model with up to two-way interactions, etc.
+#' This parameter can also be interpreted as the maximum number of non-terminal nodes. By default, it is set to 4.
 #' Please note that if this parameter is \code{NULL}, all the trees in the expansion are built based on the \code{tree.control} parameter only, independently
 #' of the \code{ABT} value.
 #' This option is devoted to advanced users only and allows them to benefit from the full flexibility of the implemented algorithm.
@@ -71,7 +71,9 @@
 #'
 #' @return a \code{BTFit} object.
 #'
-#' @author Gireg Willame \email{g.willame@@detralytics.eu}
+#' @details The NA values are currently dropped using \code{na.omit}.
+#'
+#' @author Gireg Willame \email{gireg.willame@@gmail.com}
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'
@@ -93,6 +95,7 @@
 #' M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses with Tweedie loss functions}. Paper submitted for publication.
 #'
 #' @examples
+#' \dontrun{
 #' ## Create some dataset.
 #' set.seed(4)
 #' n <- 10000
@@ -116,7 +119,6 @@
 #' ## Fit a Boosting Tree model.
 #' BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"), # formula
 #'               data = dataset, # data
-#'               tweedie.power = 1, # Poisson model.
 #'               ABT = TRUE, # Adaptive Boosting Tree
 #'               n.iter = 200,
 #'               train.fraction = 0.8,
@@ -155,6 +157,7 @@
 #' # Predict on the response scale, using the first best_iter.
 #' pred_best_iter <- predict(BT_algo, newdata = dataset,
 #'                           n.iter = best_iter, type = 'response')
+#' }
 #'
 #' @export
 #'
@@ -172,7 +175,7 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
   m <- match(c("formula", "data", "weights"), names(mf), 0)
   mf <- mf[c(1, m)]
   mf$drop.unused.levels <- TRUE
-  mf$na.action <- na.pass
+  mf$na.action <- na.omit #na.pass : Need to be reset to na.pass once NA well handled.
   mf[[1]] <- as.name("model.frame")
   m <- mf
   mf <- eval(mf, parent.frame())

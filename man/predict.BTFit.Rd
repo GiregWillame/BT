@@ -32,7 +32,7 @@ If \code{n.iter} is a vector then the result is a matrix with each column corres
 iterations, and so on.
 
 As for the fit, the predictions do not include any offset term.
-In the Poisson case, please remind that a weighted approach is initally favored.
+In the Poisson case, please remind that a weighted approach is initially favored.
 }
 \references{
 M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions}, \emph{Springer Actuarial}.
@@ -53,7 +53,7 @@ M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses 
 \code{\link{BT}}, \code{\link{BTFit}}.
 }
 \author{
-Gireg Willame \email{g.willame@detralytics.eu}
+Gireg Willame \email{gireg.willame@gmail.com}
 
 \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 }

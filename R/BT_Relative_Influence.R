@@ -19,7 +19,7 @@
 #' This function is not intended for end-user use. It performs the relative influence computation and is called during the summary function.
 #' Note that a permutation approach is not yet implemented.
 #'
-#' @author Gireg Willame \email{g.willame@@detralytics.eu}
+#' @author Gireg Willame \email{gireg.willame@@gmail.com}
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'

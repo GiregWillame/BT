@@ -13,7 +13,7 @@
 #'
 #' \item{BTIndivFits}{an object of class \code{BTIndivFits} containing the list of each individual tree fitted at each boosting iteration.}
 #'
-#' \item{distribution}{the distribution related tweedie.power that has been used to perform the algorithm.}
+#' \item{distribution}{the distribution related tweedie.power that has been used to perform the algorithm. It will currently always output 1.}
 #'
 #' \item{var.names}{a vector containing the names of the explanatory variables.}
 #'
@@ -50,7 +50,7 @@
 #'
 #' @section Structure : The following components must be included in a legitimate \code{BTFit} object.
 #'
-#' @author Gireg Willame \email{g.willame@@detralytics.eu}
+#' @author Gireg Willame \email{gireg.willame@@gmail.com}
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'

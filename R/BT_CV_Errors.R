@@ -9,10 +9,10 @@
 #' @return Vector containing the cross-validation errors w.r.t. the boosting iteration.
 #'
 #' @details
-#' This function computes the the global cross-validation error as a function of the boosting iteration. Differently said, this measure is obtained by
-#' computing the weighted average of out-of-fold errors.
+#' This function computes the global cross-validation error as a function of the boosting iteration. Differently said, this measure is obtained by
+#' computing the average of out-of-fold errors.
 #'
-#' @author Gireg Willame \email{g.willame@@detralytics.eu}
+#' @author Gireg Willame \email{gireg.willame@@gmail.com}
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'

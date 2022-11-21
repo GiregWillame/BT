@@ -10,7 +10,7 @@
 #'
 #' @return Returns a new \code{\link{BTFit}} object containing the initial call as well as the new iterations performed.
 #'
-#' @author Gireg Willame \email{g.willame@@detralytics.eu}
+#' @author Gireg Willame \email{gireg.willame@@gmail.com}
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'
