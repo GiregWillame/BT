@@ -85,7 +85,7 @@ We list below all the available parameters:
 * `formula`: a symbolic description of the model to be fit. We emphasize that the offset are not supported with out approach. 
 * `data`: the database on which the computations will be performed. 
 * `tweedie.power`: Experimental parameter : the Tweedie power referencing to the response variable distribution. Always set to 1 referring to Poisson distribution.
-* `ABT`: bool value to define whether we fit a Boosting Tree (=FALSE) or an Adaptive Boosting Tree (=TRUE).
+* `ABT`: bool value to define whether we fit a Boosting Tree (=`FALSE`) or an Adaptive Boosting Tree (=`TRUE`).
 * `n.iter`: the number of iterations to user in the fitting.
 * `train.fraction`: the percentage of the `data` that will be used as training set. The remaining part will be used as validation set.
 * `interaction.depth`: the maximum number of splits in a tree present in the expansion.
@@ -115,7 +115,7 @@ In usual MTPL pricing, the `ExpoR` variable allows to consider the time-exposure
 The latter variable is thus generally set in offset.
 In a Tweedie framework with log-link function, we emphasize that working with offset is equivalent to build a model on the rate response variable and adjusted weights. More precisely, the variable `Y_normalized` will be used as response variables with weights given by `ExpoR` (instead of original values, i.e. 1).
 This choice was made during modelling by the author.
-* We'll work in the context of Adaptive Boosting Tree and perform 300 iterations (=`n.iter`).
+* We'll work in the context of Boosting Tree and perform 300 iterations (=`n.iter`).
 * The `interaction.depth` and `shrinkage` parameters will respectively be set to 4 and 0.01.
 * The `train.fraction` will be set to 0.8, meaning that the first `0.8*nrow(data)` will be considered as training set and the remaining `data` records as validation set. Moreover, random effects such as bagging and columns sample for each tree will be defined. The `bag.fraction` and `colsample.bytree` parameters will respectively be set to 0.5 and 3.
 * 3-cv will be performed for this example.
@@ -123,7 +123,7 @@ This choice was made during modelling by the author.
 ```{r}
 BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
               data = dataset,
-              ABT = T,
+              ABT = F,
               n.iter = 300,
               train.fraction = 0.8,
               interaction.depth = 4,
@@ -195,7 +195,7 @@ head(BT_algo$BTErrors$oob.improvement)
 head(BT_algo$BTErrors$cv.error)
 ```
 
-Finaly, we note that all the trees fitted during the algorithm are stored in the `BTIndivFits` list:
+Finally, we note that all the trees fitted during the algorithm are stored in the `BTIndivFits` list:
 
 ```{r}
 BT_algo$BTIndivFits[[1]] # First tree in the expansion
@@ -244,11 +244,11 @@ Up to now, the computation of the relative influence isn't available for the per
 Regarding the currently developed method, we used the results furnished by `rpart.object`. In fact, each tree in the expansion is built thanks to this package and is stored in the `BT$BTIndivFits` list. 
 Moreover, note that this algorithm has been adapted from `rpart` itself and therefore cover special cases (e.g. need to rescale for `anova` method).
 
-One can then present the function arguments:
+One can then present the function's arguments:
 
 * `object`: a `BTFit` object, i.e. the result of the `BT` call.
 * `n.iter`: the number of iterations to use to compute the relative influence. This parameter is often set to the optimal number of iterations. 
-Per default, all the built trees will be used.
+By default, all the built trees will be used.
 * `method`: the function that has to be called to compute the relative influence. As previously mentioned, only one approach is currently available. This parameter should therefore remains set to its default value.
 * `normalize`: if the user wants to normalize the relative influence such that the sum over all normalized relative influence sum up to 100.
 * `order_it`: indicates whether the user wants to sort the relative influence or not.
@@ -268,7 +268,7 @@ Here are the function arguments:
 * `newdata`: the new data set used to realize the predictions.
 * `n.iter`: the number of boosting iterations (i.e. the number of trees) used to perform the predictions. Usually, all the iterations (i.e. the trees) up to the best one are considered to build the predictions. 
 Please note that this parameter can be a vector. In such a case, a matrix containing the predictions for each element in `n.iter` will be returned.
-* `type`: Specify if one wants to predict on the response or the link scale. 
+* `type`: Specify if one wants to predict on the 'response' or the 'link' scale. 
 * `single.iter`: If set to `TRUE` only the `n.iter` tree will be used to predict (i.e. not all the trees up to `n.iter`).
 
 Please note that if the `keep.data` argument was set to `TRUE` and if the `newdata` is not specified, the prediction will be achieved on the original training set.
@@ -313,7 +313,7 @@ We thus need to re-fit the first example (with `cv.folds` set to 1 and `keep.dat
 ```{r}
 BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"),
               data = dataset,
-              ABT = T,
+              ABT = F,
               n.iter = 300,
               train.fraction = 0.8,
               interaction.depth = 4,
@@ -340,10 +340,10 @@ head(predict(BT_algo_contd, n.iter = 350, type='link'), 10)
 
 ## Comparison between Adaptive Boosting Tree and Boosting Tree
 
-In our first example, we decided to fit an Adaptive Boosting Tree approach. However, one can be interested in fitting a Boosting Tree one.
-We note that the cross-validation is relevant for the later case while it might not be needed for the former one. In fact, by construction the Adaptive Boosting Tree
+In our first example, we decided to fit a Boosting Tree approach. However, one can be interested in fitting an Adaptive Boosting Tree one.
+We note that the cross-validation is relevant for the former case while it might not be needed for the later one. In fact, by construction the Adaptive Boosting Tree
 will naturally ends up to root node, which will not bring more information. This is then a natural stopping criterion.
 
-This task can easily be achieved taking the same example as before and setting `ABT` to `FALSE` instead of `TRUE`. It is then left to the interested reader.
+This task can easily be achieved taking the same example as before and setting `ABT` to `TRUE` instead of `FALSE`. It is then left to the interested reader.
 
 

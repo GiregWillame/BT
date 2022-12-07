@@ -119,7 +119,7 @@
 #' ## Fit a Boosting Tree model.
 #' BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"), # formula
 #'               data = dataset, # data
-#'               ABT = TRUE, # Adaptive Boosting Tree
+#'               ABT = FALSE, # Classical Boosting Tree
 #'               n.iter = 200,
 #'               train.fraction = 0.8,
 #'               interaction.depth = 3,
