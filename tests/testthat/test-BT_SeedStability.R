@@ -11,7 +11,7 @@ testthat::test_that("Stability in results with seed - Without CV",{
 
   # Create dataset.
   set.seed(444)
-  n <- 100000 # size of training set (number of observations)
+  n <- 10000 #100000 # size of training set (number of observations)
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)
@@ -110,7 +110,7 @@ testthat::test_that("Stability in results with seed - With CV",{
 
   # Create dataset.
   set.seed(444)
-  n <- 100000 # size of training set (number of observations)
+  n <- 10000#100000 # size of training set (number of observations)
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)

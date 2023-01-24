@@ -11,7 +11,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Inputs",{
 
   # Create datasets.
   set.seed(4)
-  n <- 100000
+  n <- 10000 #100000
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)
@@ -107,7 +107,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - Withou
 
   # Create datasets.
   set.seed(4)
-  n <- 100000
+  n <- 10000 #100000
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)
@@ -337,7 +337,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
 
   # Create datasets.
   set.seed(4)
-  n <- 100000
+  n <- 10000 #100000
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)

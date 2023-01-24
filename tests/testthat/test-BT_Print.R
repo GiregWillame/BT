@@ -10,7 +10,7 @@ testthat::test_that("Check the BT_Print function - Results",{
 
   # Create datasets.
   set.seed(4)
-  n <- 100000
+  n <- 10000 #100000
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)

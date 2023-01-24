@@ -1,7 +1,7 @@
 Package: BT
 Title: (Adaptive) Boosting Trees Algorithm
 Version: 0.3
-Date: November, 2022
+Date: 2023-24-01
 Authors@R: 
     c(person("Gireg", "Willame", email = "gireg.willame@gmail.com", role = c("aut", "cre", "cph")))
 Author: Gireg Willame [aut, cre, cph]
@@ -15,7 +15,7 @@ Suggests:
     rmarkdown,
     knitr,
     testthat (>= 3.0.0)
-Description: This package aims to perform the (Adaptive) Boosting Trees Algorithm for Poisson distributed response variables, using log-link function.
+Description: Performs (Adaptive) Boosting Trees for Poisson distributed response variables, using log-link function.
   The code approach is similar to the one used in gbm/gbm3. Moreover, each tree in the expansion is built thanks to the rpart package.
 URL: https://github.com/GiregWillame/BT/
 BugReports: https://github.com/GiregWillame/BT/issues/

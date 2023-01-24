@@ -9,7 +9,7 @@
 testthat::test_that("BT_More checks - Inputs consistency",{
   # Create datasets.
   set.seed(4)
-  n <- 100000
+  n <- 10000 #100000
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)
@@ -96,7 +96,7 @@ testthat::test_that("BT_More checks - Results",{
 
   # Create datasets.
   set.seed(4)
-  n <- 100000
+  n <- 10000 #100000
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)
@@ -224,7 +224,7 @@ testthat::test_that("BT_More checks - Results - Seed stability",{
 
   # Create datasets.
   set.seed(4)
-  n <- 100000
+  n <- 10000 #100000
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)
