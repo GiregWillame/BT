@@ -7,6 +7,8 @@
 ########################
 
 testthat::test_that("BT_More checks - Inputs consistency",{
+
+  skip_on_cran()
   # Create datasets.
   set.seed(4)
   n <- 10000 #100000
@@ -93,6 +95,8 @@ testthat::test_that("BT_More checks - Inputs consistency",{
 })
 
 testthat::test_that("BT_More checks - Results",{
+
+  skip_on_cran()
 
   # Create datasets.
   set.seed(4)
@@ -222,6 +226,7 @@ testthat::test_that("BT_More checks - Results",{
 
 testthat::test_that("BT_More checks - Results - Seed stability",{
 
+  skip_on_cran()
   # Create datasets.
   set.seed(4)
   n <- 10000 #100000

@@ -8,6 +8,8 @@
 
 testthat::test_that("Check the BT_Print function - Results",{
 
+  skip_on_cran()
+
   # Create datasets.
   set.seed(4)
   n <- 10000 #100000

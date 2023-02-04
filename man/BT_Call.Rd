@@ -93,7 +93,7 @@ Note that in case of cross-validation, if \code{keep.data=TRUE} the initial data
 \item{is.verbose}{if \code{is.verbose=TRUE}, the \code{BT} will print out the algorithm progress.}
 }
 \value{
-a \code{BTFit} object.
+a \code{\link{BTFit}} object.
 }
 \description{
 Fit a (Adaptive) Boosting Trees algorithm. This is for "power" users who have a large number of variable and wish to avoid calling

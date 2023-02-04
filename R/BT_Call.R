@@ -51,7 +51,7 @@
 #'
 #' @param is.verbose if \code{is.verbose=TRUE}, the \code{BT} will print out the algorithm progress.
 #'
-#' @return a \code{BTFit} object.
+#' @return a \code{\link{BTFit}} object.
 #'
 #' @author Gireg Willame \email{gireg.willame@@gmail.com}
 #'

@@ -46,7 +46,7 @@ library(BT)
 ## Define a database
 
 To demonstrate the `BT` usage, we'll use a simulated database where the response variable is Poisson distributed.
-The built database contains $n = 100000$ records as well as the following simulated variables (with their interpretation in an insurance MTPL context):
+The built database contains $n = 50000$ records as well as the following simulated variables (with their interpretation in an insurance MTPL context):
 
 * `Y`, the Poisson distributed response variable (e.g. the number of claims).
 * `Gender`, `Age` and `Sport` which are directly linked to the response variable (e.g. resp. the policyholder's gender and age, the vehicle type).
@@ -57,7 +57,7 @@ The built database contains $n = 100000$ records as well as the following simula
 
 ```{r}
 set.seed(4)
-n <- 100000
+n <- 50000
 
 Gender <- factor(sample(c("male","female"),n,replace=TRUE))
 Age <- sample(c(18:65),n,replace=TRUE)

@@ -9,6 +9,10 @@ perf_plot <- function(BTFit_object, best_iter, out_of_bag_curve,
   if(!is.logical(out_of_bag_curve) || (length(out_of_bag_curve)) > 1 || is.na(out_of_bag_curve))
     stop("out_of_bag_curve must be a logical - excluding NA")
 
+  #Restore old parameters on exit.
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+
   par(mar=c(5,4,4,4)+.1)
 
   # Get y-axis label and limits
@@ -58,6 +62,10 @@ plot_oobag <- function(BTFit_object, best_iter, overlay, ylab) {
 
   # Plot smoothed out of bag improvement
   if(overlay) {
+    #Restore old parameters on exit.
+    oldpar <- par(no.readonly = TRUE)
+    on.exit(par(oldpar))
+
     par(new=TRUE)
     plot(smoother$x,
          cumsum(smoother$y),

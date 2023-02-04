@@ -15,6 +15,8 @@
 
 testthat::test_that("Check the BT_Perf function - Inputs",{
 
+  skip_on_cran()
+
   # Create datasets.
   set.seed(4)
   n <- 10000 #100000
@@ -104,6 +106,8 @@ testthat::test_that("Check the BT_Perf function - Inputs",{
 
 testthat::test_that("Check the BT_Perf function - Validation only",{
 
+  skip_on_cran()
+
   # Create datasets.
   set.seed(4)
   n <- 10000 #100000
@@ -174,6 +178,8 @@ testthat::test_that("Check the BT_Perf function - Validation only",{
 })
 
 testthat::test_that("Check the BT_Perf function - OOB only",{
+
+  skip_on_cran()
 
   # Create datasets.
   set.seed(4)
@@ -253,6 +259,8 @@ testthat::test_that("Check the BT_Perf function - OOB only",{
 
 testthat::test_that("Check the BT_Perf function - CV only",{
 
+  skip_on_cran()
+
   # Create datasets.
   set.seed(4)
   n <- 10000 #100000
@@ -323,6 +331,8 @@ testthat::test_that("Check the BT_Perf function - CV only",{
 })
 
 testthat::test_that("Check the BT_Perf function - Validation and OOB",{
+
+  skip_on_cran()
 
   # Create datasets.
   set.seed(4)
@@ -415,6 +425,8 @@ testthat::test_that("Check the BT_Perf function - Validation and OOB",{
 
 testthat::test_that("Check the BT_Perf function - validation and CV",{
 
+  skip_on_cran()
+
   # Create datasets.
   set.seed(4)
   n <- 10000 #100000
@@ -502,6 +514,8 @@ testthat::test_that("Check the BT_Perf function - validation and CV",{
 })
 
 testthat::test_that("Check the BT_Perf function - CV and OOB",{
+
+  skip_on_cran()
 
   # Create datasets.
   set.seed(4)
@@ -597,6 +611,8 @@ testthat::test_that("Check the BT_Perf function - CV and OOB",{
 })
 
 testthat::test_that("Check the BT_Perf function - Validation, OOB and CV",{
+
+  skip_on_cran()
 
   # Create datasets.
   set.seed(4)

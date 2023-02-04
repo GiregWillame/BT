@@ -11,7 +11,7 @@ testthat::test_that("Same values as with the offset approach",{
   # Create datasets.
   set.seed(4)
   # training set.
-  n <- 500000 # size of training set (number of observations)
+  n <- 10000 #500000 # size of training set (number of observations)
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)

@@ -94,7 +94,7 @@ Therefore, the seed (if defined) used inside each fold will be a multiple of the
 \item{\dots}{not currently used.}
 }
 \value{
-a \code{BTFit} object.
+a \code{\link{BTFit}} object.
 }
 \description{
 Perform the (Adaptive) Boosting Trees algorithm. This prepare the inputs and call the function \code{\link{BT_call}}.
@@ -105,7 +105,7 @@ In case of cross-validation, this function prepares the folds and performs multi
 The NA values are currently dropped using \code{na.omit}.
 }
 \examples{
-\dontrun{
+\donttest{
 ## Create some dataset.
 set.seed(4)
 n <- 10000

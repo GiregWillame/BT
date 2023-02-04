@@ -17,6 +17,9 @@ print_perf_measures(x)
 
 \item{\dots}{arguments passed to \code{print.default}.}
 }
+\value{
+No return value.
+}
 \description{
 Functions to print the BT results.
 }

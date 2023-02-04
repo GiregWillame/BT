@@ -69,7 +69,7 @@
 #'
 #' @param \dots not currently used.
 #'
-#' @return a \code{BTFit} object.
+#' @return a \code{\link{BTFit}} object.
 #'
 #' @details The NA values are currently dropped using \code{na.omit}.
 #'
@@ -95,7 +95,7 @@
 #' M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses with Tweedie loss functions}. Paper submitted for publication.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## Create some dataset.
 #' set.seed(4)
 #' n <- 10000

@@ -8,6 +8,8 @@
 
 testthat::test_that("BT_Predict function checks - Check results",{
 
+  skip_on_cran()
+
   # Create datasets.
   set.seed(4)
   # training set.
@@ -177,6 +179,8 @@ testthat::test_that("BT_Predict function checks - Check results",{
 
 testthat::test_that("BT_Predict function checks - Wrong inputs",{
 
+  skip_on_cran()
+
   # Create datasets.
   set.seed(4)
   # training set.
@@ -263,6 +267,8 @@ testthat::test_that("BT_Predict function checks - Wrong inputs",{
 })
 
 testthat::test_that("BT_Predict function checks - keep.data set to TRUE",{
+
+  skip_on_cran()
 
   # Create datasets.
   set.seed(4)

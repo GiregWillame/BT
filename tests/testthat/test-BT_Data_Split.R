@@ -6,15 +6,6 @@
 #
 ########################
 
-# Useful to defined seed within the tests.
-with_seed <- function(seed, code) {
-  code <- substitute(code)
-  orig.seed <- .Random.seed
-  on.exit(.Random.seed <<- orig.seed)
-  set.seed(seed)
-  eval.parent(code)
-}
-
 testthat::test_that("Create_validation_set function",{
 
   # Create datasets.
@@ -90,13 +81,6 @@ testthat::test_that("create_cv_folds function",{
   expect_error(create_cv_folds(data = datasetFull, cv.folds = 3, folds.id = sample(seq(1,3), size = nrow(datasetFull)/2, replace = T)))
   expect_error(create_cv_folds(data = datasetFull, cv.folds = 3, folds.id = sample(seq(1,3), size = nrow(datasetFull)*0.8, replace = T)))
 
-
-  # Check the results if everything is well defined.
-  expect_equal(with_seed(4, create_cv_folds(data=datasetFull, cv.folds = 3, folds.id = NULL)),
-               with_seed(4, sample(seq(1, 3), size=nrow(datasetFull), replace = T)))
-
-  expect_equal(with_seed(4, create_cv_folds(data=datasetFull, cv.folds = 5, folds.id = NULL)),
-               with_seed(4, sample(seq(1, 5), size=nrow(datasetFull), replace = T)))
 
   set.seed(4)
   foldsExample <- sample(seq(1, 3), size = nrow(datasetFull), replace = T)

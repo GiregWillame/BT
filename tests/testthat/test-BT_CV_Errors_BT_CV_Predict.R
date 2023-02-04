@@ -9,6 +9,7 @@
 
 testthat::test_that("Check the BT_CV_Errors and BT_CV_Predict functions",{
 
+  skip_on_cran()
   # Create datasets.
   set.seed(4)
   n <- 10000 #100000

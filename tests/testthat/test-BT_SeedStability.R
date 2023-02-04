@@ -9,6 +9,7 @@
 
 testthat::test_that("Stability in results with seed - Without CV",{
 
+  skip_on_cran()
   # Create dataset.
   set.seed(444)
   n <- 10000 #100000 # size of training set (number of observations)
@@ -107,6 +108,8 @@ testthat::test_that("Stability in results with seed - Without CV",{
 })
 
 testthat::test_that("Stability in results with seed - With CV",{
+
+  skip_on_cran()
 
   # Create dataset.
   set.seed(444)

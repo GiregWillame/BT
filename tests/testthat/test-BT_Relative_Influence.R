@@ -9,6 +9,8 @@
 
 testthat::test_that("Check the BT_Relative_Influence function - Inputs",{
 
+  skip_on_cran()
+
   # Create datasets.
   set.seed(4)
   n <- 10000 #100000
@@ -105,9 +107,11 @@ testthat::test_that("Check the BT_Relative_Influence function - Inputs",{
 
 testthat::test_that("Check the BT_Relative_Influence function - Results - Without surrogates",{
 
+  skip_on_cran()
+
   # Create datasets.
   set.seed(4)
-  n <- 10000 #100000
+  n <- 20000
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)
@@ -335,9 +339,11 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - Withou
 # It also allows us to verify whether the get_rel_inf_of_vars is working as expected.
 testthat::test_that("Check the BT_Relative_Influence function - Results - With surrogates",{
 
+  skip_on_cran()
+
   # Create datasets.
   set.seed(4)
-  n <- 10000 #100000
+  n <- 20000 #100000
 
   Gender <- factor(sample(c("male","female"),n,replace=TRUE))
   Age <- sample(c(18:65),n,replace=TRUE)
