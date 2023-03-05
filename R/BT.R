@@ -237,7 +237,7 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
 
   # Else : cv.folds > 1 (or folds.id defined).
   if (is.verbose) message("Fit the model on the different CV folds. \n")
-  folds <- create_cv_folds(training.set, cv.folds, folds.id)
+  folds <- create_cv_folds(training.set, cv.folds, folds.id, seed)
   cl <- makeCluster(n.cores)
   clusterExport(cl, varlist=c("training.set", "tweedie.power", "respVar", "w", "explVar", "ABT",
                               "tree.control", "train.fraction", "interaction.depth", "bag.fraction", "shrinkage", "n.iter",

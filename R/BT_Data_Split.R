@@ -11,11 +11,13 @@ create_validation_set <- function(data, train.fraction){
 }
 
 #' @keywords internal
-create_cv_folds <- function(data, cv.folds, folds.id){
+create_cv_folds <- function(data, cv.folds, folds.id, seed=NULL){
   if (!is.null(folds.id)){
     if (length(folds.id)!=nrow(data)) stop("length(folds.id) differs from the number of rows in the data set.")
     return(folds.id)
   } else{
-    return( sample(seq(1,cv.folds), size=nrow(data), replace=T))
+    if (!is.null(seed)) set.seed(seed)
+    cv_index <- sample(seq(1,cv.folds), size=nrow(data), replace=T)
+    return(cv_index)
   }
 }
