@@ -32,9 +32,10 @@
 #' @rdname print.BTFit
 #' @export
 #'
-print.BTFit <- function(x, ... ){
+print.BTFit <- function(x, ...) {
   # Print call
-  if(!is.null(x$call)) print(x$call)
+  if (!is.null(x$call))
+    print(x$call)
 
   #  Print out number of iterations and distribution used
   print_iters_and_dist(x)
@@ -43,9 +44,14 @@ print.BTFit <- function(x, ... ){
   best_iter <- print_perf_measures(x)
 
   # Print out relative influence of variables
-  ri <- BT_relative_influence(x, n.iter=best_iter)
-  cat( "There were", length(x$var.names), "predictors of which",
-       sum(ri > 0), "had non-zero influence.\n" )
+  ri <- BT_relative_influence(x, n.iter = best_iter)
+  cat(
+    "There were",
+    length(x$var.names),
+    "predictors of which",
+    sum(ri > 0),
+    "had non-zero influence.\n"
+  )
 
   return(invisible(x))
 }
@@ -55,12 +61,22 @@ print.BTFit <- function(x, ... ){
 #' @keywords internal
 print_iters_and_dist <- function(x) {
   check_if_BT_fit(x)
-  if (x$BTParams$ABT){
-    cat("An adaptive boosting tree model with Tweedie parameter :", x$distribution, " has been fitted.\n",
-        length(iteration_error(x, 'train')), "iterations were performed.\n")
-  }else{
-    cat("A boosting tree model with Tweedie parameter :", x$distribution, " has been fitted.\n",
-        length(iteration_error(x, 'train')), "iterations were performed.\n")
+  if (x$BTParams$ABT) {
+    cat(
+      "An adaptive boosting tree model with Tweedie parameter :",
+      x$distribution,
+      " has been fitted.\n",
+      length(iteration_error(x, 'train')),
+      "iterations were performed.\n"
+    )
+  } else{
+    cat(
+      "A boosting tree model with Tweedie parameter :",
+      x$distribution,
+      " has been fitted.\n",
+      length(iteration_error(x, 'train')),
+      "iterations were performed.\n"
+    )
   }
 }
 
@@ -73,16 +89,16 @@ print_perf_measures <- function(x) {
   best_iter <- length(iteration_error(x, 'train'))
 
   # OOB best iteration.
-  if (has_bagging(x)){
-    best_iter <- print(BT_callPerformance(x, method="OOB"))
+  if (has_bagging(x)) {
+    best_iter <- print(BT_callPerformance(x, method = "OOB"))
   }
   # CV best iteration
   if (has_cross_validation(x)) {
-    best_iter <- print(BT_callPerformance(x, method="cv"))
+    best_iter <- print(BT_callPerformance(x, method = "cv"))
   }
   # Validation set best iteration
   if (has_train_validation_split(x)) {
-    best_iter <- print(BT_callPerformance(x, method="validation"))
+    best_iter <- print(BT_callPerformance(x, method = "validation"))
   }
 
   return(best_iter)

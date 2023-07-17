@@ -41,49 +41,76 @@
 #' @export
 #'
 summary.BTFit <- function(object,
-                          cBars=length(object$var.names),
-                          n.iter=object$BTParams$n.iter,
-                          plot_it=TRUE,
-                          order_it=TRUE,
-                          method=BT_relative_influence,
-                          normalize=TRUE,
+                          cBars = length(object$var.names),
+                          n.iter = object$BTParams$n.iter,
+                          plot_it = TRUE,
+                          order_it = TRUE,
+                          method = BT_relative_influence,
+                          normalize = TRUE,
                           ...)
 {
   # Initial checks
   check_n_iter(n.iter)
   check_if_BT_fit(object)
 
-  if(is.null(cBars) || !(check_if_natural_number(cBars) || (cBars==0)) || (length(cBars) > 1)) {stop("cBars should be an integer.")}
-  if(!is.logical(plot_it) || (length(plot_it) > 1) || is.na(plot_it)) {stop("argument plot_it must be a logical - excluding NA")}
-  if(!is.logical(order_it) || (length(order_it) > 1) || is.na(order_it)) {stop("argument order_it must be a logical - excluding NA")}
-  if(!is.logical(normalize) || (length(normalize) > 1) || is.na(normalize)) {stop("argument normalize must be a logical - excluding NA")}
+  if (is.null(cBars) ||
+      !(check_if_natural_number(cBars) ||
+        (cBars == 0)) ||
+      (length(cBars) > 1)) {
+    stop("cBars should be an integer.")
+  }
+  if (!is.logical(plot_it) ||
+      (length(plot_it) > 1) ||
+      is.na(plot_it)) {
+    stop("argument plot_it must be a logical - excluding NA")
+  }
+  if (!is.logical(order_it) ||
+      (length(order_it) > 1) ||
+      is.na(order_it)) {
+    stop("argument order_it must be a logical - excluding NA")
+  }
+  if (!is.logical(normalize) ||
+      (length(normalize) > 1) ||
+      is.na(normalize)) {
+    stop("argument normalize must be a logical - excluding NA")
+  }
 
   # Set inputs (if required)
-  if(cBars==0) cBars <- min(10, length(object$var.names))
-  if(cBars>length(object$var.names)) cBars <- length(object$var.names)
-  if(n.iter > object$BTParams$n.iter)
-    warning("Exceeded total number of BT terms. Results use n.iter=", object$BTParams$n.iter," terms.\n")
+  if (cBars == 0)
+    cBars <- min(10, length(object$var.names))
+  if (cBars > length(object$var.names))
+    cBars <- length(object$var.names)
+  if (n.iter > object$BTParams$n.iter)
+    warning(
+      "Exceeded total number of BT terms. Results use n.iter=",
+      object$BTParams$n.iter,
+      " terms.\n"
+    )
   n.iter <- min(n.iter, object$BTParams$n.iter)
 
   # Calculate relative influence and order/normalize
-  rel_inf <- method(object, n.iter=n.iter)
-  rel_inf[rel_inf<0] <- 0
-  if(normalize) rel_inf <- 100*rel_inf/sum(rel_inf)
+  rel_inf <- method(object, n.iter = n.iter)
+  rel_inf[rel_inf < 0] <- 0
+  if (normalize)
+    rel_inf <- 100 * rel_inf / sum(rel_inf)
 
   ordering <- seq_len(length(rel_inf))
-  if(order_it) {
+  if (order_it) {
     ordering <- order(-rel_inf)
   }
 
   # Bar plot of relative influence
-  if(plot_it) {
-    barplot(rel_inf[ordering[cBars:1]],
-            horiz=TRUE,
-            col=rainbow(cBars,start=3/6,end=4/6),
-            names=object$var.names[ordering[cBars:1]],
-            xlab="Relative influence",
-            las=1,...)
+  if (plot_it) {
+    barplot(
+      rel_inf[ordering[cBars:1]],
+      horiz = TRUE,
+      col = rainbow(cBars, start = 3 / 6, end = 4 / 6),
+      names = object$var.names[ordering[cBars:1]],
+      xlab = "Relative influence",
+      las = 1,
+      ...
+    )
   }
-  return(data.frame(var=object$var.names[ordering],
-                    rel_inf=rel_inf[ordering]))
+  return(data.frame(var = object$var.names[ordering],
+                    rel_inf = rel_inf[ordering]))
 }

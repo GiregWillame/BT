@@ -36,24 +36,30 @@
 #'
 #' @rdname predict.BTCVFit
 #' @keywords internal
-predict.BTCVFit <- function(object, data, cv.folds, folds, best.iter.cv, ...){
+predict.BTCVFit <-
+  function(object,
+           data,
+           cv.folds,
+           folds,
+           best.iter.cv,
+           ...) {
+    # We directly apply the predict on the dataset -> no database extraction.
 
-  # We directly apply the predict on the dataset -> no database extraction.
+    # Check match between data and folds.
+    if (nrow(data) != length(folds)) {
+      stop('Error in predict.BTCVFit - folds and data should have the same number of records.')
+    }
 
-  # Check match between data and folds.
-  if (nrow(data) != length(folds)){
-    stop('Error in predict.BTCVFit - folds and data should have the same number of records.')
+    # Flatten data for prediction.
+    result <- rep(NA, length = nrow(data))
+
+    for (index in seq_len(cv.folds)) {
+      currModel <- object[[index]]
+      flag <- which(folds == index)
+      result[flag] <- predict(currModel,
+                              newdata = data[flag, currModel$var.names, drop =
+                                               FALSE],
+                              n.iter = best.iter.cv)
+    }
+    return(result)
   }
-
-  # Flatten data for prediction.
-  result <- rep(NA, length = nrow(data))
-
-  for (index in seq_len(cv.folds)){
-    currModel <- object[[index]]
-    flag <- which(folds==index)
-    result[flag] <- predict(currModel,
-                            newdata = data[flag, currModel$var.names, drop=FALSE],
-                            n.iter=best.iter.cv)
-  }
-  return(result)
-}

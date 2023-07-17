@@ -161,124 +161,214 @@
 #'
 #' @export
 #'
-BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TRUE, n.iter = 100,
-               train.fraction = 1, interaction.depth = 4, shrinkage = 1, bag.fraction = 1,
-               colsample.bytree = NULL, keep.data = TRUE, is.verbose = FALSE,
-               cv.folds = 1, folds.id = NULL, n.cores = 1,
-               tree.control = rpart.control(xval = 0, maxdepth = (if(!is.null(interaction.depth)){interaction.depth} else{10}), cp = -Inf, minsplit = 2),
-               weights = NULL, seed = NULL, ...){
+BT <-
+  function(formula = formula(data),
+           data = list(),
+           tweedie.power = 1,
+           ABT = TRUE,
+           n.iter = 100,
+           train.fraction = 1,
+           interaction.depth = 4,
+           shrinkage = 1,
+           bag.fraction = 1,
+           colsample.bytree = NULL,
+           keep.data = TRUE,
+           is.verbose = FALSE,
+           cv.folds = 1,
+           folds.id = NULL,
+           n.cores = 1,
+           tree.control = rpart.control(
+             xval = 0,
+             maxdepth = (if (!is.null(interaction.depth)) {
+               interaction.depth
+             } else{
+               10
+             }),
+             cp = -Inf,
+             minsplit = 2
+           ),
+           weights = NULL,
+           seed = NULL,
+           ...) {
+    if (!is.null(seed))
+      set.seed(seed)
 
-  if (!is.null(seed)) set.seed(seed)
+    the_call <- match.call()
+    mf <- match.call(expand.dots = FALSE)
+    m <- match(c("formula", "data", "weights"), names(mf), 0)
+    mf <- mf[c(1, m)]
+    mf$drop.unused.levels <- TRUE
+    mf$na.action <-
+      na.omit #na.pass : Need to be reset to na.pass once NA well handled.
+    mf[[1]] <- as.name("model.frame")
+    m <- mf
+    mf <- eval(mf, parent.frame())
+    Terms <- attr(mf, "terms")
+    respVar <-
+      as.character(attr(Terms, "variables"))[-1][attr(Terms, "response")]
+    explVar <- attr(Terms, "term.labels")
+    #mf$originalRespVar <- mf[,respVar] # Keep the original variable -> Do not need to modify the formula that way.
+    #originalFormula <- formula # Keep a track of the original formula if there's any change with variable subsampling.
 
-  the_call <- match.call()
-  mf <- match.call(expand.dots = FALSE)
-  m <- match(c("formula", "data", "weights"), names(mf), 0)
-  mf <- mf[c(1, m)]
-  mf$drop.unused.levels <- TRUE
-  mf$na.action <- na.omit #na.pass : Need to be reset to na.pass once NA well handled.
-  mf[[1]] <- as.name("model.frame")
-  m <- mf
-  mf <- eval(mf, parent.frame())
-  Terms <- attr(mf, "terms")
-  respVar <- as.character(attr(Terms, "variables"))[-1][attr(Terms, "response")]
-  explVar <- attr(Terms, "term.labels")
-  #mf$originalRespVar <- mf[,respVar] # Keep the original variable -> Do not need to modify the formula that way.
-  #originalFormula <- formula # Keep a track of the original formula if there's any change with variable subsampling.
+    if (!is.null(attr(Terms, "offset"))) {
+      stop(
+        "Offset are not supported. For Tweedie model with log-link function, weights (=offset)
+         and response rate variable (=Original response variable/Offset) can instead be used."
+      )
+    }
 
-  if(!is.null(attr(Terms, "offset"))){
-    stop("Offset are not supported. For Tweedie model with log-link function, weights (=offset)
-         and response rate variable (=Original response variable/Offset) can instead be used.")
-  }
+    if (is.null(model.weights(mf))) {
+      mf$w <- rep(1, nrow(mf))
+    }
+    else{
+      colnames(mf)[names(mf) == "(weights)"] <- "w"
+    }
+    w <- "w"
 
-  if (is.null(model.weights(mf))){mf$w <- rep(1, nrow(mf))}
-  else{colnames(mf)[names(mf)=="(weights)"] <- "w"}
-  w <- "w"
+    check_tweedie_power(tweedie.power)
+    check_ABT(ABT)
+    check_n_iter(n.iter)
+    check_train_fraction(train.fraction)
+    check_interaction_depth(interaction.depth)
+    check_shrinkage(shrinkage)
+    check_bag_fraction(bag.fraction)
+    check_colsample_bytree(colsample.bytree, length(explVar))
+    check_keep_data(keep.data)
+    check_is_verbose(is.verbose)
+    check_cv_folds(cv.folds)
+    check_folds_id(folds.id)
+    check_n_cores(n.cores)
+    check_weights(mf$w)
 
-  check_tweedie_power(tweedie.power)
-  check_ABT(ABT)
-  check_n_iter(n.iter)
-  check_train_fraction(train.fraction)
-  check_interaction_depth(interaction.depth)
-  check_shrinkage(shrinkage)
-  check_bag_fraction(bag.fraction)
-  check_colsample_bytree(colsample.bytree, length(explVar))
-  check_keep_data(keep.data)
-  check_is_verbose(is.verbose)
-  check_cv_folds(cv.folds)
-  check_folds_id(folds.id)
-  check_n_cores(n.cores)
-  check_weights(mf$w)
+    if (!is.null(interaction.depth) &&
+        tree.control$maxdepth != interaction.depth) {
+      stop(
+        "interaction.depth and maxdepth defined. If interaction.depth is not null it has to be set to maxdepth."
+      )
+    }
 
-  if (!is.null(interaction.depth) && tree.control$maxdepth != interaction.depth){
-    stop("interaction.depth and maxdepth defined. If interaction.depth is not null it has to be set to maxdepth.")
-  }
+    setList <- create_validation_set(mf, train.fraction)
+    training.set <- setList$training.set
+    validation.set <- setList$validation.set
+    rm(setList)
+    rm(mf)
+    gc()
 
-  setList <- create_validation_set(mf, train.fraction)
-  training.set <- setList$training.set
-  validation.set <- setList$validation.set
-  rm(setList)
-  rm(mf)
-  gc()
+    # Fit full model.
+    if (is.verbose)
+      message("Fit the model on the whole training set. \n")
+    BT_full_results <-
+      BT_call(
+        training.set,
+        validation.set,
+        tweedie.power,
+        respVar,
+        w,
+        explVar,
+        ABT,
+        tree.control,
+        train.fraction,
+        interaction.depth,
+        bag.fraction,
+        shrinkage,
+        n.iter,
+        colsample.bytree,
+        keep.data,
+        is.verbose
+      )
 
-  # Fit full model.
-  if (is.verbose) message("Fit the model on the whole training set. \n")
-  BT_full_results <- BT_call(training.set, validation.set, tweedie.power, respVar, w, explVar, ABT,
-                             tree.control, train.fraction, interaction.depth, bag.fraction, shrinkage, n.iter, colsample.bytree,
-                             keep.data, is.verbose)
+    if (!is.null(folds.id)) {
+      numFolds <- length(unique(folds.id))
+      if (cv.folds != numFolds)
+        warning("CV folds changed from ",
+                cv.folds,
+                " to ",
+                numFolds,
+                " because of levels in folds.id")
+      cv.folds <- numFolds
+      # Transform folds.id index to a numeric vector of index, ascending from 1.
+      folds.id <- as.numeric(as.factor(folds.id))
+    }
 
-  if (!is.null(folds.id)){
-    numFolds <- length(unique(folds.id))
-    if (cv.folds != numFolds) warning("CV folds changed from ", cv.folds, " to ", numFolds, " because of levels in folds.id")
-    cv.folds <- numFolds
-    # Transform folds.id index to a numeric vector of index, ascending from 1.
-    folds.id <- as.numeric(as.factor(folds.id))
-  }
+    if (cv.folds == 1) {
+      BT_full_results$cv.folds <- cv.folds
+      BT_full_results$call <- the_call
+      BT_full_results$Terms <- Terms
+      BT_full_results$seed <- seed
+      return(BT_full_results)
+    }
 
-  if (cv.folds==1){
+    # Else : cv.folds > 1 (or folds.id defined).
+    if (is.verbose)
+      message("Fit the model on the different CV folds. \n")
+    folds <- create_cv_folds(training.set, cv.folds, folds.id, seed)
+    cl <- makeCluster(n.cores)
+    clusterExport(
+      cl,
+      varlist = c(
+        "training.set",
+        "tweedie.power",
+        "respVar",
+        "w",
+        "explVar",
+        "ABT",
+        "tree.control",
+        "train.fraction",
+        "interaction.depth",
+        "bag.fraction",
+        "shrinkage",
+        "n.iter",
+        "colsample.bytree",
+        "keep.data",
+        "is.verbose"
+      ),
+      envir = environment()
+    )
+    BT_cv_results <- parLapply(cl, seq_len(cv.folds), function(xx) {
+      if (!is.null(seed))
+        set.seed(seed * (xx + 1))
+      valIndex <- which(folds == xx)
+      trainIndex <- setdiff(1:length(folds), valIndex)
+      BT_call(
+        training.set[trainIndex, ],
+        training.set[valIndex, ],
+        tweedie.power,
+        respVar,
+        w,
+        explVar,
+        ABT,
+        tree.control,
+        train.fraction,
+        interaction.depth,
+        bag.fraction,
+        shrinkage,
+        n.iter,
+        colsample.bytree,
+        FALSE,
+        is.verbose
+      ) # We dont keep a copy of each dataset in case of cross-validation, keep.data=FALSE
+    })
+    stopCluster(cl)
+    # Different folds -> result object is from a different class.
+    class(BT_cv_results) <- "BTCVFit"
+
+    cv_errors <- BT_cv_errors(BT_cv_results, cv.folds, folds)
+
+    # Best number of iterations/trees.
+    bestIterCV <- which.min(cv_errors)
+
+    # Prediction on each OOF for the optimal number of iterations.
+    predictions <-
+      predict(BT_cv_results, training.set, cv.folds, folds, bestIterCV)
+
+    # Extract relevant part - all data model.
     BT_full_results$cv.folds <- cv.folds
+    BT_full_results$folds <- folds
     BT_full_results$call <- the_call
     BT_full_results$Terms <- Terms
     BT_full_results$seed <- seed
+    BT_full_results$BTErrors$cv.error <- cv_errors
+    BT_full_results$cv.fitted <- predictions
+
     return(BT_full_results)
   }
-
-  # Else : cv.folds > 1 (or folds.id defined).
-  if (is.verbose) message("Fit the model on the different CV folds. \n")
-  folds <- create_cv_folds(training.set, cv.folds, folds.id, seed)
-  cl <- makeCluster(n.cores)
-  clusterExport(cl, varlist=c("training.set", "tweedie.power", "respVar", "w", "explVar", "ABT",
-                              "tree.control", "train.fraction", "interaction.depth", "bag.fraction", "shrinkage", "n.iter",
-                              "colsample.bytree", "keep.data", "is.verbose"), envir = environment())
-  BT_cv_results <- parLapply(cl, seq_len(cv.folds), function(xx){
-    if (!is.null(seed)) set.seed(seed*(xx+1))
-    valIndex <- which(folds==xx)
-    trainIndex <- setdiff(1:length(folds), valIndex)
-    BT_call(training.set[trainIndex,], training.set[valIndex,], tweedie.power, respVar, w, explVar, ABT,
-            tree.control, train.fraction, interaction.depth, bag.fraction, shrinkage, n.iter, colsample.bytree,
-            FALSE, is.verbose) # We dont keep a copy of each dataset in case of cross-validation, keep.data=FALSE
-  })
-  stopCluster(cl)
-  # Different folds -> result object is from a different class.
-  class(BT_cv_results) <- "BTCVFit"
-
-  cv_errors <- BT_cv_errors(BT_cv_results, cv.folds, folds)
-
-  # Best number of iterations/trees.
-  bestIterCV <- which.min(cv_errors)
-
-  # Prediction on each OOF for the optimal number of iterations.
-  predictions <- predict(BT_cv_results, training.set, cv.folds, folds, bestIterCV)
-
-  # Extract relevant part - all data model.
-  BT_full_results$cv.folds <- cv.folds
-  BT_full_results$folds <- folds
-  BT_full_results$call <- the_call
-  BT_full_results$Terms <- Terms
-  BT_full_results$seed <- seed
-  BT_full_results$BTErrors$cv.error <- cv_errors
-  BT_full_results$cv.fitted <- predictions
-
-  return(BT_full_results)
-}
-
-

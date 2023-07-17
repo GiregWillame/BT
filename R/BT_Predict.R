@@ -43,74 +43,97 @@
 #' @rdname predict.BTFit
 #' @export
 #'
-predict.BTFit <- function(object, newdata, n.iter, type = "link", single.iter=FALSE, ...){
-
-  # Check inputs
-  if(!is.element(type, c("link","response" ))) {
-    stop("type must be either 'link' or 'response'")
-  }
-
-  if(missing(newdata) || !is.data.frame(newdata)) {
-    if (object$keep.data){
-      message("As newdata is missing or is not a data frame, the training set has been used thanks to the keep.data = TRUE parameter.")
-      newdata <- object$BTData$training.set
-    } else{
-      stop("newdata must be provided as a data frame.")
+predict.BTFit <-
+  function(object,
+           newdata,
+           n.iter,
+           type = "link",
+           single.iter = FALSE,
+           ...) {
+    # Check inputs
+    if (!is.element(type, c("link", "response"))) {
+      stop("type must be either 'link' or 'response'")
     }
-  }
 
-  if (!all(object$var.names %in% colnames(newdata))){
-    stop("newdata must contain the same explanatory variable as the original fitted BT object.")
-  }
-
-  if(missing(n.iter)) {
-    stop("Number of iterations to be used in prediction must be provided.")
-  }
-
-  if (length(n.iter) == 0) {
-    stop("n.iter cannot be NULL or a vector of zero length.")
-  }
-
-  if(any(n.iter != as.integer(n.iter)) || is.na(all(n.iter == as.integer(n.iter)))
-     || any(n.iter <= 0)) { # at least one iteration - not only the init considered to avoid problem.
-    stop("n.iter must be a vector of non-negative integers.")
-  }
-
-  if(!(single.iter %in% c(TRUE, FALSE))){
-    stop("single.iter should be either TRUE or FALSE.")
-  }
-
-  if(any(n.iter > object$BTParams$n.iter)) {
-    n.iter[n.iter > object$BTParams$n.iter] <- object$BTParams$n.iter
-    warning("Number of trees exceeded number fit so far. Using ", paste(n.iter,collapse=" "),".")
-  }
-
-  outMatrix <- matrix(NA, nrow=nrow(newdata), ncol=length(n.iter))
-
-  if (single.iter){
-    for (i in seq(1, length(n.iter))){
-      iIter <- n.iter[i]
-      # Link-scale output.
-      outMatrix[,i] <- log(predict(object$BTIndivFits[[iIter]], newdata = newdata, type = "vector"))
-    }
-  } else{
-    # Compute cumulative results for each iteration in the vector n.iter
-    lastIter <- max(n.iter)
-    shrinkage <- object$BTParams$shrinkage
-
-    currPred <- rep(log(object$BTInit$initFit), nrow(newdata)) # GLM used as first prediction.
-
-    for (iIter in seq(1, lastIter)){
-      currPred <- currPred + shrinkage*log(predict(object$BTIndivFits[[iIter]], newdata = newdata, type = "vector"))
-      if (iIter %in% n.iter){
-        outMatrix[, which(n.iter == iIter)] <- currPred
+    if (missing(newdata) || !is.data.frame(newdata)) {
+      if (object$keep.data) {
+        message(
+          "As newdata is missing or is not a data frame, the training set has been used thanks to the keep.data = TRUE parameter."
+        )
+        newdata <- object$BTData$training.set
+      } else{
+        stop("newdata must be provided as a data frame.")
       }
     }
+
+    if (!all(object$var.names %in% colnames(newdata))) {
+      stop("newdata must contain the same explanatory variable as the original fitted BT object.")
+    }
+
+    if (missing(n.iter)) {
+      stop("Number of iterations to be used in prediction must be provided.")
+    }
+
+    if (length(n.iter) == 0) {
+      stop("n.iter cannot be NULL or a vector of zero length.")
+    }
+
+    if (any(n.iter != as.integer(n.iter)) ||
+        is.na(all(n.iter == as.integer(n.iter)))
+        ||
+        any(n.iter <= 0)) {
+      # at least one iteration - not only the init considered to avoid problem.
+      stop("n.iter must be a vector of non-negative integers.")
+    }
+
+    if (!(single.iter %in% c(TRUE, FALSE))) {
+      stop("single.iter should be either TRUE or FALSE.")
+    }
+
+    if (any(n.iter > object$BTParams$n.iter)) {
+      n.iter[n.iter > object$BTParams$n.iter] <- object$BTParams$n.iter
+      warning("Number of trees exceeded number fit so far. Using ",
+              paste(n.iter, collapse = " "),
+              ".")
+    }
+
+    outMatrix <- matrix(NA, nrow = nrow(newdata), ncol = length(n.iter))
+
+    if (single.iter) {
+      for (i in seq(1, length(n.iter))) {
+        iIter <- n.iter[i]
+        # Link-scale output.
+        outMatrix[, i] <-
+          log(predict(
+            object$BTIndivFits[[iIter]],
+            newdata = newdata,
+            type = "vector"
+          ))
+      }
+    } else{
+      # Compute cumulative results for each iteration in the vector n.iter
+      lastIter <- max(n.iter)
+      shrinkage <- object$BTParams$shrinkage
+
+      currPred <-
+        rep(log(object$BTInit$initFit), nrow(newdata)) # GLM used as first prediction.
+
+      for (iIter in seq(1, lastIter)) {
+        currPred <-
+          currPred + shrinkage * log(predict(
+            object$BTIndivFits[[iIter]],
+            newdata = newdata,
+            type = "vector"
+          ))
+        if (iIter %in% n.iter) {
+          outMatrix[, which(n.iter == iIter)] <- currPred
+        }
+      }
+    }
+
+    if (type == "response")
+      outMatrix <- exp(outMatrix) # Exponential link-function.
+    if (length(n.iter) == 1)
+      outMatrix <- as.vector(outMatrix)
+    return(outMatrix)
   }
-
-  if (type=="response") outMatrix <- exp(outMatrix) # Exponential link-function.
-  if (length(n.iter)==1) outMatrix <- as.vector(outMatrix)
-  return(outMatrix)
-}
-
-

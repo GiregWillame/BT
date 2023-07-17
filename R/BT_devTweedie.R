@@ -42,35 +42,46 @@
 #'
 #' @export
 #'
-BT_devTweedie <- function(y, mu, tweedieVal, w = NULL){
-
+BT_devTweedie <- function(y, mu, tweedieVal, w = NULL) {
   check_tweedie_power(tweedieVal)
-  if(any(is.logical(y) | is.character(y) | (y != as.double(y)) | is.na(y))) {
+  if (any(is.logical(y) |
+          is.character(y) | (y != as.double(y)) | is.na(y))) {
     stop("Responses must be doubles")
   }
-  if(any(is.logical(mu) | is.character(mu) | (mu != as.double(mu)) | is.na(mu))) {
+  if (any(is.logical(mu) |
+          is.character(mu) | (mu != as.double(mu)) | is.na(mu))) {
     stop("Predictions must be doubles")
   }
-  if (is.null(w)) {w <- rep(1, length(y))}
+  if (is.null(w)) {
+    w <- rep(1, length(y))
+  }
 
-  if(any(is.logical(w) | is.character(w) | (w != as.double(w)) | is.na(w) | (w < 0))) {
+  if (any(is.logical(w) |
+          is.character(w) | (w != as.double(w)) | is.na(w) | (w < 0))) {
     stop("Weights must be positive doubles")
   }
-  if (any(length(y) != length(mu) | length(y) != length(w))){
+  if (any(length(y) != length(mu) | length(y) != length(w))) {
     stop("Responses, predictions and weights should have the same length")
   }
 
-  if (tweedieVal==0){ # Gaussian case.
-    dev<-w*(y-mu)**2
-  } else if (tweedieVal==1){ # Poisson case.
+  if (tweedieVal == 0) {
+    # Gaussian case.
+    dev <- w * (y - mu) ** 2
+  } else if (tweedieVal == 1) {
+    # Poisson case.
     r <- mu
-    p <- which(y>0)
-    r[p] <- (y*log(y/mu) - (y-mu))[p]
-    dev<-2*r*w
-  } else if (tweedieVal==2){ # Gamma case.
-    dev<-2*w*(-log(ifelse(y==0, 1, y/mu)) + (y/mu) - 1) # Support Gamma : ]0; +Inf[
+    p <- which(y > 0)
+    r[p] <- (y * log(y / mu) - (y - mu))[p]
+    dev <- 2 * r * w
+  } else if (tweedieVal == 2) {
+    # Gamma case.
+    dev <-
+      2 * w * (-log(ifelse(y == 0, 1, y / mu)) + (y / mu) - 1) # Support Gamma : ]0; +Inf[
   } else{
-    dev<-2*w*(((max(y,0)^(2-tweedieVal))/((1-tweedieVal)*(2-tweedieVal))) - (y*(mu^(1-tweedieVal))/(1-tweedieVal)) + ((mu^(2-tweedieVal))/(2-tweedieVal)))
+    dev <-
+      2 * w * (((max(y, 0) ^ (2 - tweedieVal)) / ((1 - tweedieVal) * (2 - tweedieVal))) - (y *
+                                                                                             (mu ^ (1 - tweedieVal)) / (1 - tweedieVal)) + ((mu ^ (2 - tweedieVal)) /
+                                                                                                                                              (2 - tweedieVal)))
   }
   return(dev)
 }

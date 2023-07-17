@@ -77,158 +77,302 @@
 #' @rdname BT_Call
 #' @export
 #'
-BT_call <- function(training.set, validation.set, tweedie.power, respVar, w, explVar, ABT,
-                    tree.control, train.fraction, interaction.depth, bag.fraction, shrinkage, n.iter, colsample.bytree,
-                    keep.data, is.verbose){
+BT_call <-
+  function(training.set,
+           validation.set,
+           tweedie.power,
+           respVar,
+           w,
+           explVar,
+           ABT,
+           tree.control,
+           train.fraction,
+           interaction.depth,
+           bag.fraction,
+           shrinkage,
+           n.iter,
+           colsample.bytree,
+           keep.data,
+           is.verbose) {
+    # Create storage objects.
+    BT <- list()
 
-  # Create storage objects.
-  BT <- list()
+    # Init GLM + Init error.
+    if (is.verbose)
+      message('bag.fraction is not used for the initialization fit.')
+    init <-
+      BT_callInit(training.set, validation.set, tweedie.power, respVar, w)
+    initF <-
+      list(
+        initFit = init$initFit,
+        training.error = init$trainingError,
+        validation.error = init$validationError
+      )
+    currTrainScore <- init$currTrainScore
+    currValScore <- init$currValScore
+    rm(init)
+    gc()
 
-  # Init GLM + Init error.
-  if (is.verbose) message('bag.fraction is not used for the initialization fit.')
-  init <- BT_callInit(training.set, validation.set, tweedie.power, respVar, w)
-  initF <- list(initFit = init$initFit, training.error = init$trainingError, validation.error = init$validationError)
-  currTrainScore <- init$currTrainScore
-  currValScore <- init$currValScore
-  rm(init)
-  gc()
+    # Boosting algorithm.
+    BT <-
+      BT_callBoosting(
+        cbind(training.set, currTrainScore),
+        cbind(validation.set, currValScore),
+        tweedie.power,
+        ABT,
+        tree.control,
+        interaction.depth,
+        bag.fraction,
+        shrinkage,
+        n.iter,
+        colsample.bytree,
+        train.fraction,
+        keep.data,
+        is.verbose,
+        respVar,
+        w,
+        explVar
+      )
 
-  # Boosting algorithm.
-  BT <- BT_callBoosting(cbind(training.set, currTrainScore), cbind(validation.set, currValScore), tweedie.power, ABT,
-                        tree.control, interaction.depth, bag.fraction, shrinkage, n.iter, colsample.bytree, train.fraction,
-                        keep.data, is.verbose, respVar, w, explVar)
+    # Add parameters in the list and init.
+    BT$BTInit <- structure(initF, class = "BTInit")
 
-  # Add parameters in the list and init.
-  BT$BTInit <- structure(initF, class="BTInit")
-
-  class(BT) <- "BTFit"
-  return(BT)
-}
-
-#' @rdname BT_Call
-#' @export
-#'
-BT_callInit <- function(training.set, validation.set, tweedie.power, respVar, w){
-  initFit <- sum(training.set[,w]*training.set[,respVar])/sum(training.set[,w])
-  currTrainScore <- rep(log(initFit), nrow(training.set)) # Return value on score scale.
-  trainingError <- sum(BT_devTweedie(training.set[, respVar], exp(currTrainScore),
-                                     tweedieVal = tweedie.power, w=training.set[,w]))/nrow(training.set)#sum(mf$originalWeights)
-
-  currValScore <- NULL
-  validationError <- NULL
-  if (!is.null(validation.set)){
-    currValScore <- rep(log(initFit), nrow(validation.set)) # Return value on score scale.
-    validationError <- sum(BT_devTweedie(validation.set[, respVar], exp(currValScore),
-                                         tweedieVal = tweedie.power, w=validation.set[,w]))/nrow(validation.set)
+    class(BT) <- "BTFit"
+    return(BT)
   }
-  return(list(initFit=initFit, currTrainScore = currTrainScore, currValScore=currValScore, trainingError = trainingError, validationError = validationError))
-}
 
 #' @rdname BT_Call
 #' @export
 #'
-BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
-                            tree.control, interaction.depth, bag.fraction, shrinkage, n.iter, colsample.bytree, train.fraction,
-                            keep.data, is.verbose, respVar, w, explVar){
+BT_callInit <-
+  function(training.set,
+           validation.set,
+           tweedie.power,
+           respVar,
+           w) {
+    initFit <-
+      sum(training.set[, w] * training.set[, respVar]) / sum(training.set[, w])
+    currTrainScore <-
+      rep(log(initFit), nrow(training.set)) # Return value on score scale.
+    trainingError <-
+      sum(BT_devTweedie(
+        training.set[, respVar],
+        exp(currTrainScore),
+        tweedieVal = tweedie.power,
+        w = training.set[, w]
+      )) / nrow(training.set)#sum(mf$originalWeights)
 
-  sampRow <- 1:nrow(training.set)
-  currFormula <- as.formula(paste("residuals ~ ", paste(explVar, collapse = " + ")))
-
-  training.error <- NULL
-  validation.error <- NULL
-  oob.improvement <- NULL
-  listFits <- list()
-
-  for (iTree in seq_len(n.iter)){
-    if (is.verbose) {
-      if ((iTree <= 10) || (iTree <= 100 && iTree %% 10 == 0) || (iTree %% 100 ==0))  message("Iteration: ", iTree)
+    currValScore <- NULL
+    validationError <- NULL
+    if (!is.null(validation.set)) {
+      currValScore <-
+        rep(log(initFit), nrow(validation.set)) # Return value on score scale.
+      validationError <-
+        sum(
+          BT_devTweedie(
+            validation.set[, respVar],
+            exp(currValScore),
+            tweedieVal = tweedie.power,
+            w = validation.set[, w]
+          )
+        ) / nrow(validation.set)
     }
+    return(
+      list(
+        initFit = initFit,
+        currTrainScore = currTrainScore,
+        currValScore = currValScore,
+        trainingError = trainingError,
+        validationError = validationError
+      )
+    )
+  }
 
-    training.set[, "residuals"] <- training.set[, respVar]/exp(training.set[, "currTrainScore"])
-    training.set[, "iWeights"] <- training.set[, w]*(exp(training.set[, "currTrainScore"])^(2-tweedie.power))
+#' @rdname BT_Call
+#' @export
+#'
+BT_callBoosting <-
+  function(training.set,
+           validation.set,
+           tweedie.power,
+           ABT,
+           tree.control,
+           interaction.depth,
+           bag.fraction,
+           shrinkage,
+           n.iter,
+           colsample.bytree,
+           train.fraction,
+           keep.data,
+           is.verbose,
+           respVar,
+           w,
+           explVar) {
+    sampRow <- 1:nrow(training.set)
+    currFormula <-
+      as.formula(paste("residuals ~ ", paste(explVar, collapse = " + ")))
 
-    if (bag.fraction<1){
-      sampRow <- sample(1:nrow(training.set), bag.fraction*nrow(training.set))
-      oobRow <- setdiff(1:nrow(training.set), sampRow)
-      oldOOBError <- (sum(BT_devTweedie(training.set[oobRow, respVar], exp(training.set[oobRow, "currTrainScore"]),
-                                        tweedieVal = tweedie.power, w=training.set[oobRow, w]))/length(oobRow))
-      if (iTree==1) initOOB <- oldOOBError
-    }
+    training.error <- NULL
+    validation.error <- NULL
+    oob.improvement <- NULL
+    listFits <- list()
 
-    if ((!is.null(colsample.bytree)) && (colsample.bytree != length(explVar))){
-      sampVar <- explVar[sample(1:length(explVar), colsample.bytree)]
-      currFormula <- as.formula(paste("residuals ~ ", paste(sampVar, collapse = " + ")))
-    }
-
-    # Fit the current tree, update score and store the fit.
-    if (tweedie.power==1){
-      currFit <- rpart(currFormula, training.set[sampRow,], weights = training.set[sampRow, "iWeights"], method = "poisson", control=tree.control, y=FALSE) #iWeights is also working but not best.
-    }else{
-      stop("Currently implemented for Poisson distribution only.")
-     # currFit <- rpart(currFormula, training.set[sampRow,], weights = iWeights, method = list(eval=evalTweedie, split=splitTweedie, init=initTweedie),
-     #                   parms = list(tweedieVal=tweedie.power), control=tree.control, y=FALSE) # y = FALSE : do not keep a copy of the response variable.
-    }
-
-    # We need to prune the tree. If interaction.depth is NULL then the maxdepth approach is chosen and no pruning needed.
-    if (!is.null(interaction.depth)){
-      if (!ABT){
-        # interaction.depth defined and BT approach chosen.
-        splittingStrategy <- BT_splittingStrategy(currFit, interaction.depth)
-        if (!is.null(splittingStrategy) && length(splittingStrategy) > 0) currFit <- snip.rpart(currFit, toss=splittingStrategy)
-      } else{
-        # interaction.depth defined and ABT approach chosen.
-        currFit <- prune(currFit, cp=currFit$cptable[, "CP"][max(which(currFit$cptable[, "nsplit"] <= interaction.depth))])
+    for (iTree in seq_len(n.iter)) {
+      if (is.verbose) {
+        if ((iTree <= 10) ||
+            (iTree <= 100 &&
+             iTree %% 10 == 0) ||
+            (iTree %% 100 == 0))
+          message("Iteration: ", iTree)
       }
-    }
 
-    # Delete the where object resulting from rpart. Not needed for the predict afterwards.
-    currFit$where <- NULL
-    training.set[, "currTrainScore"] <- training.set[, "currTrainScore"] + shrinkage*log( predict(currFit, newdata=training.set, type = "vector") )
-    listFits[[iTree]] <- currFit
+      training.set[, "residuals"] <-
+        training.set[, respVar] / exp(training.set[, "currTrainScore"])
+      training.set[, "iWeights"] <-
+        training.set[, w] * (exp(training.set[, "currTrainScore"]) ^ (2 - tweedie.power))
 
-    # Compute errors.
-    training.error[iTree] <- sum(BT_devTweedie(training.set[sampRow, respVar], exp(training.set[sampRow, "currTrainScore"]),
-                                               tweedieVal = tweedie.power, w=training.set[sampRow, w]))/length(sampRow) # In-bag error.
-    if (bag.fraction<1){
-      oob.improvement[iTree] <- (oldOOBError- (sum(BT_devTweedie(training.set[oobRow, respVar], exp(training.set[oobRow, "currTrainScore"]),
-                                                                 tweedieVal = tweedie.power, w=training.set[oobRow, w]))/length(oobRow))) # OOB Improvement.
-    }
-    if (!is.null(validation.set)){
-      validation.set[, "currValScore"] <- validation.set[, "currValScore"] + shrinkage*log( predict(currFit, newdata=validation.set, type = "vector") )
-      validation.error[iTree] <- sum(BT_devTweedie(validation.set[, respVar], exp(validation.set[, "currValScore"]),
-                                                   tweedieVal = tweedie.power, w=validation.set[,w]))/nrow(validation.set) # Validation error.
-    }
-  } # End loop
+      if (bag.fraction < 1) {
+        sampRow <-
+          sample(1:nrow(training.set), bag.fraction * nrow(training.set))
+        oobRow <- setdiff(1:nrow(training.set), sampRow)
+        oldOOBError <-
+          (sum(
+            BT_devTweedie(
+              training.set[oobRow, respVar],
+              exp(training.set[oobRow, "currTrainScore"]),
+              tweedieVal = tweedie.power,
+              w = training.set[oobRow, w]
+            )
+          ) / length(oobRow))
+        if (iTree == 1)
+          initOOB <- oldOOBError
+      }
 
-  # Return errors, fitted trees, misc.
-  BT_CallBoosting <- list()
-  BT_CallBoosting$BTErrors <- structure(list(training.error = training.error,
-                                             validation.error=validation.error,
-                                             oob.improvement=oob.improvement), class="BTErrors")
+      if ((!is.null(colsample.bytree)) &&
+          (colsample.bytree != length(explVar))) {
+        sampVar <- explVar[sample(1:length(explVar), colsample.bytree)]
+        currFormula <-
+          as.formula(paste("residuals ~ ", paste(sampVar, collapse = " + ")))
+      }
 
-  class(listFits) <- "BTIndivFits"
-  BT_CallBoosting$BTIndivFits <- listFits
+      # Fit the current tree, update score and store the fit.
+      if (tweedie.power == 1) {
+        currFit <-
+          rpart(
+            currFormula,
+            training.set[sampRow, ],
+            weights = training.set[sampRow, "iWeights"],
+            method = "poisson",
+            control = tree.control,
+            y = FALSE
+          ) #iWeights is also working but not best.
+      } else{
+        stop("Currently implemented for Poisson distribution only.")
+        # currFit <- rpart(currFormula, training.set[sampRow,], weights = iWeights, method = list(eval=evalTweedie, split=splitTweedie, init=initTweedie),
+        #                   parms = list(tweedieVal=tweedie.power), control=tree.control, y=FALSE) # y = FALSE : do not keep a copy of the response variable.
+      }
 
-  BT_CallBoosting$distribution <- tweedie.power
-  BT_CallBoosting$var.names <- explVar
-  BT_CallBoosting$response <- respVar
-  BT_CallBoosting$w <- w
-  if (keep.data) BT_CallBoosting$BTData <- structure(list(training.set = training.set[, ! (colnames(training.set) %in% c("iWeights", "residuals"))],
-                                                          validation.set = validation.set), class = "BTData")
+      # We need to prune the tree. If interaction.depth is NULL then the maxdepth approach is chosen and no pruning needed.
+      if (!is.null(interaction.depth)) {
+        if (!ABT) {
+          # interaction.depth defined and BT approach chosen.
+          splittingStrategy <-
+            BT_splittingStrategy(currFit, interaction.depth)
+          if (!is.null(splittingStrategy) &&
+              length(splittingStrategy) > 0)
+            currFit <- snip.rpart(currFit, toss = splittingStrategy)
+        } else{
+          # interaction.depth defined and ABT approach chosen.
+          currFit <-
+            prune(currFit, cp = currFit$cptable[, "CP"][max(which(currFit$cptable[, "nsplit"] <= interaction.depth))])
+        }
+      }
 
-  BT_CallBoosting$BTParams <- structure(list(ABT = ABT,
-                                             train.fraction=train.fraction,
-                                             shrinkage=shrinkage,
-                                             interaction.depth = interaction.depth,
-                                             bag.fraction=bag.fraction,
-                                             n.iter = n.iter,
-                                             colsample.bytree=colsample.bytree,
-                                             tree.control=tree.control), class="BTParams")
+      # Delete the where object resulting from rpart. Not needed for the predict afterwards.
+      currFit$where <- NULL
+      training.set[, "currTrainScore"] <-
+        training.set[, "currTrainScore"] + shrinkage * log(predict(currFit, newdata =
+                                                                     training.set, type = "vector"))
+      listFits[[iTree]] <- currFit
 
-  BT_CallBoosting$keep.data <- keep.data
-  BT_CallBoosting$is.verbose <- is.verbose
+      # Compute errors.
+      training.error[iTree] <-
+        sum(BT_devTweedie(
+          training.set[sampRow, respVar],
+          exp(training.set[sampRow, "currTrainScore"]),
+          tweedieVal = tweedie.power,
+          w = training.set[sampRow, w]
+        )) / length(sampRow) # In-bag error.
+      if (bag.fraction < 1) {
+        oob.improvement[iTree] <-
+          (oldOOBError - (sum(
+            BT_devTweedie(
+              training.set[oobRow, respVar],
+              exp(training.set[oobRow, "currTrainScore"]),
+              tweedieVal = tweedie.power,
+              w = training.set[oobRow, w]
+            )
+          ) / length(oobRow))) # OOB Improvement.
+      }
+      if (!is.null(validation.set)) {
+        validation.set[, "currValScore"] <-
+          validation.set[, "currValScore"] + shrinkage * log(predict(currFit, newdata =
+                                                                       validation.set, type = "vector"))
+        validation.error[iTree] <-
+          sum(
+            BT_devTweedie(
+              validation.set[, respVar],
+              exp(validation.set[, "currValScore"]),
+              tweedieVal = tweedie.power,
+              w = validation.set[, w]
+            )
+          ) / nrow(validation.set) # Validation error.
+      }
+    } # End loop
 
-  BT_CallBoosting$fitted.values <- training.set[, "currTrainScore"]
+    # Return errors, fitted trees, misc.
+    BT_CallBoosting <- list()
+    BT_CallBoosting$BTErrors <-
+      structure(
+        list(
+          training.error = training.error,
+          validation.error = validation.error,
+          oob.improvement = oob.improvement
+        ),
+        class = "BTErrors"
+      )
 
-  return(BT_CallBoosting)
-}
+    class(listFits) <- "BTIndivFits"
+    BT_CallBoosting$BTIndivFits <- listFits
+
+    BT_CallBoosting$distribution <- tweedie.power
+    BT_CallBoosting$var.names <- explVar
+    BT_CallBoosting$response <- respVar
+    BT_CallBoosting$w <- w
+    if (keep.data)
+      BT_CallBoosting$BTData <-
+      structure(list(training.set = training.set[, !(colnames(training.set) %in% c("iWeights", "residuals"))],
+                     validation.set = validation.set),
+                class = "BTData")
+
+    BT_CallBoosting$BTParams <- structure(
+      list(
+        ABT = ABT,
+        train.fraction = train.fraction,
+        shrinkage = shrinkage,
+        interaction.depth = interaction.depth,
+        bag.fraction = bag.fraction,
+        n.iter = n.iter,
+        colsample.bytree = colsample.bytree,
+        tree.control = tree.control
+      ),
+      class = "BTParams"
+    )
+
+    BT_CallBoosting$keep.data <- keep.data
+    BT_CallBoosting$is.verbose <- is.verbose
+
+    BT_CallBoosting$fitted.values <- training.set[, "currTrainScore"]
+
+    return(BT_CallBoosting)
+  }
