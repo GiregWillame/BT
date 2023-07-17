@@ -1,6 +1,6 @@
 # BT : (Adaptive) Boosting Tree for Poisson distributed response variable.
 
-## Aknowledgements
+## Acknowledgements
 
 The author thanks Julien Trufin and Michel Denuit for their support during the project.
 

@@ -1,5 +1,3 @@
-
-
 ############################
 # Accessors.
 ############################
@@ -136,6 +134,17 @@ check_n_cores <- function(n.cores) {
   if (!check_if_natural_number(n.cores) ||
       (length(n.cores) > 1))
     stop("n.cores should be a positive integer.")
+  detectedCores <- parallel::detectCores()
+  if (n.cores > detectedCores)
+    stop(paste0(
+      "n.cores is higher than maximum available cores (",
+      detectedCores,
+      ")."
+    ))
+  if (n.cores == detectedCores)
+    warning(
+      "n.cores is equal to maximum available cores. System might become unresponsive and crash in case of insufficient memory."
+    )
 }
 
 #' @keywords internal

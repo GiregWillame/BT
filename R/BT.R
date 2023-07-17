@@ -56,7 +56,7 @@
 #' By default, \code{folds.id = NULL} meaning that no folds are defined.
 #'
 #' @param n.cores the number of cores to use for parallelization. This parameter is used during the cross-validation.
-#' By default, it is set to 1.
+#' By default, it is set to 1 leading to a sequential approach.
 #'
 #' @param tree.control for advanced user only. It allows to define additional tree parameters that will be used at each iteration.
 #' See \code{\link{rpart.control}} for more information.
@@ -302,53 +302,83 @@ BT <-
     if (is.verbose)
       message("Fit the model on the different CV folds. \n")
     folds <- create_cv_folds(training.set, cv.folds, folds.id, seed)
-    cl <- makeCluster(n.cores)
-    clusterExport(
-      cl,
-      varlist = c(
-        "training.set",
-        "tweedie.power",
-        "respVar",
-        "w",
-        "explVar",
-        "ABT",
-        "tree.control",
-        "train.fraction",
-        "interaction.depth",
-        "bag.fraction",
-        "shrinkage",
-        "n.iter",
-        "colsample.bytree",
-        "keep.data",
-        "is.verbose"
-      ),
-      envir = environment()
-    )
-    BT_cv_results <- parLapply(cl, seq_len(cv.folds), function(xx) {
-      if (!is.null(seed))
-        set.seed(seed * (xx + 1))
-      valIndex <- which(folds == xx)
-      trainIndex <- setdiff(1:length(folds), valIndex)
-      BT_call(
-        training.set[trainIndex, ],
-        training.set[valIndex, ],
-        tweedie.power,
-        respVar,
-        w,
-        explVar,
-        ABT,
-        tree.control,
-        train.fraction,
-        interaction.depth,
-        bag.fraction,
-        shrinkage,
-        n.iter,
-        colsample.bytree,
-        FALSE,
-        is.verbose
-      ) # We dont keep a copy of each dataset in case of cross-validation, keep.data=FALSE
-    })
-    stopCluster(cl)
+    if (n.cores > 1) {
+      cl <- makeCluster(n.cores)
+      clusterExport(
+        cl,
+        varlist = c(
+          "training.set",
+          "tweedie.power",
+          "respVar",
+          "w",
+          "explVar",
+          "ABT",
+          "tree.control",
+          "train.fraction",
+          "interaction.depth",
+          "bag.fraction",
+          "shrinkage",
+          "n.iter",
+          "colsample.bytree",
+          "keep.data",
+          "is.verbose"
+        ),
+        envir = environment()
+      )
+      BT_cv_results <-
+        parLapply(cl, seq_len(cv.folds), function(xx) {
+          if (!is.null(seed))
+            set.seed(seed * (xx + 1))
+          valIndex <- which(folds == xx)
+          trainIndex <- setdiff(1:length(folds), valIndex)
+          BT_call(
+            training.set[trainIndex,],
+            training.set[valIndex,],
+            tweedie.power,
+            respVar,
+            w,
+            explVar,
+            ABT,
+            tree.control,
+            train.fraction,
+            interaction.depth,
+            bag.fraction,
+            shrinkage,
+            n.iter,
+            colsample.bytree,
+            FALSE,
+            is.verbose
+          ) # We dont keep a copy of each dataset in case of cross-validation, keep.data=FALSE
+        })
+      on.exit(stopCluster(cl))
+
+    } else{
+      # n.cores = 1
+      BT_cv_results <- lapply(seq_len(cv.folds), function(xx) {
+        if (!is.null(seed))
+          set.seed(seed * (xx + 1))
+        valIndex <- which(folds == xx)
+        trainIndex <- setdiff(1:length(folds), valIndex)
+        BT_call(
+          training.set[trainIndex,],
+          training.set[valIndex,],
+          tweedie.power,
+          respVar,
+          w,
+          explVar,
+          ABT,
+          tree.control,
+          train.fraction,
+          interaction.depth,
+          bag.fraction,
+          shrinkage,
+          n.iter,
+          colsample.bytree,
+          FALSE,
+          is.verbose
+        ) # We dont keep a copy of each dataset in case of cross-validation, keep.data=FALSE
+      })
+    }
     # Different folds -> result object is from a different class.
     class(BT_cv_results) <- "BTCVFit"
 
