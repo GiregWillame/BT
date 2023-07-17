@@ -114,9 +114,7 @@ plot.BTPerformance <- function(x, out_of_bag_curve=FALSE, overlay=TRUE, main="",
             main)
 }
 
-#' @rdname BT_perf
-#' @export
-#'
+#' @keywords internal
 best_iter_validation <- function(BTFit_object){
   check_if_BT_fit(BTFit_object)
 
@@ -128,9 +126,7 @@ best_iter_validation <- function(BTFit_object){
   return(best_iter_val)
 }
 
-#' @rdname BT_perf
-#' @export
-#'
+#' @keywords internal
 best_iter_cv <- function(BTFit_object) {
   check_if_BT_fit(BTFit_object)
 
@@ -142,9 +138,7 @@ best_iter_cv <- function(BTFit_object) {
   return(best_iter_cv)
 }
 
-#' @rdname BT_perf
-#' @export
-#'
+#' @keywords internal
 best_iter_out_of_bag <- function(BTFit_object){
 
   check_if_BT_fit(BTFit_object)

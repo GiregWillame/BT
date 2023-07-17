@@ -1,6 +1,6 @@
-#' Printing functions.
+#' Printing function.
 #'
-#' Functions to print the BT results.
+#' Function to print the BT results.
 #'
 #' @param x a \code{\link{BTFit}} object.
 #' @param \dots arguments passed to \code{print.default}.
@@ -52,9 +52,7 @@ print.BTFit <- function(x, ... ){
 
 
 #### Helper Functions ####
-#' @rdname print.BTFit
-#' @export
-#'
+#' @keywords internal
 print_iters_and_dist <- function(x) {
   check_if_BT_fit(x)
   if (x$BTParams$ABT){
@@ -66,9 +64,7 @@ print_iters_and_dist <- function(x) {
   }
 }
 
-#' @rdname print.BTFit
-#' @export
-#'
+#' @keywords internal
 print_perf_measures <- function(x) {
   # Calculate the best number of iterations - returns test set if possible
   check_if_BT_fit(x)

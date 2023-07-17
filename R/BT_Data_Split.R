@@ -3,9 +3,11 @@ create_validation_set <- function(data, train.fraction){
   if (train.fraction != 1){
     trainIndex <- seq(1, train.fraction*nrow(data))
     valIndex <- setdiff(1:nrow(data), trainIndex)
-    training.set <- data[trainIndex,] ; validation.set <- data[valIndex,]
+    training.set <- data[trainIndex,]
+    validation.set <- data[valIndex,]
   } else{
-    training.set <- data ; validation.set <- NULL
+    training.set <- data
+    validation.set <- NULL
   }
   return(list(training.set = training.set, validation.set = validation.set))
 }

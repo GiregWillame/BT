@@ -40,8 +40,7 @@
 #' M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses with Tweedie loss functions}. Paper submitted for publication.
 #'
 #' @rdname BT_relative_influence
-#' @export
-#'
+#' @keywords internal
 BT_relative_influence <- function(BTFit_object, n.iter,
                                rescale = FALSE, sort.it = FALSE,
                                consider.competing = FALSE, consider.surrogates = FALSE){

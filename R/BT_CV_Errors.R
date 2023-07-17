@@ -33,14 +33,12 @@
 #' M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses with Tweedie loss functions}. Paper submitted for publication.
 #'
 #' @rdname BT_cv_errors
-#' @export
-#'
+#' @keywords internal
 BT_cv_errors <- function(BT_cv_fit, cv.folds, folds) {
   UseMethod("BT_cv_errors", BT_cv_fit)
 }
 
 #' @keywords internal
-#'
 BT_cv_errors.BTCVFit <- function(BT_cv_fit, cv.folds, folds){
 
   check_if_BTCV_fit(BT_cv_fit)

@@ -35,8 +35,7 @@
 #' M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses with Tweedie loss functions}. Paper submitted for publication.
 #'
 #' @rdname predict.BTCVFit
-#' @export
-#'
+#' @keywords internal
 predict.BTCVFit <- function(object, data, cv.folds, folds, best.iter.cv, ...){
 
   # We directly apply the predict on the dataset -> no database extraction.

@@ -180,7 +180,8 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
   m <- mf
   mf <- eval(mf, parent.frame())
   Terms <- attr(mf, "terms")
-  respVar <- as.character(attr(Terms, "variables"))[-1][attr(Terms, "response")] ; explVar <- attr(Terms, "term.labels")
+  respVar <- as.character(attr(Terms, "variables"))[-1][attr(Terms, "response")]
+  explVar <- attr(Terms, "term.labels")
   #mf$originalRespVar <- mf[,respVar] # Keep the original variable -> Do not need to modify the formula that way.
   #originalFormula <- formula # Keep a track of the original formula if there's any change with variable subsampling.
 
@@ -213,8 +214,11 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
   }
 
   setList <- create_validation_set(mf, train.fraction)
-  training.set <- setList$training.set ; validation.set <- setList$validation.set
-  rm(setList) ; rm(mf) ; gc()
+  training.set <- setList$training.set
+  validation.set <- setList$validation.set
+  rm(setList)
+  rm(mf)
+  gc()
 
   # Fit full model.
   if (is.verbose) message("Fit the model on the whole training set. \n")
@@ -231,7 +235,10 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
   }
 
   if (cv.folds==1){
-    BT_full_results$cv.folds <- cv.folds ; BT_full_results$call <- the_call ; BT_full_results$Terms <- Terms ; BT_full_results$seed <- seed
+    BT_full_results$cv.folds <- cv.folds
+    BT_full_results$call <- the_call
+    BT_full_results$Terms <- Terms
+    BT_full_results$seed <- seed
     return(BT_full_results)
   }
 
@@ -244,7 +251,8 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
                               "colsample.bytree", "keep.data", "is.verbose"), envir = environment())
   BT_cv_results <- parLapply(cl, seq_len(cv.folds), function(xx){
     if (!is.null(seed)) set.seed(seed*(xx+1))
-    valIndex <- which(folds==xx) ; trainIndex <- setdiff(1:length(folds), valIndex)
+    valIndex <- which(folds==xx)
+    trainIndex <- setdiff(1:length(folds), valIndex)
     BT_call(training.set[trainIndex,], training.set[valIndex,], tweedie.power, respVar, w, explVar, ABT,
             tree.control, train.fraction, interaction.depth, bag.fraction, shrinkage, n.iter, colsample.bytree,
             FALSE, is.verbose) # We dont keep a copy of each dataset in case of cross-validation, keep.data=FALSE
@@ -262,8 +270,11 @@ BT <- function(formula = formula(data), data=list(), tweedie.power = 1, ABT = TR
   predictions <- predict(BT_cv_results, training.set, cv.folds, folds, bestIterCV)
 
   # Extract relevant part - all data model.
-  BT_full_results$cv.folds <- cv.folds ; BT_full_results$folds <- folds
-  BT_full_results$call <- the_call ; BT_full_results$Terms <- Terms ; BT_full_results$seed <- seed
+  BT_full_results$cv.folds <- cv.folds
+  BT_full_results$folds <- folds
+  BT_full_results$call <- the_call
+  BT_full_results$Terms <- Terms
+  BT_full_results$seed <- seed
   BT_full_results$BTErrors$cv.error <- cv_errors
   BT_full_results$cv.fitted <- predictions
 

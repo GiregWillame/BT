@@ -88,8 +88,10 @@ BT_call <- function(training.set, validation.set, tweedie.power, respVar, w, exp
   if (is.verbose) message('bag.fraction is not used for the initialization fit.')
   init <- BT_callInit(training.set, validation.set, tweedie.power, respVar, w)
   initF <- list(initFit = init$initFit, training.error = init$trainingError, validation.error = init$validationError)
-  currTrainScore <- init$currTrainScore ; currValScore <- init$currValScore
-  rm(init) ; gc()
+  currTrainScore <- init$currTrainScore
+  currValScore <- init$currValScore
+  rm(init)
+  gc()
 
   # Boosting algorithm.
   BT <- BT_callBoosting(cbind(training.set, currTrainScore), cbind(validation.set, currValScore), tweedie.power, ABT,
@@ -112,7 +114,8 @@ BT_callInit <- function(training.set, validation.set, tweedie.power, respVar, w)
   trainingError <- sum(BT_devTweedie(training.set[, respVar], exp(currTrainScore),
                                      tweedieVal = tweedie.power, w=training.set[,w]))/nrow(training.set)#sum(mf$originalWeights)
 
-  currValScore <- NULL ; validationError <- NULL
+  currValScore <- NULL
+  validationError <- NULL
   if (!is.null(validation.set)){
     currValScore <- rep(log(initFit), nrow(validation.set)) # Return value on score scale.
     validationError <- sum(BT_devTweedie(validation.set[, respVar], exp(currValScore),
@@ -131,7 +134,10 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
   sampRow <- 1:nrow(training.set)
   currFormula <- as.formula(paste("residuals ~ ", paste(explVar, collapse = " + ")))
 
-  training.error <- NULL ; validation.error <- NULL ; oob.improvement <- NULL ; listFits <- list()
+  training.error <- NULL
+  validation.error <- NULL
+  oob.improvement <- NULL
+  listFits <- list()
 
   for (iTree in seq_len(n.iter)){
     if (is.verbose) {
@@ -200,10 +206,13 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
                                              validation.error=validation.error,
                                              oob.improvement=oob.improvement), class="BTErrors")
 
-  class(listFits) <- "BTIndivFits" ; BT_CallBoosting$BTIndivFits <- listFits
+  class(listFits) <- "BTIndivFits"
+  BT_CallBoosting$BTIndivFits <- listFits
 
   BT_CallBoosting$distribution <- tweedie.power
-  BT_CallBoosting$var.names <- explVar ; BT_CallBoosting$response <- respVar ; BT_CallBoosting$w <- w
+  BT_CallBoosting$var.names <- explVar
+  BT_CallBoosting$response <- respVar
+  BT_CallBoosting$w <- w
   if (keep.data) BT_CallBoosting$BTData <- structure(list(training.set = training.set[, ! (colnames(training.set) %in% c("iWeights", "residuals"))],
                                                           validation.set = validation.set), class = "BTData")
 
@@ -216,7 +225,8 @@ BT_callBoosting <- function(training.set, validation.set, tweedie.power, ABT,
                                              colsample.bytree=colsample.bytree,
                                              tree.control=tree.control), class="BTParams")
 
-  BT_CallBoosting$keep.data <- keep.data ; BT_CallBoosting$is.verbose <- is.verbose
+  BT_CallBoosting$keep.data <- keep.data
+  BT_CallBoosting$is.verbose <- is.verbose
 
   BT_CallBoosting$fitted.values <- training.set[, "currTrainScore"]
 
