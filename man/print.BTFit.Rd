@@ -2,15 +2,9 @@
 % Please edit documentation in R/BT_Print.R
 \name{print.BTFit}
 \alias{print.BTFit}
-\alias{print_iters_and_dist}
-\alias{print_perf_measures}
-\title{Printing functions.}
+\title{Printing function.}
 \usage{
 \method{print}{BTFit}(x, ...)
-
-print_iters_and_dist(x)
-
-print_perf_measures(x)
 }
 \arguments{
 \item{x}{a \code{\link{BTFit}} object.}
@@ -21,7 +15,7 @@ print_perf_measures(x)
 No return value.
 }
 \description{
-Functions to print the BT results.
+Function to print the BT results.
 }
 \details{
 Print the different input parameters as well as obtained results (best iteration/performance & relative influence) given the chosen approach.

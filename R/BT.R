@@ -96,28 +96,11 @@
 #'
 #' @examples
 #' \donttest{
-#' ## Create some dataset.
-#' set.seed(4)
-#' n <- 10000
-#'
-#' Gender <- factor(sample(c("male","female"), n, replace=TRUE))
-#' Age <- sample(c(18:65), n, replace=TRUE)
-#' Split <- factor(sample(c("yes","no"), n, replace=TRUE))
-#' Sport <- factor(sample(c("yes","no"), n, replace=TRUE))
-#'
-#' lambda <- 0.1*ifelse(Gender=="male", 1.1, 1)
-#' lambda <- lambda*(1+1/(Age-17)^0.5)
-#' lambda <- lambda*ifelse(Sport=="yes", 1.15, 1)
-#'
-#' ExpoR <- runif(n)
-#'
-#' Y <- rpois(n, ExpoR*lambda)
-#' Y_normalized <- Y/ExpoR
-#'
-#' dataset <- data.frame(Y,Gender,Age,Split,Sport,ExpoR, Y_normalized)
+#' ## Load dataset.
+#' dataset <- BT::BT_Simulated_Data
 #'
 #' ## Fit a Boosting Tree model.
-#' BT_algo <- BT(formula = as.formula("Y_normalized ~ Age + Sport + Split + Gender"), # formula
+#' BT_algo <- BT(formula = Y_normalized ~ Age + Sport + Split + Gender, # formula
 #'               data = dataset, # data
 #'               ABT = FALSE, # Classical Boosting Tree
 #'               n.iter = 200,

@@ -2,9 +2,6 @@
 % Please edit documentation in R/BT_Perf.R
 \name{BT_perf}
 \alias{BT_perf}
-\alias{best_iter_validation}
-\alias{best_iter_cv}
-\alias{best_iter_out_of_bag}
 \title{Performance assessment.}
 \usage{
 BT_perf(
@@ -15,12 +12,6 @@ BT_perf(
   method,
   main = ""
 )
-
-best_iter_validation(BTFit_object)
-
-best_iter_cv(BTFit_object)
-
-best_iter_out_of_bag(BTFit_object)
 }
 \arguments{
 \item{BTFit_object}{a \code{\link{BTFit}} object created from an initial call to \code{\link{BT}}}
