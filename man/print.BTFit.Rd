@@ -36,7 +36,7 @@ Paper submitted for publication.
 M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses with Tweedie loss functions}. Paper submitted for publication.
 }
 \seealso{
-\code{\link{BT}}, \code{\link{BT_relative_influence}}, \code{\link{BT_perf}}.
+\code{\link{BT}}, \code{\link{.BT_relative_influence}}, \code{\link{BT_perf}}.
 }
 \author{
 Gireg Willame \email{gireg.willame@gmail.com}

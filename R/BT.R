@@ -78,7 +78,7 @@
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'
 #' @seealso \code{\link{BTFit}}, \code{\link{BTCVFit}}, \code{\link{BT_call}}, \code{\link{BT_perf}}, \code{\link{predict.BTFit}},
-#' \code{\link{summary.BTFit}}, \code{\link{print.BTFit}}, \code{\link{BT_cv_errors}}.
+#' \code{\link{summary.BTFit}}, \code{\link{print.BTFit}}, \code{\link{.BT_cv_errors}}.
 #'
 #' @references M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions}, \emph{Springer Actuarial}.
 #'
@@ -208,20 +208,20 @@ BT <-
     }
     w <- "w"
 
-    check_tweedie_power(tweedie.power)
-    check_ABT(ABT)
-    check_n_iter(n.iter)
-    check_train_fraction(train.fraction)
-    check_interaction_depth(interaction.depth)
-    check_shrinkage(shrinkage)
-    check_bag_fraction(bag.fraction)
-    check_colsample_bytree(colsample.bytree, length(explVar))
-    check_keep_data(keep.data)
-    check_is_verbose(is.verbose)
-    check_cv_folds(cv.folds)
-    check_folds_id(folds.id)
-    check_n_cores(n.cores)
-    check_weights(mf$w)
+    .check_tweedie_power(tweedie.power)
+    .check_ABT(ABT)
+    .check_n_iter(n.iter)
+    .check_train_fraction(train.fraction)
+    .check_interaction_depth(interaction.depth)
+    .check_shrinkage(shrinkage)
+    .check_bag_fraction(bag.fraction)
+    .check_colsample_bytree(colsample.bytree, length(explVar))
+    .check_keep_data(keep.data)
+    .check_is_verbose(is.verbose)
+    .check_cv_folds(cv.folds)
+    .check_folds_id(folds.id)
+    .check_n_cores(n.cores)
+    .check_weights(mf$w)
 
     if (!is.null(interaction.depth) &&
         tree.control$maxdepth != interaction.depth) {
@@ -230,7 +230,7 @@ BT <-
       )
     }
 
-    setList <- create_validation_set(mf, train.fraction)
+    setList <- .create_validation_set(mf, train.fraction)
     training.set <- setList$training.set
     validation.set <- setList$validation.set
     rm(setList)
@@ -284,7 +284,7 @@ BT <-
     # Else : cv.folds > 1 (or folds.id defined).
     if (is.verbose)
       message("Fit the model on the different CV folds. \n")
-    folds <- create_cv_folds(training.set, cv.folds, folds.id, seed)
+    folds <- .create_cv_folds(training.set, cv.folds, folds.id, seed)
     if (n.cores > 1) {
       cl <- makeCluster(n.cores)
       clusterExport(
@@ -365,7 +365,7 @@ BT <-
     # Different folds -> result object is from a different class.
     class(BT_cv_results) <- "BTCVFit"
 
-    cv_errors <- BT_cv_errors(BT_cv_results, cv.folds, folds)
+    cv_errors <- .BT_cv_errors(BT_cv_results, cv.folds, folds)
 
     # Best number of iterations/trees.
     bestIterCV <- which.min(cv_errors)

@@ -119,7 +119,7 @@ M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses 
 }
 \seealso{
 \code{\link{BTFit}}, \code{\link{BTCVFit}}, \code{\link{BT_perf}}, \code{\link{predict.BTFit}},
-\code{\link{summary.BTFit}}, \code{\link{print.BTFit}}, \code{\link{BT_cv_errors}}.
+\code{\link{summary.BTFit}}, \code{\link{print.BTFit}}, \code{\link{.BT_cv_errors}}.
 }
 \author{
 Gireg Willame \email{gireg.willame@gmail.com}

@@ -10,7 +10,7 @@
   n.iter = object$BTParams$n.iter,
   plot_it = TRUE,
   order_it = TRUE,
-  method = BT_relative_influence,
+  method = .BT_relative_influence,
   normalize = TRUE,
   ...
 )
@@ -27,7 +27,7 @@ If \code{order=FALSE} then the first \code{cBars} variables will appear in the b
 
 \item{order_it}{an indicator as to whether the plotted and/or returned relative influence are sorted.}
 
-\item{method}{the function used to compute the relative influence. Currently, only \code{\link{BT_relative_influence}} is available (default value as well).}
+\item{method}{the function used to compute the relative influence. Currently, only \code{\link{.BT_relative_influence}} is available (default value as well).}
 
 \item{normalize}{if \code{TRUE} returns the normalized relative influence.}
 
@@ -59,7 +59,7 @@ Paper submitted for publication.
 M. Denuit, J. Trufin and T. Verdebout (2022). \strong{Boosting on the responses with Tweedie loss functions}. Paper submitted for publication.
 }
 \seealso{
-\code{\link{BT}}, \code{\link{BT_relative_influence}}.
+\code{\link{BT}}, \code{\link{.BT_relative_influence}}.
 }
 \author{
 Gireg Willame \email{gireg.willame@gmail.com}

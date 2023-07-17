@@ -1,12 +1,12 @@
 #' @keywords internal
-perf_plot <- function(BTFit_object,
+.perf_plot <- function(BTFit_object,
                       best_iter,
                       out_of_bag_curve,
                       overlay,
                       method,
                       main) {
   # Check inputs
-  check_if_BT_fit(BTFit_object)
+  .check_if_BT_fit(BTFit_object)
   if (!is.logical(overlay) ||
       (length(overlay)) > 1 || is.na(overlay))
     stop("overlay must be a logical - excluding NA")
@@ -27,29 +27,29 @@ perf_plot <- function(BTFit_object,
           BTFit_object$distribution,
           ")",
           sep = "")
-  if (!has_train_validation_split(BTFit_object)) {
+  if (!.has_train_validation_split(BTFit_object)) {
     ylim <- switch(
       method,
       cv = range(
-        iteration_error(BTFit_object, 'train'),
-        iteration_error(BTFit_object, 'cv')
+        .iteration_error(BTFit_object, 'train'),
+        .iteration_error(BTFit_object, 'cv')
       ),
       validation = range(
-        iteration_error(BTFit_object, 'train'),
-        iteration_error(BTFit_object, 'validation')
+        .iteration_error(BTFit_object, 'train'),
+        .iteration_error(BTFit_object, 'validation')
       ),
-      OOB = range(iteration_error(BTFit_object, 'train'))
+      OOB = range(.iteration_error(BTFit_object, 'train'))
     ) # Those are the only 3 possibilities allowed by the main BT_callPerformance function, no further test needed.
   } else {
     ylim <- range(
-      iteration_error(BTFit_object, 'train'),
-      iteration_error(BTFit_object, 'validation')
+      .iteration_error(BTFit_object, 'train'),
+      .iteration_error(BTFit_object, 'validation')
     )
   }
 
   # Initial plot
   plot(
-    iteration_error(BTFit_object, 'train'),
+    .iteration_error(BTFit_object, 'train'),
     ylim = ylim,
     type = "l",
     xlab = "Iteration",
@@ -57,11 +57,11 @@ perf_plot <- function(BTFit_object,
     main = main
   )
 
-  if (has_train_validation_split(BTFit_object)) {
-    lines(iteration_error(BTFit_object, 'validation'), col = "red")
+  if (.has_train_validation_split(BTFit_object)) {
+    lines(.iteration_error(BTFit_object, 'validation'), col = "red")
   }
   if (method == "cv") {
-    lines(iteration_error(BTFit_object, 'cv'), col = "green")
+    lines(.iteration_error(BTFit_object, 'cv'), col = "green")
   }
   if (!is.na(best_iter))
     abline(
@@ -78,14 +78,14 @@ perf_plot <- function(BTFit_object,
     if (all(!is.finite(BTFit_object$BTErrors$oob.improvement)))
       stop("Cannot compute OOB estimate or the OOB curve. No finite OOB estimates of improvement")
 
-    plot_oobag(BTFit_object, best_iter, overlay, ylab)
+    .plot_oobag(BTFit_object, best_iter, overlay, ylab)
   }
 }
 
 #' @keywords internal
-plot_oobag <- function(BTFit_object, best_iter, overlay, ylab) {
+.plot_oobag <- function(BTFit_object, best_iter, overlay, ylab) {
   # Get smoother
-  smoother <- generate_smoother_oobag(BTFit_object)
+  smoother <- .generate_smoother_oobag(BTFit_object)
 
   # Plot smoothed out of bag improvement
   if (overlay) {

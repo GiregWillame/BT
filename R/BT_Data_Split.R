@@ -1,5 +1,5 @@
 #' @keywords internal
-create_validation_set <- function(data, train.fraction) {
+.create_validation_set <- function(data, train.fraction) {
   if (train.fraction != 1) {
     trainIndex <- seq(1, train.fraction * nrow(data))
     valIndex <- setdiff(1:nrow(data), trainIndex)
@@ -13,7 +13,7 @@ create_validation_set <- function(data, train.fraction) {
 }
 
 #' @keywords internal
-create_cv_folds <- function(data, cv.folds, folds.id, seed = NULL) {
+.create_cv_folds <- function(data, cv.folds, folds.id, seed = NULL) {
   if (!is.null(folds.id)) {
     if (length(folds.id) != nrow(data))
       stop("length(folds.id) differs from the number of rows in the data set.")

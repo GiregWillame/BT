@@ -43,7 +43,7 @@
 #' @export
 #'
 BT_devTweedie <- function(y, mu, tweedieVal, w = NULL) {
-  check_tweedie_power(tweedieVal)
+  .check_tweedie_power(tweedieVal)
   if (any(is.logical(y) |
           is.character(y) | (y != as.double(y)) | is.na(y))) {
     stop("Responses must be doubles")

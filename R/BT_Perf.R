@@ -50,7 +50,7 @@ BT_perf <- function(BTFit_object,
   if (!is.logical(plot.it) || (length(plot.it)) > 1 || is.na(plot.it))
     stop("plot.it must be a logical - excluding NA")
 
-  performance <- BT_callPerformance(BTFit_object, method)
+  performance <- .BT_callPerformance(BTFit_object, method)
   if (plot.it) {
     plot(
       performance,
@@ -64,21 +64,21 @@ BT_perf <- function(BTFit_object,
 }
 
 #' @keywords internal
-BT_callPerformance <- function(BTFit_object, method) {
+.BT_callPerformance <- function(BTFit_object, method) {
   # Check inputs
-  check_if_BT_fit(BTFit_object)
+  .check_if_BT_fit(BTFit_object)
 
   ## Guess the method
   if (missing(method)) {
-    method <- guess_error_method(BTFit_object)
+    method <- .guess_error_method(BTFit_object)
     message("Using ", method, " method...")
   }
 
   result <- switch(
     method,
-    OOB = best_iter_out_of_bag(BTFit_object),
-    validation = best_iter_validation(BTFit_object),
-    cv = best_iter_cv(BTFit_object),
+    OOB = .best_iter_out_of_bag(BTFit_object),
+    validation = .best_iter_validation(BTFit_object),
+    cv = .best_iter_cv(BTFit_object),
     stop("method must be validation, cv or OOB")
   )
 
@@ -118,7 +118,7 @@ plot.BTPerformance <-
            main = "",
            ...) {
     info <- attr(x, 'info')
-    perf_plot(info$BTFit_object,
+    .perf_plot(info$BTFit_object,
               x,
               out_of_bag_curve,
               overlay,
@@ -127,35 +127,35 @@ plot.BTPerformance <-
   }
 
 #' @keywords internal
-best_iter_validation <- function(BTFit_object) {
-  check_if_BT_fit(BTFit_object)
+.best_iter_validation <- function(BTFit_object) {
+  .check_if_BT_fit(BTFit_object)
 
-  if (!has_train_validation_split(BTFit_object)) {
+  if (!.has_train_validation_split(BTFit_object)) {
     stop(
       'In order to use method = "validation" BT must be called with a properly defined train.fraction parameter.'
     )
   }
 
   best_iter_val <-
-    which.min(iteration_error(BTFit_object, 'validation'))
+    which.min(.iteration_error(BTFit_object, 'validation'))
   return(best_iter_val)
 }
 
 #' @keywords internal
-best_iter_cv <- function(BTFit_object) {
-  check_if_BT_fit(BTFit_object)
+.best_iter_cv <- function(BTFit_object) {
+  .check_if_BT_fit(BTFit_object)
 
-  if (!has_cross_validation(BTFit_object)) {
+  if (!.has_cross_validation(BTFit_object)) {
     stop('In order to use method="cv" BT must be called with cv_folds>1.')
   }
 
-  best_iter_cv <- which.min(iteration_error(BTFit_object, 'cv'))
+  best_iter_cv <- which.min(.iteration_error(BTFit_object, 'cv'))
   return(best_iter_cv)
 }
 
 #' @keywords internal
-best_iter_out_of_bag <- function(BTFit_object) {
-  check_if_BT_fit(BTFit_object)
+.best_iter_out_of_bag <- function(BTFit_object) {
+  .check_if_BT_fit(BTFit_object)
 
   if (BTFit_object$BTParams$bag.fraction == 1)
     stop("Cannot compute OOB estimate or the OOB curve when bag.fraction=1")
@@ -166,14 +166,14 @@ best_iter_out_of_bag <- function(BTFit_object) {
     "OOB generally underestimates the optimal number of iterations although predictive performance is reasonably competitive.
             Using cv_folds>1 when calling BT usually results in improved predictive performance."
   )
-  smoother <- generate_smoother_oobag(BTFit_object)
+  smoother <- .generate_smoother_oobag(BTFit_object)
   best_iter_oob <- smoother$x[which.min(-cumsum(smoother$y))]
   return(best_iter_oob)
 }
 
 #' @keywords internal
-generate_smoother_oobag <- function(BTFit_object) {
-  check_if_BT_fit(BTFit_object)
+.generate_smoother_oobag <- function(BTFit_object) {
+  .check_if_BT_fit(BTFit_object)
   smoother <- NULL
   x <- seq_len(BTFit_object$BTParams$n.iter)
   smoother <- loess(BTFit_object$BTErrors$oob.improvement ~ x,
@@ -184,10 +184,10 @@ generate_smoother_oobag <- function(BTFit_object) {
 }
 
 #' @keywords internal
-guess_error_method <- function(BTFit_object) {
-  if (has_train_validation_split(BTFit_object)) {
+.guess_error_method <- function(BTFit_object) {
+  if (.has_train_validation_split(BTFit_object)) {
     "validation"
-  } else if (has_cross_validation(BTFit_object)) {
+  } else if (.has_cross_validation(BTFit_object)) {
     "cv"
   } else{
     "OOB"

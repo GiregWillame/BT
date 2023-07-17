@@ -41,14 +41,14 @@
 #'
 #' @rdname BT_relative_influence
 #' @keywords internal
-BT_relative_influence <- function(BTFit_object,
+.BT_relative_influence <- function(BTFit_object,
                                   n.iter,
                                   rescale = FALSE,
                                   sort.it = FALSE,
                                   consider.competing = FALSE,
                                   consider.surrogates = FALSE) {
   # Initial checks
-  check_if_BT_fit(BTFit_object)
+  .check_if_BT_fit(BTFit_object)
   if (!is.logical(rescale) ||
       (length(rescale) > 1) || is.na(rescale))
     stop("rescale argument must be a logical")
@@ -58,14 +58,14 @@ BT_relative_influence <- function(BTFit_object,
 
   # Fill in missing values
   if (missing(n.iter)) {
-    if (has_train_validation_split(BTFit_object)) {
-      n.iter <- BT_callPerformance(BTFit_object, method = "validation")
+    if (.has_train_validation_split(BTFit_object)) {
+      n.iter <- .BT_callPerformance(BTFit_object, method = "validation")
     }
-    else if (has_cross_validation(BTFit_object)) {
-      n.iter <- BT_callPerformance(BTFit_object, method = "cv")
+    else if (.has_cross_validation(BTFit_object)) {
+      n.iter <- .BT_callPerformance(BTFit_object, method = "cv")
     }
-    else if (has_bagging(BTFit_object)) {
-      n.iter <- BT_callPerformance(BTFit_object, method = "OOB")
+    else if (.has_bagging(BTFit_object)) {
+      n.iter <- .BT_callPerformance(BTFit_object, method = "OOB")
     }
     else{
       n.iter <- BTFit_object$BTParams$n.iter
@@ -73,7 +73,7 @@ BT_relative_influence <- function(BTFit_object,
     message("n.iter not given. Using ", n.iter, " trees.")
   }
   else{
-    check_n_iter(n.iter) # Additional checks on n.iter
+    .check_n_iter(n.iter) # Additional checks on n.iter
     if (n.iter > length(BTFit_object$BTIndivFits)) {
       stop("n.iter exceeds number in fit")
     }
@@ -83,7 +83,7 @@ BT_relative_influence <- function(BTFit_object,
   rel_inf_verbose <-
     unlist(lapply(BTFit_object$BTIndivFits[seq(1, n.iter)],
                   function(xx) {
-                    get_rel_inf_of_vars(xx,
+                    .get_rel_inf_of_vars(xx,
                                         considerCompeting = consider.competing,
                                         considerSurrogates = consider.surrogates)
                   }))
@@ -117,7 +117,7 @@ BT_relative_influence <- function(BTFit_object,
 
 #### Helper function ####
 #' @keywords internal
-get_rel_inf_of_vars <-
+.get_rel_inf_of_vars <-
   function(rpart_object,
            considerCompeting,
            considerSurrogates) {
@@ -176,7 +176,7 @@ get_rel_inf_of_vars <-
     else
       (return(list()))
   }
-#get_rel_inf_of_vars <- function(rpart_object) {
+#.get_rel_inf_of_vars <- function(rpart_object) {
 #  if (!is.null(rpart_object$splits)) return(lapply(split(rpart_object$splits[,3], names(rpart_object$splits[,3])), sum)) # 3 - Improvement
 #  else (return(list())) # With rpart : splits isn't returned if we've a single node (i.e. no splits).
 #}

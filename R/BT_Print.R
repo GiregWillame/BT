@@ -13,7 +13,7 @@
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'
-#' @seealso \code{\link{BT}}, \code{\link{BT_relative_influence}}, \code{\link{BT_perf}}.
+#' @seealso \code{\link{BT}}, \code{\link{.BT_relative_influence}}, \code{\link{BT_perf}}.
 #'
 #' @references M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions}, \emph{Springer Actuarial}.
 #'
@@ -38,13 +38,13 @@ print.BTFit <- function(x, ...) {
     print(x$call)
 
   #  Print out number of iterations and distribution used
-  print_iters_and_dist(x)
+  .print_iters_and_dist(x)
 
   # Print out performance measures
-  best_iter <- print_perf_measures(x)
+  best_iter <- .print_perf_measures(x)
 
   # Print out relative influence of variables
-  ri <- BT_relative_influence(x, n.iter = best_iter)
+  ri <- .BT_relative_influence(x, n.iter = best_iter)
   cat(
     "There were",
     length(x$var.names),
@@ -59,14 +59,14 @@ print.BTFit <- function(x, ...) {
 
 #### Helper Functions ####
 #' @keywords internal
-print_iters_and_dist <- function(x) {
-  check_if_BT_fit(x)
+.print_iters_and_dist <- function(x) {
+  .check_if_BT_fit(x)
   if (x$BTParams$ABT) {
     cat(
       "An adaptive boosting tree model with Tweedie parameter :",
       x$distribution,
       " has been fitted.\n",
-      length(iteration_error(x, 'train')),
+      length(.iteration_error(x, 'train')),
       "iterations were performed.\n"
     )
   } else{
@@ -74,31 +74,31 @@ print_iters_and_dist <- function(x) {
       "A boosting tree model with Tweedie parameter :",
       x$distribution,
       " has been fitted.\n",
-      length(iteration_error(x, 'train')),
+      length(.iteration_error(x, 'train')),
       "iterations were performed.\n"
     )
   }
 }
 
 #' @keywords internal
-print_perf_measures <- function(x) {
+.print_perf_measures <- function(x) {
   # Calculate the best number of iterations - returns test set if possible
-  check_if_BT_fit(x)
+  .check_if_BT_fit(x)
 
   # Set default answer - final iteration
-  best_iter <- length(iteration_error(x, 'train'))
+  best_iter <- length(.iteration_error(x, 'train'))
 
   # OOB best iteration.
-  if (has_bagging(x)) {
-    best_iter <- print(BT_callPerformance(x, method = "OOB"))
+  if (.has_bagging(x)) {
+    best_iter <- print(.BT_callPerformance(x, method = "OOB"))
   }
   # CV best iteration
-  if (has_cross_validation(x)) {
-    best_iter <- print(BT_callPerformance(x, method = "cv"))
+  if (.has_cross_validation(x)) {
+    best_iter <- print(.BT_callPerformance(x, method = "cv"))
   }
   # Validation set best iteration
-  if (has_train_validation_split(x)) {
-    best_iter <- print(BT_callPerformance(x, method = "validation"))
+  if (.has_train_validation_split(x)) {
+    best_iter <- print(.BT_callPerformance(x, method = "validation"))
   }
 
   return(best_iter)

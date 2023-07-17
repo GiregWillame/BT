@@ -2,10 +2,10 @@
 # Accessors.
 ############################
 #' @keywords internal
-iteration_error <-
+.iteration_error <-
   function(object,
            which = c('train', 'validation', 'cv')) {
-    check_if_BT_fit(object)
+    .check_if_BT_fit(object)
     switch(
       match.arg(which),
       train = object$BTErrors$training.error,
@@ -21,12 +21,12 @@ iteration_error <-
 ############################
 
 #' @keywords internal
-check_if_rpart_params <- function(params) {
-  assertInherits(params, "list")
+.check_if_rpart_params <- function(params) {
+  .assertInherits(params, "list")
 }
 
 #' @keywords internal
-check_tweedie_power <- function(tweedie.power) {
+.check_tweedie_power <- function(tweedie.power) {
   if (is.null(tweedie.power))
     stop("Please defined a tweedie power.")
   if (!is.double(tweedie.power) ||
@@ -39,23 +39,23 @@ check_tweedie_power <- function(tweedie.power) {
 }
 
 #' @keywords internal
-check_n_iter <- function(n.iter) {
+.check_n_iter <- function(n.iter) {
   if (is.null(n.iter) ||
-      !check_if_natural_number(n.iter) ||
+      !.check_if_natural_number(n.iter) ||
       (length(n.iter) > 1))
     stop("n.iter should be a positive integer.")
 }
 
 #' @keywords internal
-check_interaction_depth <- function(interaction.depth) {
+.check_interaction_depth <- function(interaction.depth) {
   if (!is.null(interaction.depth) &&
-      (!check_if_natural_number(interaction.depth) ||
+      (!.check_if_natural_number(interaction.depth) ||
        (length(interaction.depth) > 1)))
     stop("When defined interaction.depth should be a positive integer.")
 }
 
 #' @keywords internal
-check_shrinkage <- function(shrinkage) {
+.check_shrinkage <- function(shrinkage) {
   if (is.null(shrinkage) ||
       (length(shrinkage) > 1))
     stop("Please define a shrinkage parameter.")
@@ -65,7 +65,7 @@ check_shrinkage <- function(shrinkage) {
 }
 
 #' @keywords internal
-check_bag_fraction <- function(bag.fraction) {
+.check_bag_fraction <- function(bag.fraction) {
   if (is.null(bag.fraction) ||
       (length(bag.fraction) > 1))
     stop("Please define a bag.fraction parameter.")
@@ -75,19 +75,19 @@ check_bag_fraction <- function(bag.fraction) {
 }
 
 #' @keywords internal
-check_colsample_bytree <- function(colsample.bytree, numExplVar) {
+.check_colsample_bytree <- function(colsample.bytree, numExplVar) {
   if (!is.null(colsample.bytree)) {
     if (length(colsample.bytree) > 1)
       stop("colsample.bytree should be a positive integer.")
     if (colsample.bytree > numExplVar)
       stop("colsample.bytree should be lower than the number of explanatory variables.")
-    if (!check_if_natural_number(colsample.bytree))
+    if (!.check_if_natural_number(colsample.bytree))
       stop("colsample.bytree should be a positive integer.")
   }
 }
 
 #' @keywords internal
-check_train_fraction <- function(train.fraction) {
+.check_train_fraction <- function(train.fraction) {
   if (is.null(train.fraction) ||
       (length(train.fraction) > 1))
     stop("Please define a train.fraction parameter.")
@@ -97,7 +97,7 @@ check_train_fraction <- function(train.fraction) {
 }
 
 #' @keywords internal
-check_keep_data <- function(keep.data) {
+.check_keep_data <- function(keep.data) {
   if (!is.logical(keep.data) ||
       (length(keep.data) > 1) ||
       is.na(keep.data))
@@ -105,7 +105,7 @@ check_keep_data <- function(keep.data) {
 }
 
 #' @keywords internal
-check_is_verbose <- function(is.verbose) {
+.check_is_verbose <- function(is.verbose) {
   if (!is.logical(is.verbose) ||
       (length(is.verbose) > 1) ||
       is.na(is.verbose))
@@ -113,16 +113,16 @@ check_is_verbose <- function(is.verbose) {
 }
 
 #' @keywords internal
-check_cv_folds <- function(cv.folds) {
+.check_cv_folds <- function(cv.folds) {
   if (is.null(cv.folds))
     stop("cv.folds should be defined.")
-  if (!check_if_natural_number(cv.folds) ||
+  if (!.check_if_natural_number(cv.folds) ||
       (length(cv.folds) > 1))
     stop("cv.folds should be a positive integer.")
 }
 
 #' @keywords internal
-check_folds_id <- function(folds.id) {
+.check_folds_id <- function(folds.id) {
   if (!is.null(folds.id) &&
       (!is.vector(folds.id) ||
        any(is.na(folds.id))))
@@ -130,8 +130,8 @@ check_folds_id <- function(folds.id) {
 }
 
 #' @keywords internal
-check_n_cores <- function(n.cores) {
-  if (!check_if_natural_number(n.cores) ||
+.check_n_cores <- function(n.cores) {
+  if (!.check_if_natural_number(n.cores) ||
       (length(n.cores) > 1))
     stop("n.cores should be a positive integer.")
   detectedCores <- parallel::detectCores()
@@ -148,14 +148,14 @@ check_n_cores <- function(n.cores) {
 }
 
 #' @keywords internal
-check_weights <- function(weights) {
+.check_weights <- function(weights) {
   if (!is.double(weights) ||
       any(weights <= 0))
     stop("Non-double and negative weights not allowed.")
 }
 
 #' @keywords internal
-check_ABT <- function(ABT) {
+.check_ABT <- function(ABT) {
   if (!is.logical(ABT) ||
       (length(ABT) > 1) || is.na(ABT))
     stop("ABT should be a boolean.")
@@ -165,22 +165,22 @@ check_ABT <- function(ABT) {
 # Check different outputs.
 ############################
 #' @keywords internal
-has_train_validation_split <- function(object) {
+.has_train_validation_split <- function(object) {
   (object$BTParams$train.fraction != 1) # Previously, !is.null(...)
 }
 
 #' @keywords internal
-has_bagging <- function(object) {
+.has_bagging <- function(object) {
   object$BTParams$bag.fraction < 1
 }
 
 #' @keywords internal
-has_cross_validation <- function(object) {
+.has_cross_validation <- function(object) {
   !is.null(object$BTErrors$cv.error)
 }
 
 #' @keywords internal
-check_if_natural_number <-
+.check_if_natural_number <-
   function(x, tol = .Machine$double.eps ^ 0.5) {
     x > tol & abs(x - round(x)) < tol
   }
@@ -190,20 +190,20 @@ check_if_natural_number <-
 ############################
 
 #' @keywords internal
-assertInherits <- function(object, class.name) {
+.assertInherits <- function(object, class.name) {
   if (!isTRUE(inherits(object, class.name))) {
     stop("Function requires a ", class.name, " object.")
   }
 }
 
 #' @keywords internal
-check_if_BT_fit <- function(object) {
-  assertInherits(object, "BTFit")
+.check_if_BT_fit <- function(object) {
+  .assertInherits(object, "BTFit")
 }
 
 #' @keywords internal
-check_if_BTCV_fit <- function(object) {
-  assertInherits(object, "BTCVFit")
+.check_if_BTCV_fit <- function(object) {
+  .assertInherits(object, "BTCVFit")
 }
 
 ############################
@@ -211,7 +211,7 @@ check_if_BTCV_fit <- function(object) {
 ############################
 
 #' @keywords internal
-BT_splittingStrategy <- function(rpart_object, interaction.depth) {
+.BT_splittingStrategy <- function(rpart_object, interaction.depth) {
   ff <- rpart_object$frame
   # No split available - rootnode.
   if (is.null(rpart_object$splits) ||

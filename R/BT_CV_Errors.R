@@ -34,13 +34,13 @@
 #'
 #' @rdname BT_cv_errors
 #' @keywords internal
-BT_cv_errors <- function(BT_cv_fit, cv.folds, folds) {
-  UseMethod("BT_cv_errors", BT_cv_fit)
+.BT_cv_errors <- function(BT_cv_fit, cv.folds, folds) {
+  UseMethod(".BT_cv_errors", BT_cv_fit)
 }
 
 #' @keywords internal
-BT_cv_errors.BTCVFit <- function(BT_cv_fit, cv.folds, folds) {
-  check_if_BTCV_fit(BT_cv_fit)
+.BT_cv_errors.BTCVFit <- function(BT_cv_fit, cv.folds, folds) {
+  .check_if_BTCV_fit(BT_cv_fit)
 
   in_group <- tabulate(folds, nbins = cv.folds)
   cv_error <- vapply(seq_len(cv.folds),

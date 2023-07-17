@@ -8,7 +8,7 @@
 #' @param n.iter the number of trees used to compute the relative influence. Only the first \code{n.trees} trees will be used.
 #' @param plot_it an indicator as to whether the plot is generated.
 #' @param order_it an indicator as to whether the plotted and/or returned relative influence are sorted.
-#' @param method the function used to compute the relative influence. Currently, only \code{\link{BT_relative_influence}} is available (default value as well).
+#' @param method the function used to compute the relative influence. Currently, only \code{\link{.BT_relative_influence}} is available (default value as well).
 #' @param normalize if \code{TRUE} returns the normalized relative influence.
 #' @param ... additional argument passed to the plot function.
 #'
@@ -21,7 +21,7 @@
 #'
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'
-#' @seealso \code{\link{BT}}, \code{\link{BT_relative_influence}}.
+#' @seealso \code{\link{BT}}, \code{\link{.BT_relative_influence}}.
 #'
 #' @references M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions}, \emph{Springer Actuarial}.
 #'
@@ -45,16 +45,16 @@ summary.BTFit <- function(object,
                           n.iter = object$BTParams$n.iter,
                           plot_it = TRUE,
                           order_it = TRUE,
-                          method = BT_relative_influence,
+                          method = .BT_relative_influence,
                           normalize = TRUE,
                           ...)
 {
   # Initial checks
-  check_n_iter(n.iter)
-  check_if_BT_fit(object)
+  .check_n_iter(n.iter)
+  .check_if_BT_fit(object)
 
   if (is.null(cBars) ||
-      !(check_if_natural_number(cBars) ||
+      !(.check_if_natural_number(cBars) ||
         (cBars == 0)) ||
       (length(cBars) > 1)) {
     stop("cBars should be an integer.")

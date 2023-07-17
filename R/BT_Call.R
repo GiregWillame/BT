@@ -58,7 +58,7 @@
 #' \emph{This package is inspired by the \code{gbm3} package. For more details, see \url{https://github.com/gbm-developers/gbm3/}}.
 #'
 #' @seealso \code{\link{BTFit}}, \code{\link{BTCVFit}}, \code{\link{BT_perf}}, \code{\link{predict.BTFit}},
-#' \code{\link{summary.BTFit}}, \code{\link{print.BTFit}}, \code{\link{BT_cv_errors}}.
+#' \code{\link{summary.BTFit}}, \code{\link{print.BTFit}}, \code{\link{.BT_cv_errors}}.
 #'
 #' @references M. Denuit, D. Hainaut and J. Trufin (2019). \strong{Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions}, \emph{Springer Actuarial}.
 #'
@@ -277,7 +277,7 @@ BT_callBoosting <-
         if (!ABT) {
           # interaction.depth defined and BT approach chosen.
           splittingStrategy <-
-            BT_splittingStrategy(currFit, interaction.depth)
+            .BT_splittingStrategy(currFit, interaction.depth)
           if (!is.null(splittingStrategy) &&
               length(splittingStrategy) > 0)
             currFit <- snip.rpart(currFit, toss = splittingStrategy)

@@ -44,15 +44,15 @@ BT_more <-
     the_call <- match.call()
 
     # Check inputs
-    check_if_BT_fit(BTFit_object)
-    check_n_iter(new.n.iter)
-    check_is_verbose(is.verbose)
+    .check_if_BT_fit(BTFit_object)
+    .check_n_iter(new.n.iter)
+    .check_is_verbose(is.verbose)
 
     if (is.null(BTFit_object$BTData)) {
       stop("keep.data was set to FALSE on original BT call - Impossible to continue the training.")
     }
 
-    if (has_cross_validation(BTFit_object)) {
+    if (.has_cross_validation(BTFit_object)) {
       warning("BT.more is incompatible with cross-validation; losing cv results.")
     }
 
