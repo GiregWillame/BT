@@ -52,7 +52,7 @@ testthat::test_that("Check the BT_Print function - Results", {
     )
 
   best.iter <- BT_perf(BT_algo, plot.it = F, method = "validation")
-  ri <- BT_relative_influence(BT_algo, best.iter)
+  ri <- .BT_relative_influence(BT_algo, best.iter)
 
   expectedMessage_part1 <- BT_algo$call
   expectedMessage_part2 <-
@@ -104,7 +104,7 @@ testthat::test_that("Check the BT_Print function - Results", {
 
   expect_message(best.iter <-
                    BT_perf(BT_algo, plot.it = F, method = "OOB"))
-  ri <- BT_relative_influence(BT_algo, best.iter)
+  ri <- .BT_relative_influence(BT_algo, best.iter)
 
   expectedMessage_part1 <- BT_algo$call
   expectedMessage_part2 <-
@@ -155,7 +155,7 @@ testthat::test_that("Check the BT_Print function - Results", {
     )
 
   best.iter <- BT_perf(BT_algo, plot.it = F, method = "cv")
-  ri <- BT_relative_influence(BT_algo, best.iter)
+  ri <- .BT_relative_influence(BT_algo, best.iter)
 
   expectedMessage_part1 <- BT_algo$call
   expectedMessage_part2 <-
@@ -206,7 +206,7 @@ testthat::test_that("Check the BT_Print function - Results", {
     )
 
   best.iter <- 200
-  ri <- BT_relative_influence(BT_algo, best.iter)
+  ri <- .BT_relative_influence(BT_algo, best.iter)
 
   expectedMessage_part1 <- BT_algo$call
   expectedMessage_part2 <-
@@ -256,7 +256,7 @@ testthat::test_that("Check the BT_Print function - Results", {
   best.iter <- BT_perf(BT_algo, plot.it = F, method = "validation")
   expect_message(best.iter.oob <-
                    BT_perf(BT_algo, plot.it = F, method = "OOB"))
-  ri <- BT_relative_influence(BT_algo, best.iter)
+  ri <- .BT_relative_influence(BT_algo, best.iter)
 
   expectedMessage_part1 <- BT_algo$call
   expectedMessage_part2 <-
@@ -312,7 +312,7 @@ testthat::test_that("Check the BT_Print function - Results", {
   best.iter <- BT_perf(BT_algo, plot.it = F, method = "cv")
   expect_message(best.iter.oob <-
                    BT_perf(BT_algo, plot.it = F, method = "OOB"))
-  ri <- BT_relative_influence(BT_algo, best.iter)
+  ri <- .BT_relative_influence(BT_algo, best.iter)
 
   expectedMessage_part1 <- BT_algo$call
   expectedMessage_part2 <-
@@ -367,7 +367,7 @@ testthat::test_that("Check the BT_Print function - Results", {
 
   best.iter <- BT_perf(BT_algo, plot.it = F, method = "validation")
   best.iter.cv <- BT_perf(BT_algo, plot.it = F, method = "cv")
-  ri <- BT_relative_influence(BT_algo, best.iter)
+  ri <- .BT_relative_influence(BT_algo, best.iter)
 
   expectedMessage_part1 <- BT_algo$call
   expectedMessage_part2 <-
@@ -427,7 +427,7 @@ testthat::test_that("Check the BT_Print function - Results", {
   best.iter.cv <- BT_perf(BT_algo, plot.it = F, method = "cv")
   expect_message(best.iter.oob <-
                    BT_perf(BT_algo, plot.it = F, method = "OOB"))
-  ri <- BT_relative_influence(BT_algo, best.iter)
+  ri <- .BT_relative_influence(BT_algo, best.iter)
 
   expectedMessage_part1 <- BT_algo$call
   expectedMessage_part2 <-

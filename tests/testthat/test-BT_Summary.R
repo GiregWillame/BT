@@ -203,7 +203,7 @@ testthat::test_that("Check the BT_Summary function - Results", {
   # Check results with validation n.iter.
   ####
   n.iter <- BT_perf(BT_algo, plot.it = F, method = "validation")
-  ri <- BT_relative_influence(BT_algo, n.iter = n.iter)
+  ri <- .BT_relative_influence(BT_algo, n.iter = n.iter)
   ri[ri < 0] <- 0
 
   normalizedRI <- 100 * ri / sum(ri)
@@ -374,7 +374,7 @@ testthat::test_that("Check the BT_Summary function - Results", {
   # Check results with cv n.iter.
   ####
   n.iter <- BT_perf(BT_algo, plot.it = F, method = "cv")
-  ri <- BT_relative_influence(BT_algo, n.iter = n.iter)
+  ri <- .BT_relative_influence(BT_algo, n.iter = n.iter)
   ri[ri < 0] <- 0
 
   normalizedRI <- 100 * ri / sum(ri)
@@ -546,7 +546,7 @@ testthat::test_that("Check the BT_Summary function - Results", {
   ####
   expect_message(n.iter <-
                    BT_perf(BT_algo, plot.it = F, method = "OOB"))
-  ri <- BT_relative_influence(BT_algo, n.iter = n.iter)
+  ri <- .BT_relative_influence(BT_algo, n.iter = n.iter)
   ri[ri < 0] <- 0
 
   normalizedRI <- 100 * ri / sum(ri)
@@ -717,7 +717,7 @@ testthat::test_that("Check the BT_Summary function - Results", {
   # Check results with max n.iter.
   ####
   n.iter <- BT_algo$BTParams$n.iter
-  ri <- BT_relative_influence(BT_algo, n.iter = n.iter)
+  ri <- .BT_relative_influence(BT_algo, n.iter = n.iter)
   ri[ri < 0] <- 0
 
   normalizedRI <- 100 * ri / sum(ri)

@@ -2,7 +2,7 @@
 # Author : Gireg Willame
 # June 2022.
 #
-# The goal is to check that the BT_Relative_Influence
+# The goal is to check that the .BT_Relative_Influence
 #   computation is correct.
 #
 ########################
@@ -55,100 +55,100 @@ testthat::test_that("Check the BT_Relative_Influence function - Inputs", {
   BT_algo <- do.call(BT, paramsBT)
 
   # empty or wrong BTFit_object
-  expect_error(BT_relative_influence(list()))
-  expect_error(BT_relative_influence(BTFit_object = seq(1, 10)))
-  expect_error(BT_relative_influence())
+  expect_error(.BT_relative_influence(list()))
+  expect_error(.BT_relative_influence(BTFit_object = seq(1, 10)))
+  expect_error(.BT_relative_influence())
 
   # Check the n.iter parameter.
-  expect_message(tempRes <- BT_relative_influence(BT_algo))
+  expect_message(tempRes <- .BT_relative_influence(BT_algo))
   expect_equal(tempRes,
-               BT_relative_influence(BT_algo, BT_callPerformance(BT_algo, "validation")))
+               .BT_relative_influence(BT_algo, .BT_callPerformance(BT_algo, "validation")))
 
   n.iter <- 100
   # Check rescale parameter.
   rescale <-
     1
-  expect_error(BT_relative_influence(BT_algo, n.iter, rescale = rescale))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, rescale = rescale))
   rescale <-
     0.4
-  expect_error(BT_relative_influence(BT_algo, n.iter, rescale = rescale))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, rescale = rescale))
   rescale <-
     2.785
-  expect_error(BT_relative_influence(BT_algo, n.iter, rescale = rescale))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, rescale = rescale))
   rescale <-
     c(3, 4)
-  expect_error(BT_relative_influence(BT_algo, n.iter, rescale = rescale))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, rescale = rescale))
   rescale <-
     NULL
-  expect_error(BT_relative_influence(BT_algo, n.iter, rescale = rescale))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, rescale = rescale))
   rescale <-
     NA
-  expect_error(BT_relative_influence(BT_algo, n.iter, rescale = rescale))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, rescale = rescale))
   rescale <-
     "Text"
-  expect_error(BT_relative_influence(BT_algo, n.iter, rescale = rescale))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, rescale = rescale))
 
   # Check sort.it parameter.
   sort.it <-
     1
-  expect_error(BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
   sort.it <-
     0.4
-  expect_error(BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
   sort.it <-
     2.785
-  expect_error(BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
   sort.it <-
     c(3, 4)
-  expect_error(BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
   sort.it <-
     NULL
-  expect_error(BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
   sort.it <-
     NA
-  expect_error(BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
   sort.it <-
     "Text"
-  expect_error(BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
+  expect_error(.BT_relative_influence(BT_algo, n.iter, sort.it = sort.it))
 
   # Check if n.iter is not well defined (or bigger than number of algo iters).
   n.iter <-
     400
-  expect_error(BT_relative_influence(BT_algo, n.iter))
+  expect_error(.BT_relative_influence(BT_algo, n.iter))
   n.iter <- 0
-  expect_error(BT_relative_influence(BT_algo, n.iter))
+  expect_error(.BT_relative_influence(BT_algo, n.iter))
   n.iter <-
     c(3, 4)
-  expect_error(BT_relative_influence(BT_algo, n.iter))
+  expect_error(.BT_relative_influence(BT_algo, n.iter))
   n.iter <-
     NULL
-  expect_error(BT_relative_influence(BT_algo, n.iter))
+  expect_error(.BT_relative_influence(BT_algo, n.iter))
   n.iter <-
     NA
-  expect_error(BT_relative_influence(BT_algo, n.iter))
+  expect_error(.BT_relative_influence(BT_algo, n.iter))
   n.iter <-
     "Text"
-  expect_error(BT_relative_influence(BT_algo, n.iter))
+  expect_error(.BT_relative_influence(BT_algo, n.iter))
   n.iter <- F
-  expect_error(BT_relative_influence(BT_algo, n.iter))
+  expect_error(.BT_relative_influence(BT_algo, n.iter))
 
   # Change inputs - test OOB.
   paramsBT$train.fraction <- 1
   BT_algo <- do.call(BT, paramsBT)
   # Check the n.iter parameter.
-  expect_message(tempRes <- BT_relative_influence(BT_algo))
+  expect_message(tempRes <- .BT_relative_influence(BT_algo))
   expect_message(tempResExpected_NbIter <-
-                   BT_callPerformance(BT_algo, "OOB"))
+                   .BT_callPerformance(BT_algo, "OOB"))
   expect_equal(tempRes,
-               BT_relative_influence(BT_algo, tempResExpected_NbIter))
+               .BT_relative_influence(BT_algo, tempResExpected_NbIter))
 
   # Change inputs - test cv
   paramsBT$cv.folds <- 3
   BT_algo <- do.call(BT, paramsBT)
   # Check the n.iter parameter.
-  expect_message(tempRes <- BT_relative_influence(BT_algo))
+  expect_message(tempRes <- .BT_relative_influence(BT_algo))
   expect_equal(tempRes,
-               BT_relative_influence(BT_algo, BT_callPerformance(BT_algo, "cv")))
+               .BT_relative_influence(BT_algo, .BT_callPerformance(BT_algo, "cv")))
 
 })
 
@@ -251,7 +251,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - Withou
                       # Test n.iter coming from validation.set
                       ####
 
-                      n.iter <- BT_callPerformance(BT_algo, method = "validation")
+                      n.iter <- .BT_callPerformance(BT_algo, method = "validation")
                       # Extract trees of interest and compute relative influence.
                       treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
                       resMatrix <- matrix(0, ncol = length(varName), nrow = n.iter)
@@ -272,13 +272,13 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - Withou
                       relInfSortedAndNormalized <- relInfSorted / max(relInfSorted)
 
                       expect_equal(relInf[BT_algo$var.names],
-                                   BT_relative_influence(BT_algo, rescale = F, sort.it = F)[BT_algo$var.names])
+                                   .BT_relative_influence(BT_algo, rescale = F, sort.it = F)[BT_algo$var.names])
                       expect_equal(relInfNormalized[BT_algo$var.names],
-                                   BT_relative_influence(BT_algo, rescale = T, sort.it = F)[BT_algo$var.names])
+                                   .BT_relative_influence(BT_algo, rescale = T, sort.it = F)[BT_algo$var.names])
                       expect_equal(relInfSorted,
-                                   BT_relative_influence(BT_algo, rescale = F, sort.it = T))
+                                   .BT_relative_influence(BT_algo, rescale = F, sort.it = T))
                       expect_equal(relInfSortedAndNormalized,
-                                   BT_relative_influence(BT_algo, rescale = T, sort.it = T))
+                                   .BT_relative_influence(BT_algo, rescale = T, sort.it = T))
 
                       ####
                       # Test n.iter coming from CV.
@@ -313,14 +313,14 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - Withou
                       relInfSortedAndNormalized <- relInfSorted / max(relInfSorted)
 
                       expect_equal(relInf[BT_algo$var.names],
-                                   BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F)[BT_algo$var.names])
+                                   .BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F)[BT_algo$var.names])
                       expect_equal(relInfNormalized[BT_algo$var.names],
-                                   BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F)[BT_algo$var.names])
+                                   .BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F)[BT_algo$var.names])
                       expect_equal(relInfSorted,
-                                   BT_relative_influence(BT_algo, rescale = F, n.iter, sort.it = T))
+                                   .BT_relative_influence(BT_algo, rescale = F, n.iter, sort.it = T))
                       expect_equal(
                         relInfSortedAndNormalized,
-                        BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T)
+                        .BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T)
                       )
 
                       ####
@@ -352,13 +352,13 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - Withou
                       relInfSortedAndNormalized <- relInfSorted / max(relInfSorted)
 
                       expect_equal(relInf[BT_algo$var.names],
-                                   BT_relative_influence(BT_algo, rescale = F, sort.it = F)[BT_algo$var.names])
+                                   .BT_relative_influence(BT_algo, rescale = F, sort.it = F)[BT_algo$var.names])
                       expect_equal(relInfNormalized[BT_algo$var.names],
-                                   BT_relative_influence(BT_algo, rescale = T, sort.it = F)[BT_algo$var.names])
+                                   .BT_relative_influence(BT_algo, rescale = T, sort.it = F)[BT_algo$var.names])
                       expect_equal(relInfSorted,
-                                   BT_relative_influence(BT_algo, rescale = F, sort.it = T))
+                                   .BT_relative_influence(BT_algo, rescale = F, sort.it = T))
                       expect_equal(relInfSortedAndNormalized,
-                                   BT_relative_influence(BT_algo, rescale = T, sort.it = T))
+                                   .BT_relative_influence(BT_algo, rescale = T, sort.it = T))
 
                       ####
                       # Test n.iter max.
@@ -385,14 +385,14 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - Withou
                       relInfSortedAndNormalized <- relInfSorted / max(relInfSorted)
 
                       expect_equal(relInf[BT_algo$var.names],
-                                   BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F)[BT_algo$var.names])
+                                   .BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F)[BT_algo$var.names])
                       expect_equal(relInfNormalized[BT_algo$var.names],
-                                   BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F)[BT_algo$var.names])
+                                   .BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F)[BT_algo$var.names])
                       expect_equal(relInfSorted,
-                                   BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
+                                   .BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
                       expect_equal(
                         relInfSortedAndNormalized,
-                        BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T)
+                        .BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T)
                       )
 
                       ####
@@ -420,14 +420,14 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - Withou
                       relInfSortedAndNormalized <- relInfSorted / max(relInfSorted)
 
                       expect_equal(relInf[BT_algo$var.names],
-                                   BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F)[BT_algo$var.names])
+                                   .BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = F)[BT_algo$var.names])
                       expect_equal(relInfNormalized[BT_algo$var.names],
-                                   BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F)[BT_algo$var.names])
+                                   .BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = F)[BT_algo$var.names])
                       expect_equal(relInfSorted,
-                                   BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
+                                   .BT_relative_influence(BT_algo, n.iter, rescale = F, sort.it = T))
                       expect_equal(
                         relInfSortedAndNormalized,
-                        BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T)
+                        .BT_relative_influence(BT_algo, n.iter, rescale = T, sort.it = T)
                       )
 
                     })
@@ -493,7 +493,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       # Test n.iter coming from validation.set
                       ####
 
-                      n.iter <- BT_callPerformance(BT_algo, method = "validation")
+                      n.iter <- .BT_callPerformance(BT_algo, method = "validation")
                       # Extract trees of interest and compute relative influence.
                       treesList <- BT_algo$BTIndivFits[seq_len(n.iter)]
                       resMatrix <- matrix(0, ncol = length(varName), nrow = n.iter)
@@ -514,7 +514,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
 
                       expect_equal(
                         relInf[BT_algo$var.names],
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           rescale = F,
                           sort.it = F,
@@ -523,7 +523,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfNormalized[BT_algo$var.names],
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           rescale = T,
                           sort.it = F,
@@ -532,7 +532,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfSorted,
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           rescale = F,
                           sort.it = T,
@@ -541,7 +541,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfSortedAndNormalized,
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           rescale = T,
                           sort.it = T,
@@ -582,7 +582,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
 
                       expect_equal(
                         relInf[BT_algo$var.names],
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           n.iter,
                           rescale = F,
@@ -592,7 +592,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfNormalized[BT_algo$var.names],
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           n.iter,
                           rescale = T,
@@ -602,7 +602,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfSorted,
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           rescale = F,
                           n.iter,
@@ -612,7 +612,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfSortedAndNormalized,
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           n.iter,
                           rescale = T,
@@ -650,7 +650,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
 
                       expect_equal(
                         relInf[BT_algo$var.names],
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           rescale = F,
                           sort.it = F,
@@ -659,7 +659,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfNormalized[BT_algo$var.names],
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           rescale = T,
                           sort.it = F,
@@ -668,7 +668,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfSorted,
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           rescale = F,
                           sort.it = T,
@@ -677,7 +677,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfSortedAndNormalized,
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           rescale = T,
                           sort.it = T,
@@ -710,7 +710,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
 
                       expect_equal(
                         relInf[BT_algo$var.names],
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           n.iter,
                           rescale = F,
@@ -720,7 +720,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfNormalized[BT_algo$var.names],
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           n.iter,
                           rescale = T,
@@ -730,7 +730,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfSorted,
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           n.iter,
                           rescale = F,
@@ -740,7 +740,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfSortedAndNormalized,
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           n.iter,
                           rescale = T,
@@ -774,7 +774,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
 
                       expect_equal(
                         relInf[BT_algo$var.names],
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           n.iter,
                           rescale = F,
@@ -784,7 +784,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfNormalized[BT_algo$var.names],
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           n.iter,
                           rescale = T,
@@ -794,7 +794,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfSorted,
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           n.iter,
                           rescale = F,
@@ -804,7 +804,7 @@ testthat::test_that("Check the BT_Relative_Influence function - Results - With s
                       )
                       expect_equal(
                         relInfSortedAndNormalized,
-                        BT_relative_influence(
+                        .BT_relative_influence(
                           BT_algo,
                           n.iter,
                           rescale = T,

@@ -29,27 +29,27 @@ testthat::test_that("Create_validation_set function", {
     data.frame(Y, Gender, Age, Split, Sport, ExpoR, Y_normalized)
 
   # Expect error if dataset is empty.
-  expect_error(create_validation_set(NULL, train.fraction = 0.1))
+  expect_error(.create_validation_set(NULL, train.fraction = 0.1))
 
   # Expect NULL validation.set if train.fraction is 1.
-  expect_equal(create_validation_set(datasetFull, 1)$validation.set, NULL)
-  expect_equal(create_validation_set(datasetFull, 1)$training.set,
+  expect_equal(.create_validation_set(datasetFull, 1)$validation.set, NULL)
+  expect_equal(.create_validation_set(datasetFull, 1)$training.set,
                datasetFull)
 
   # Check the results if everything is well defined.
-  expect_equal(create_validation_set(datasetFull, 0.5)$validation.set,
+  expect_equal(.create_validation_set(datasetFull, 0.5)$validation.set,
                datasetFull[seq(0.5 * nrow(datasetFull) + 1, nrow(datasetFull)), ])
-  expect_equal(create_validation_set(datasetFull, 0.5)$training.set,
+  expect_equal(.create_validation_set(datasetFull, 0.5)$training.set,
                datasetFull[seq(1, 0.5 * nrow(datasetFull)), ])
 
-  expect_equal(create_validation_set(datasetFull, 0.25)$validation.set,
+  expect_equal(.create_validation_set(datasetFull, 0.25)$validation.set,
                datasetFull[seq(0.25 * nrow(datasetFull) + 1, nrow(datasetFull)), ])
-  expect_equal(create_validation_set(datasetFull, 0.25)$training.set,
+  expect_equal(.create_validation_set(datasetFull, 0.25)$training.set,
                datasetFull[seq(1, 0.25 * nrow(datasetFull)), ])
 
-  expect_equal(create_validation_set(datasetFull, 0.891)$validation.set,
+  expect_equal(.create_validation_set(datasetFull, 0.891)$validation.set,
                datasetFull[seq(0.891 * nrow(datasetFull) + 1, nrow(datasetFull)), ])
-  expect_equal(create_validation_set(datasetFull, 0.891)$training.set,
+  expect_equal(.create_validation_set(datasetFull, 0.891)$training.set,
                datasetFull[seq(1, 0.891 * nrow(datasetFull)), ])
 
 })
@@ -79,25 +79,25 @@ testthat::test_that("create_cv_folds function", {
   # Note additionnal checks on the values of cv.folds/folds.id are performed in the test-BTInputs.R code.
 
   # Expect error if everything empty
-  expect_error(create_cv_folds(
+  expect_error(.create_cv_folds(
     data = NULL,
     cv.folds = NULL,
     folds.id = NULL
   ))
   # Expect error if dataset is empty
-  expect_error(create_cv_folds(
+  expect_error(.create_cv_folds(
     data = NULL,
     cv.folds = 2,
     folds.id = NULL
   ))
   # Expect error if cv.folds and folds.id are not provided -> should not be the case as cv.folds cannot be NULL
-  expect_error(create_cv_folds(
+  expect_error(.create_cv_folds(
     data = datasetFull,
     cv.folds = NULL,
     folds.id = NULL
   ))
   # Expect error if cv.folds defined but not the good length.
-  expect_error(create_cv_folds(
+  expect_error(.create_cv_folds(
     data = datasetFull,
     cv.folds = 3,
     folds.id = sample(
@@ -106,7 +106,7 @@ testthat::test_that("create_cv_folds function", {
       replace = T
     )
   ))
-  expect_error(create_cv_folds(
+  expect_error(.create_cv_folds(
     data = datasetFull,
     cv.folds = 3,
     folds.id = sample(
@@ -121,7 +121,7 @@ testthat::test_that("create_cv_folds function", {
   foldsExample <-
     sample(seq(1, 3), size = nrow(datasetFull), replace = T)
   expect_equal(
-    create_cv_folds(
+    .create_cv_folds(
       data = datasetFull,
       cv.folds = 3,
       folds.id = foldsExample
@@ -133,7 +133,7 @@ testthat::test_that("create_cv_folds function", {
   foldsExample <-
     sample(seq(1, 5), size = nrow(datasetFull), replace = T)
   expect_equal(
-    create_cv_folds(
+    .create_cv_folds(
       data = datasetFull,
       cv.folds = 5,
       folds.id = foldsExample
@@ -148,7 +148,7 @@ testthat::test_that("create_cv_folds function", {
            size = nrow(datasetFull),
            replace = T)
   expect_equal(
-    create_cv_folds(
+    .create_cv_folds(
       data = datasetFull,
       cv.folds = 3,
       folds.id = foldsExample
@@ -165,7 +165,7 @@ testthat::test_that("create_cv_folds function", {
       replace = T
     )))
   expect_equal(
-    create_cv_folds(
+    .create_cv_folds(
       data = datasetFull,
       cv.folds = 4,
       folds.id = foldsExample
@@ -182,7 +182,7 @@ testthat::test_that("create_cv_folds function", {
       replace = T
     )))
   expect_equal(
-    create_cv_folds(
+    .create_cv_folds(
       data = datasetFull,
       cv.folds = 6,
       folds.id = foldsExample
