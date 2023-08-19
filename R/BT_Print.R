@@ -5,7 +5,7 @@
 #' @param x a \code{\link{BTFit}} object.
 #' @param \dots arguments passed to \code{print.default}.
 #'
-#' @return No return value.
+#' @return No value returned.
 #'
 #' @details Print the different input parameters as well as obtained results (best iteration/performance & relative influence) given the chosen approach.
 #'

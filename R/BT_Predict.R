@@ -4,9 +4,9 @@
 #'
 #' @param object a \code{\link{BTFit}} object.
 #' @param newdata data frame of observations for which to make predictions. If missing or not a data frame, if \code{keep.data=TRUE} in the initial fit then the original training set will be used.
-#' @param n.iter number of boosting iteration used in the prediction. This parameter can be a vector in which case predictions are returned for each iteration specified.
+#' @param n.iter number of boosting iterations used for the prediction. This parameter can be a vector in which case predictions are returned for each iteration specified.
 #' @param type the scale on which the BT makes the predictions. Can either be "link" or "response". Note that, by construction, a log-link function is used during the fit.
-#' @param single.iter if \code{single.iter=TRUE} then \code{predict.BTFit} returns only the prediction from tree \code{n.iter}.
+#' @param single.iter if \code{single.iter=TRUE} then \code{predict.BTFit} returns the predictions from the single tree \code{n.iter}.
 #' @param \dots not currently used.
 #'
 #' @return Returns a vector of predictions. By default, the predictions are on the score scale.

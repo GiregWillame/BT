@@ -74,21 +74,21 @@ This option is devoted to advanced users only and allows them to benefit from th
 \item{bag.fraction}{the fraction of independent training observations randomly selected to propose the next tree in the expansion.
 This introduces randomness into the model fit. If \code{bag.fraction}<1 then running the same model twice will result in similar but different fits.
 \code{BT} uses the R random number generator, so \code{set.seed} ensures the same model can be reconstructed. Please note that if this parameter is used the \code{BTErrors$training.error}
-corresponds to the normalized in-bag error}
+corresponds to the normalized in-bag error.}
 
 \item{shrinkage}{a shrinkage parameter applied to each tree in the expansion. Also known as the learning rate or step-size reduction.}
 
-\item{n.iter}{the total number of iterations to fit. This is equivalent to the number of trees and the number of basis function in the additive expansion.
-Please note that the initialization is not taken into account in the \code{n.iter}. More explicitly, a first GLM initializes the algorithm and then \code{n.iter} trees
+\item{n.iter}{the total number of iterations to fit. This is equivalent to the number of trees and the number of basis functions in the additive expansion.
+Please note that the initialization is not taken into account in the \code{n.iter}. More explicitly, a weighted average initializes the algorithm and then \code{n.iter} trees
 are built. Moreover, note that the \code{bag.fraction}, \code{colsample.bytree}, ... are not used for this initializing phase.}
 
 \item{colsample.bytree}{each tree will be trained on a random subset of \code{colsample.bytree} number of features. Each tree will consider a new
 random subset of features from the formula, adding variability to the algorithm and reducing computation time. \code{colsample.bytree} will be bounded between
-1 and the number of features considered in the formula.}
+1 and the number of features considered.}
 
-\item{keep.data}{a boolean variable indicating whether to keep the data frames or not. This is particularly useful if one wants to keep track of the initial data frames
+\item{keep.data}{a boolean variable indicating whether to keep the data frames. This is particularly useful if one wants to keep track of the initial data frames
 and is further used for predicting in case any data frame is specified.
-Note that in case of cross-validation, if \code{keep.data=TRUE} the initial data frames is saved whereas the cross-validation samples are not.}
+Note that in case of cross-validation, if \code{keep.data=TRUE} the initial data frames are saved whereas the cross-validation samples are not.}
 
 \item{is.verbose}{if \code{is.verbose=TRUE}, the \code{BT} will print out the algorithm progress.}
 }
@@ -96,7 +96,7 @@ Note that in case of cross-validation, if \code{keep.data=TRUE} the initial data
 a \code{\link{BTFit}} object.
 }
 \description{
-Fit a (Adaptive) Boosting Trees algorithm. This is for "power" users who have a large number of variable and wish to avoid calling
+Fit a (Adaptive) Boosting Trees algorithm. This is for "power" users who have a large number of variables and wish to avoid calling
 \code{model.frame} which can be slow in this instance. This function is in particular called by \code{\link{BT}}.
 It is mainly split in two parts, the first one considers the initialization (see \code{BT_callInit}) whereas the second performs all the boosting iterations (see \code{BT_callBoosting}).
 By default, this function does not perform input checks (those are all done in \code{\link{BT}}) and all the parameters should be given in the right format. We therefore

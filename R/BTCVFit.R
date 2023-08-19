@@ -4,7 +4,7 @@
 #'
 #' @description These are objects representing CV fitted boosting trees.
 #'
-#' @return a list of \code{\link{BTFit}} object which each element corresponding to a specific BT fit on a particular fold
+#' @return a list of \code{\link{BTFit}} objects with each element corresponding to a specific BT fit on a particular fold
 #'
 #' @section Structure : The following components must be included in a legitimate \code{BTCVFit} object.
 #'

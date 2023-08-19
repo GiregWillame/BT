@@ -3,8 +3,8 @@
 #' Helper function for computing the relative influence of each variable in the BT object.
 #'
 #' @param BTFit_object a \code{\link{BTFit}} object.
-#' @param n.iter number of boosting iteration used for computations. If not provided, the function will perform a best guest approach to determine the optimal number of iterations. In fact,
-#' if a test set was used during the fitting, the retained number of iterations is the one corresponding to the lowest test set error ; otherwise, if cross-validation was performed, the
+#' @param n.iter number of boosting iterations used for computation. If not provided, the function will perform a best guess approach to determine the optimal number of iterations. In fact,
+#' if a validation set was used during the fitting, the retained number of iterations is the one corresponding to the lowest validation set error ; otherwise, if cross-validation was performed, the
 #' number of iterations resulting in lowest cross-validation error will be used; otherwise, if the out-of-bag parameter was defined, the OOB error will be used to determine the optimal
 #' number of iterations; otherwise, all iterations will be used.
 #' @param rescale whether or not the results should be rescaled (divided by the maximum observation). Default set to \code{FALSE}.

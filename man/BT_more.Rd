@@ -2,7 +2,7 @@
 % Please edit documentation in R/BT_More.R
 \name{BT_more}
 \alias{BT_more}
-\title{Perform additionnal boosting.}
+\title{Perform additional boosting iterations.}
 \usage{
 BT_more(BTFit_object, new.n.iter = 100, is.verbose = FALSE, seed = NULL)
 }

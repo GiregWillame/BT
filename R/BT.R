@@ -1,6 +1,6 @@
 #' (Adaptive) Boosting Trees (ABT/BT) Algorithm.
 #'
-#' Perform the (Adaptive) Boosting Trees algorithm. This prepare the inputs and call the function \code{\link{BT_call}}.
+#' Performs the (Adaptive) Boosting Trees algorithm. This code prepares the inputs and calls the function \code{\link{BT_call}}.
 #' Each tree in the process is built thanks to the \code{\link{rpart}} function.
 #' In case of cross-validation, this function prepares the folds and performs multiple calls to the fitting function \code{\link{BT_call}}.
 #'
@@ -15,8 +15,8 @@
 #' @param ABT a boolean parameter. If \code{ABT=TRUE} an adaptive boosting tree algorithm is built whereas if \code{ABT=FALSE} an usual boosting tree algorithm is run.
 #' By default, it is set to \code{TRUE}.
 #'
-#' @param n.iter the total number of iterations to fit. This is equivalent to the number of trees and the number of basis function in the additive expansion.
-#' Please note that the initialization is not taken into account in the \code{n.iter}. More explicitly, a first GLM initializes the algorithm and then \code{n.iter} trees
+#' @param n.iter the total number of iterations to fit. This is equivalent to the number of trees and the number of basis functions in the additive expansion.
+#' Please note that the initialization is not taken into account in the \code{n.iter}. More explicitly, a weighted average initializes the algorithm and then \code{n.iter} trees
 #' are built. Moreover, note that the \code{bag.fraction}, \code{colsample.bytree}, ... are not used for this initializing phase.
 #' By default, it is set to 100.
 #'
@@ -33,7 +33,6 @@
 #'
 #' @param bag.fraction the fraction of independent training observations randomly selected to propose the next tree in the expansion.
 #' This introduces randomness into the model fit. If \code{bag.fraction}<1 then running the same model twice will result in similar but different fits.
-#' \code{BT} uses the R random number generator, so \code{set.seed} ensures the same model can be reconstructed.
 #' Please note that if this parameter is used the \code{BTErrors$training.error} corresponds to the normalized in-bag error and the out-of-bag improvements
 #' are computed and stored in \code{BTErrors$oob.improvement}. See \code{\link{BTFit}} for more details.
 #' By default, it is set to 1.
@@ -42,9 +41,9 @@
 #' random subset of features from the formula, adding variability to the algorithm and reducing computation time. \code{colsample.bytree} will be bounded between
 #' 1 and the number of features considered in the formula. By default, it is set to \code{NULL} meaning no effect.
 #'
-#' @param keep.data a boolean variable indicating whether to keep the data frames or not. This is particularly useful if one wants to keep track of the initial data frames
+#' @param keep.data a boolean variable indicating whether to keep the data frames. This is particularly useful if one wants to keep track of the initial data frames
 #' and is further used for predicting in case any data frame is specified.
-#' Note that in case of cross-validation, if \code{keep.data=TRUE} the initial data frames is saved whereas the cross-validation samples are not.
+#' Note that in case of cross-validation, if \code{keep.data=TRUE} the initial data frames are saved whereas the cross-validation samples are not.
 #' By default, it is set to \code{FALSE}.
 #'
 #' @param is.verbose if \code{is.verbose=TRUE}, the \code{BT} will print out the algorithm progress. By default, it is set to \code{FALSE}.
@@ -56,12 +55,13 @@
 #' By default, \code{folds.id = NULL} meaning that no folds are defined.
 #'
 #' @param n.cores the number of cores to use for parallelization. This parameter is used during the cross-validation.
+#' This parameter is bounded between 1 and the maximum number of available cores.
 #' By default, it is set to 1 leading to a sequential approach.
 #'
 #' @param tree.control for advanced user only. It allows to define additional tree parameters that will be used at each iteration.
 #' See \code{\link{rpart.control}} for more information.
 #'
-#' @param weights optional vector of weights used in the fitting process. These weights must be positive but does not need to be normalized.
+#' @param weights optional vector of weights used in the fitting process. These weights must be positive but do not need to be normalized.
 #' By default, it is set to \code{NULL} which corresponds to an uniform weight of 1 for each observation.
 #'
 #' @param seed optional number used as seed. Please note that if \code{cv.folds}>1, the \code{parLapply} function is called.

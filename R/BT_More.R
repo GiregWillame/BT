@@ -1,4 +1,4 @@
-#' Perform additionnal boosting.
+#' Perform additional boosting iterations.
 #'
 #' Method to perform additional iterations of the Boosting Tree algorithm, starting from an initial \code{\link{BTFit}} object.
 #' This does not support further cross-validation. Moreover, this approach is only allowed if \code{keep.data=TRUE} in the original call.

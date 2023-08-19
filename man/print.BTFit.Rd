@@ -12,7 +12,7 @@
 \item{\dots}{arguments passed to \code{print.default}.}
 }
 \value{
-No return value.
+No value returned.
 }
 \description{
 Function to print the BT results.

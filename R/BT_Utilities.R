@@ -143,7 +143,8 @@
     ))
   if (n.cores == detectedCores)
     warning(
-      "n.cores is equal to maximum available cores. System might become unresponsive and crash in case of insufficient memory."
+      "n.cores is equal to maximum available cores. System might become unresponsive and crash in case of insufficient memory.",
+      immediate. = T
     )
 }
 

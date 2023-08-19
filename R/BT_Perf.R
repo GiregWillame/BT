@@ -2,8 +2,8 @@
 #'
 #' Function to compute the performances of a fitted boosting tree.
 #'
-#' @param BTFit_object a \code{\link{BTFit}} object created from an initial call to \code{\link{BT}}
-#' @param plot.it an indicator of whether or not to plot the performance measure. Setting \code{plot.it = TRUE} creates two plot.
+#' @param BTFit_object a \code{\link{BTFit}} object resulting from an initial call to \code{\link{BT}}
+#' @param plot.it a boolean indicating whether to plot the performance measure. Setting \code{plot.it = TRUE} creates two plots.
 #' The first one plots the \code{object$BTErrors$training.error} (in black) as well as the \code{object$BTErrors$validation.error} (in red) and/or the \code{object$BTErrors$cv.error} (in green) depending on the \code{method} and
 #' parametrization. These values are plotted as a function of the iteration number. The scale of the error measurement, shown on the left vertical axis, depends on the arguments used in the
 #' initial call to \code{\link{BT}} and the chosen \code{method}.
@@ -14,7 +14,7 @@
 #' @param method indicates the method used to estimate the optimal number of boosting iterations. Setting \code{method = "OOB"} computes the out-of-bag estimate and \code{method = "validation"}
 #' uses the validation dataset to compute an out-of-sample estimate. Finally, setting \code{method = "cv"} extracts the optimal number of iterations using cross-validation, if
 #' \code{\link{BT}} was called with \code{cv.folds > 1}. If missing, a guessing method is applied.
-#' @param main optional paramter that allows the user to define specific plot title.
+#' @param main optional parameter that allows the user to define specific plot title.
 #'
 #' @return Returns the estimated optimal number of iterations. The method of computation depends on the \code{method} argument.
 #'

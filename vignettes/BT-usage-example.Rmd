@@ -29,9 +29,9 @@ When presented with data, the `BT` package offers the user the ability to build 
 The built package is based on the original idea proposed by D. Hainaut, J. Trufin and M. Denuit. For more theoretical details, we refer to the following references:
 
 * M. Denuit, D. Hainaut and J. Trufin (2019). **Effective Statistical Learning Methods for Actuaries |: GLMs and Extensions**, *Springer Actuarial*.
-* M. Denuit, D. Hainaut and J. Trufin (2019). **Effective Statistical Learning Methods for Actuaries ||: Tree-Based Methods and Extensions**, *Springer Actuarial*.
+* M. Denuit, D. Hainaut and J. Trufin (2020). **Effective Statistical Learning Methods for Actuaries ||: Tree-Based Methods and Extensions**, *Springer Actuarial*.
 * M. Denuit, D. Hainaut and J. Trufin (2019). **Effective Statistical Learning Methods for Actuaries |||: Neural Networks and Extensions**, *Springer Actuarial*.
-* M. Denuit, D. Hainaut and J. Trufin (2022). **Response versus gradient boosting trees, GLMs and neural networks under Tweedie loss and log-link**, Accepted for publication in *Scandinavian Actuarial Journal*.
+* M. Denuit, D. Hainaut and J. Trufin (2022). **Response versus gradient boosting trees, GLMs and neural networks under Tweedie loss and log-link**, *Scandinavian Actuarial Journal 2022, 841-866*.
 * M. Denuit, J. Huyghe and J. Trufin (2022). **Boosting cost-complexity pruned trees on Tweedie responses: The ABT machine for insurance ratemaking**. Paper submitted for publication.
 * M. Denuit, J. Trufin and T. Verdebout (2022). **Boosting on the responses with Tweedie loss functions**. Paper submitted for publication.
 
@@ -49,12 +49,12 @@ library(BT)
 As previously mentioned, the `BT` package is only available for *Poisson* distributed response variable $Y$, in a log-link context.
 
 Using *offset* in the Poisson framework is often required. 
-In the insurance modelling for example, the offset allows to take into account the time exposure-to-risk. It therefore help to align the asked premium with respect to the contract duration.
+In the insurance modelling for example, the offset allows to take into account the time exposure-to-risk. It therefore helps to align the asked premium with respect to the contract duration.
 
 Regarding the `BT` package, the weighted approach was favored in place of the offset one. In fact, the two are equivalent given some adjustments.
 More precisely, the modeler is allowed to work either with 
 
-* the observed claim count $Y$ with offset $d$ (e.g. the time-exposure) or,
+* the observed claim count $Y$ with offset $ln(d)$ under log link, where $d$ is the exposure to risk, generally measured in time units, sometimes in distance traveled or other meaningful unit depending on the application, or
 * the observed claim frequency (also called claim rate) $\tilde{Y} = Y/d$ provided the weight $\nu = d$ enters the analysis. In fact, the distribution of the claim frequency $\tilde{Y}$ still belongs to the Tweedie family and is called the Poisson rate distribution.
 
 We refer to the first book aforementioned (p. 123) for a detailed proof.
@@ -182,7 +182,7 @@ sum(testSet$Y)/sum(testSet$ExpoR)
 
 ## Boosting Tree (BT)
 
-The basic idea behind this algorithm consists in building weak leaners to explain the remaining error, using all the past iterations. It differs from the Gradient Boosting Methods as we're here boosting the residuals rather than the pseudo-residuals, using the defined underlying distribution rather than a gaussian approach.
+The basic idea behind this algorithm consists in building weak leaners to explain the remaining error, using all the past iterations. It differs from the Gradient Boosting Methods as we're here boosting the ratios (as previously explained) rather than the pseudo-residuals, using the defined underlying distribution rather than a gaussian approach.
 
 In particular, let us remind that the package does not support offset. However, a problem reformulation can be used as explained before.
 
@@ -565,5 +565,5 @@ One can now assess the deviance of the different models.
 devPoisson(testSet$Y, btPredTest)
 devPoisson(testSet$Y, abtPredTest)
 ```
-For this simulated used-case, it therefore seems that the usual boosting tree approach performs better.
+For this simulated use-case, it therefore seems that the usual boosting tree approach performs better.
 

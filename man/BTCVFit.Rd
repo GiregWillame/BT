@@ -4,7 +4,7 @@
 \alias{BTCVFit}
 \title{BTCVFit}
 \value{
-a list of \code{\link{BTFit}} object which each element corresponding to a specific BT fit on a particular fold
+a list of \code{\link{BTFit}} objects with each element corresponding to a specific BT fit on a particular fold
 }
 \description{
 These are objects representing CV fitted boosting trees.

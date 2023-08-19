@@ -406,6 +406,8 @@ testthat::test_that("Invalid folds.id checks", {
 })
 
 testthat::test_that("Invalid n.cores checks", {
+  skip_on_cran()
+
   n.cores <- 0
   expect_error(.check_n_cores(n.cores))
   n.cores <- 0.4

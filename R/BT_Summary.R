@@ -5,9 +5,9 @@
 #' @param object a \code{\link{BTFit}} object.
 #' @param cBars the number of bars to plot. If \code{order=TRUE} only the variables with the \code{cBars} largest relative influence will appear in the barplot.
 #' If \code{order=FALSE} then the first \code{cBars} variables will appear in the barplot.
-#' @param n.iter the number of trees used to compute the relative influence. Only the first \code{n.trees} trees will be used.
+#' @param n.iter the number of trees used to compute the relative influence. Only the first \code{n.iter} trees will be used.
 #' @param plot_it an indicator as to whether the plot is generated.
-#' @param order_it an indicator as to whether the plotted and/or returned relative influence are sorted.
+#' @param order_it an indicator as to whether the plotted and/or returned relative influences are sorted.
 #' @param method the function used to compute the relative influence. Currently, only \code{\link{.BT_relative_influence}} is available (default value as well).
 #' @param normalize if \code{TRUE} returns the normalized relative influence.
 #' @param ... additional argument passed to the plot function.
